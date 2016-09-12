@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour 
 {
-
 	public float moveSpeed = 5.0f;
 	public float jumpPower = 10.0f;
 	public float maxVelocityChange = 10.0f;
