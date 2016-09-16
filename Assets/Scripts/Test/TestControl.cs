@@ -3,9 +3,11 @@ using System.Collections;
 
 public class TestControl : MonoBehaviour {
 
+	[SerializeField] Rigidbody rigidbody;
 	[SerializeField] float speed;
 	// Use this for initialization
 	void Start () {
+		rigidbody = GetComponent<Rigidbody> ();
 	}
 	
 	// Update is called once per frame
@@ -13,7 +15,8 @@ public class TestControl : MonoBehaviour {
 		Camera cam = Camera.main;
 		Vector3 speedV3 = Time.deltaTime * speed * ( Input.GetAxis ("Horizontal") * cam.transform.right + Input.GetAxis ("Vertical") * cam.transform.forward ) ;
 		speedV3.y = 0;
-		transform.position += speedV3;
+		rigidbody.velocity = speedV3;
+
 
 	}
 

@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 	public float jumpPower = 10.0f;
 	public float maxVelocityChange = 10.0f;
 
-	private float sensitivity = 200.0f;
+	public float sensitivity = 200.0f;
 
 	public void Start () 
 	{
