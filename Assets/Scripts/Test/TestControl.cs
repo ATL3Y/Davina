@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TestControl : MonoBehaviour {
+public class TestControl : MonoBehaviour 
+{
 
 	[SerializeField] float speed;
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 		Camera cam = Camera.main;
 		Vector3 speedV3 = Time.deltaTime * speed * ( Input.GetAxis ("Horizontal") * cam.transform.right + Input.GetAxis ("Vertical") * cam.transform.forward ) ;
 		speedV3.y = 0;
@@ -17,7 +20,8 @@ public class TestControl : MonoBehaviour {
 
 	}
 
-	void OnGUI(){
+	void OnGUI()
+	{
 		GUILayout.Label (Input.GetAxis ("Horizontal") + " " + Input.GetAxis ("Vertical"));
 	}
 }
