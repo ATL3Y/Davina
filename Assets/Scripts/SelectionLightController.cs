@@ -28,9 +28,9 @@ public class SelectionLightController : MonoBehaviour
 		
 	void Update () 
 	{
-		print ("selection Light update call");
-		print ("isHovered " + isHovered);
-		print ("isSelected " + isSelected);
+		//print ("selection Light update call");
+		//print ("isHovered " + isHovered);
+		//print ("isSelected " + isSelected);
 
 		if (isHovered) 
 		{
