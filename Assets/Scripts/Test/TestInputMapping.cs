@@ -26,4 +26,10 @@ public class TestInputMapping : MonoBehaviour {
 			break;
 		}
 	}
+
+	void Update()
+	{
+		Ray ray = InputManager.Instance.GetCenterRayCast ();
+		Debug.DrawRay (ray.origin , ray.direction , Color.red);
+	}
 }

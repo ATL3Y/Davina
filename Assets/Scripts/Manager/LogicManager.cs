@@ -9,6 +9,9 @@ public class LogicManager : MBehavior {
 
 	[SerializeField] bool VREnable = false;
 
+	[SerializeField] GameObject PC;
+	[SerializeField] GameObject VR;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -19,10 +22,10 @@ public class LogicManager : MBehavior {
 			gameObject.AddComponent<PCInputManager> ();
 		}
 
-		if (GameObject.Find ("PC"))
-			GameObject.Find ("PC").SetActive (!VREnable);
-		if (GameObject.Find ("VR"))
-			GameObject.Find ("PC").SetActive (VREnable);
+		if (PC != null)
+			PC.SetActive (!VREnable);
+		if (VR != null)
+			VR.SetActive (VREnable);
 
 	}
 
