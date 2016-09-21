@@ -199,6 +199,30 @@ public class ViveInputController : MonoBehaviour
 		return angle;
 	}
 
+	//gets one instance of pressing pad down
+	public bool ReceivedRightPadDownSignal()
+	{
+		if (useViveInput && GetControllerIndices())
+		{
+			if (rightControllerIndex > -1 && SteamVR_Controller.Input(rightControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				return true;
+		}
+
+		return false;
+	}
+
+	//gets one instance of pressing pad down
+	public bool ReceivedLeftPadDownSignal()
+	{
+		if (useViveInput && GetControllerIndices())
+		{
+			if (leftControllerIndex > -1 && SteamVR_Controller.Input(leftControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				return true;
+		}
+
+		return false;
+	}
+
 	public bool ReceivedRightPadPressedSignal()
 	{
 		if (useViveInput && GetControllerIndices ()) 
