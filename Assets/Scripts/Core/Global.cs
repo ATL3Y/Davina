@@ -13,4 +13,5 @@ public class Global {
 			return GameObject.Find ("DWorld").transform;
 		}
 	}
+
 }

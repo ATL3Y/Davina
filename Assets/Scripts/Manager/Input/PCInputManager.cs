@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PCInputManager : InputManager {
 
+
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
@@ -12,12 +13,13 @@ public class PCInputManager : InputManager {
 		if (Input.GetMouseButtonDown (1)) {
 			FireTransport ();
 		}
+
+		Debug.DrawLine (GetCenterRayCast ().origin, GetCenterRayCast ().direction * 1000f);
 	}
 
 	public override Ray GetCenterRayCast ()
 	{
-		return base.GetCenterRayCast ();
+		return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
 	}
-
-
+		
 }
