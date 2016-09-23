@@ -68,6 +68,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 
             // pass all parameters to the character control script
+			crouch = true;
             m_Character.Move(m_Move, crouch, m_Jump);
             m_Jump = false;
         }
