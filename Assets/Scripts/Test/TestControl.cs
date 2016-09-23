@@ -13,11 +13,11 @@ public class TestControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Camera cam = Camera.main;
-		Vector3 speedV3 = Time.deltaTime * speed * ( Input.GetAxis ("Horizontal") * cam.transform.right + Input.GetAxis ("Vertical") * cam.transform.forward ) ;
-		speedV3.y = 0;
-		rigidbody.velocity = speedV3;
+		Vector3 speedV3;
 
+		speedV3 = Time.deltaTime * speed * ( Input.GetAxis ("Horizontal") * cam.transform.right + Input.GetAxis ("Vertical") * cam.transform.forward ) ;
 
+		rigidbody.velocity = speedV3 * (Input.GetKey(KeyCode.LeftShift)? 10f : 1f);
 	}
 
 	void OnGUI(){

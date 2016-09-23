@@ -11,8 +11,16 @@ public class LogicManager : MBehavior {
 
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
+	[SerializeField] Transform PCHand;
+	[SerializeField] Transform VRHand;
 
 	[SerializeField] GameObject Rain;
+
+	private PasserBy m_stayPasserBy;
+	public PasserBy StayPasserBy
+	{
+		get { return m_stayPasserBy; }
+	}
 
 	protected override void MAwake ()
 	{
@@ -42,5 +50,33 @@ public class LogicManager : MBehavior {
 	{
 		return VREnable ? VR.transform : PC.transform;
 	}
+
+	public Transform GetHandTransform()
+	{
+		return VREnable ? VRHand : PCHand;
+	}
+
+
+	protected override void MOnEnable ()
+	{
+		base.MOnEnable ();
+		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportToNewObject;
+	}
+
+	protected override void MOnDisable ()
+	{
+		base.MOnDisable ();
+		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportToNewObject;
+	}
+
+	void OnTransportToNewObject( LogicArg arg )
+	{
+		var obj = arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
+		if (obj is PasserBy) {
+			m_stayPasserBy = (PasserBy)obj;
+		}
+	}
+
+
 
 }

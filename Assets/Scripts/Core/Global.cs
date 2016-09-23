@@ -14,4 +14,7 @@ public class Global {
 		}
 	}
 
+
+	static public string EVENT_LOGIC_TRANSPORTTO_MOBJECT = "MOBJECT";
+	static public string EVENT_LOGIC_SELECT_COBJECT = "COBJECT";
 }

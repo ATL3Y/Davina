@@ -1,7 +1,7 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
-Shader "Cg per-pixel lighting" {
+Shader "Custom/DiffusePhong" {
    Properties {
       _Color ("Diffuse Material Color", Color) = (1,1,1,1) 
       _SpecColor ("Specular Material Color", Color) = (1,1,1,1) 
@@ -22,9 +22,9 @@ Shader "Cg per-pixel lighting" {
             // color of light source (from "Lighting.cginc")
  
          // User-specified properties
-         uniform float4 _Color; 
-         uniform float4 _SpecColor; 
-         uniform float _Shininess;
+         uniform half4 _Color; 
+         uniform half4 _SpecColor; 
+         uniform half4 _Shininess;
  
          struct vertexInput {
             float4 vertex : POSITION;

@@ -12,6 +12,14 @@ public enum MInputType
 	FocusNewObject,
 }
 
+public enum LogicEvents
+{
+	None,
+	TransportStart,
+	TransportEnd,
+	SelectSuccessful,
+}
+
 public class M_Event : MonoBehaviour {
 
 	/// <summary>
@@ -22,6 +30,25 @@ public class M_Event : MonoBehaviour {
 	public static event EventHandler StartApp;
 	public static void FireStartApp(BasicArg arg){if ( StartApp != null ) StartApp(arg) ; }
 
+
+	public delegate void LogicHandler( LogicArg arg );
+
+	public static LogicHandler[] logicEvents = new LogicHandler[System.Enum.GetNames (typeof (LogicEvents)).Length];
+	public static void FireLogicEvent( LogicArg arg )
+	{
+		if (arg.type != LogicEvents.None) {
+			FireLogicEvent (arg.type, arg);
+		}
+	}
+	public static void FireLogicEvent( LogicEvents type , LogicArg arg )
+	{
+		if ( logicEvents[(int)type] != null )
+		{
+			arg.type = type;
+			logicEvents [(int)type] ( arg );
+		}
+
+	}
 
 	/// <summary>
 	/// Input events
@@ -93,4 +120,14 @@ public class InputArg : BasicArg
 	public MInputType type;
 
 	public GameObject focusObject;
+}
+
+public class LogicArg : MsgArg
+{
+	public LogicArg(object _this):base(_this){}
+
+	/// <summary>
+	/// The type of the arg.
+	/// </summary>
+	public LogicEvents type;
 }

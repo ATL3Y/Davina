@@ -1,18 +1,11 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-
-Shader "Outlined/MOutLinePhong"
+﻿Shader "Custom/MPhoneCloseFade"
 {
 	Properties {
 		_Color ("Main Color", Color) = (.5,.5,.5,1)
 		_SpecColor ("Specular Color", Color) = (.5,.5,.5,1)
 		_Shininess ("Shininess" , float ) = 1
-		_DisappearRange ("Disappear Range" , float ) = 0.1
+		_DisappearRange ("Disappear Range(Max,Min)" , float ) = 0.1
      	_InColor ("Inner side Color" , Color ) = (1,1,1,1)
-		_OutlineColor ("Outline Color", Color) = (0,0,0,1)
-		_Outline ("Outline width", Range (0.0, 0.03)) = .005
 		_MainTex ("Base (RGB)", 2D) = "white" { }
 		_InTex("In Tex" , 2d ) = "white" {}
 	}
@@ -25,11 +18,6 @@ Shader "Outlined/MOutLinePhong"
 		float3 normal : NORMAL;
 	};
 	 
-	struct v2f_outline {
-		float4 pos : POSITION;
-		float4 color : COLOR;
-	};
-
 	struct v2f_out {
 		float4 pos : POSITION;
 		float4 color : COLOR;
@@ -46,8 +34,6 @@ Shader "Outlined/MOutLinePhong"
 		float4 posWorld : TEXCOORD1;	// the position of the vertex in world
 	};
 	 
-	uniform float _Outline;
-	uniform float4 _OutlineColor;
 	uniform float4 _Color;
 	uniform float4 _SpecColor;
 	uniform float _Shininess;
@@ -63,20 +49,6 @@ Shader "Outlined/MOutLinePhong"
 	float4 _MainTex_ST;
 	sampler2D _InTex;
 	float4 _InTex_ST;
-	 
-	v2f_outline vert_outline(appdata v) {
-		// just make a copy of incoming vertex data but scaled according to normal direction
-		v2f_outline o;
-		o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-	 
-		float3 norm   = mul ((float3x3)UNITY_MATRIX_IT_MV, v.normal);
-		float2 offset = TransformViewToProjection(norm.xy);
-	 
-		o.pos.xy += offset * o.pos.z * _Outline;
-		o.color = _OutlineColor;
-		o.color.a = ( _Outline == 0 )? 0 : 1;
-		return o;
-	}
 	 
 	v2f_out vert_out(appdata_base v ) {
 		v2f_out o;
@@ -98,6 +70,23 @@ Shader "Outlined/MOutLinePhong"
 		o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 		o.posWorld = mul(unity_ObjectToWorld,v.vertex);
 		return o;
+	}
+
+	float depth2Alpha( float d )
+	{
+		float a = 1;
+		if ( d < _DisappearRange.x )
+			a = d / _DisappearRange.x;
+//		{
+//			if ( d > _DisappearRange.y )
+//			{
+//				a = ( d - _DisappearRange.y ) / ( _DisappearRange.x - _DisappearRange.y);
+//			}else
+//			{
+//				a = 0;
+//			}
+//		}
+		return a;
 	}
 
 	
@@ -153,7 +142,7 @@ Shader "Outlined/MOutLinePhong"
 		UNITY_APPLY_FOG(i.fogCoord, phongColor);
 
 		float depth = length(_WorldSpaceCameraPos - i.posWorld.xyz);
-		float alpha = ( depth < _DisappearRange)? depth / _DisappearRange : 1;
+		float alpha = depth2Alpha(depth);
 		phongColor.a = alpha;
 
 
@@ -213,29 +202,10 @@ Shader "Outlined/MOutLinePhong"
        	UNITY_APPLY_FOG(i.fogCoord, phongColor);
 
        	float depth = length(_WorldSpaceCameraPos - i.posWorld.xyz);
-		float alpha = ( depth < _DisappearRange)? depth / _DisappearRange : 1;
+		float alpha = depth2Alpha(depth);
 		phongColor.a = alpha;
 
         return phongColor ;
-	}
-
-	fixed4 frag_base_in(v2f_in i ) : COLOR {
-
-		float4 col = tex2D(_InTex, i.uv) * _InColor;
-
-		float depth = length(_WorldSpaceCameraPos - i.posWorld.xyz);
-		float alpha = ( depth < _DisappearRange)? depth / _DisappearRange : 1;
-		col.a = alpha;
-         return col;
-	}
-
-	fixed4 frag_add_in(v2f_in i ) : COLOR {
-
-		float4 col = tex2D(_InTex, i.uv) * _InColor;
-		float depth = length(_WorldSpaceCameraPos - i.posWorld.xyz);
-		float alpha = ( depth < _DisappearRange)? depth / _DisappearRange : 1;
-		col.a = alpha;
-         return col;
 	}
 
 	ENDCG
@@ -243,32 +213,6 @@ Shader "Outlined/MOutLinePhong"
 		SubShader {
 //			Tags { "Queue" = "Geometry" , "RenderType" = "Opaque" }
 			Tags { "Queue" = "Geometry" }
-	 
-			// note that a vertex shader is specified here but its using the one above
-			Pass {
-				Name "OUTLINE"
-				Tags { "LightMode" = "Always" }
-				Cull Front
-				ZWrite On
-				ZTest LEqual
-//				ColorMask RGB // alpha not used
-	 
-				// you can choose what kind of blending mode you want for the outline
-//				Blend SrcAlpha OneMinusSrcAlpha // Normal
-				Blend One One // Additive
-//				Blend One OneMinusDstColor // Soft Additive
-				//Blend DstColor Zero // Multiplicative
-				//Blend DstColor SrcColor // 2x Multiplicative
-	 
-			CGPROGRAM
-			#pragma vertex vert_outline
-			#pragma fragment frag
-			 
-			half4 frag(v2f_outline i) :COLOR {
-				return i.color;
-			}
-			ENDCG
-			}
 
 			Pass {
 				Name "BASE_OUT"
@@ -302,36 +246,6 @@ Shader "Outlined/MOutLinePhong"
 				ENDCG
 			}
 
-//			Pass {
-//				Name "BASE_IN"
-//				 Tags { "LightMode" = "ForwardBase" } 
-//
-//				ZWrite On
-//				ZTest LEqual
-//				Cull front
-//
-//				CGPROGRAM
-//				#pragma vertex vert_in
-//				#pragma fragment frag_base_in
-//				 
-//				ENDCG
-//			}
-//	 
-//			Pass {
-//				Name "ADD_IN"
-//				 Tags { "LightMode" = "ForwardAdd" } 
-//
-//				ZWrite On
-//				ZTest LEqual
-//				Cull front
-//				Blend One One // additive blending 
-//
-//				CGPROGRAM
-//				#pragma vertex vert_in
-//				#pragma fragment frag_add_in
-//				 
-//				ENDCG
-//			}
 		}
  
 	Fallback "Diffuse"

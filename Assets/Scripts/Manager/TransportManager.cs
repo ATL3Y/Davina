@@ -14,6 +14,25 @@ public class TransportManager : MBehavior {
 	[SerializeField] float transportOffset = 1f;
 	[SerializeField] float fadeTime = 1f;
 	[SerializeField] float transportTime = 2f;
+
+	/// <summary>
+	/// For the transport animation
+	/// </summary>
+	private Sequence transportSequence;
+	public bool IsTransporting{
+		get { 
+			if ( transportSequence != null ) 
+				return !transportSequence.IsComplete();
+			return false;
+		}
+	}
+
+	protected override void MAwake ()
+	{
+		base.MAwake ();
+
+	}
+
 	protected override void MStart ()
 	{
 		base.MStart ();
@@ -33,31 +52,61 @@ public class TransportManager : MBehavior {
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
 	}
 
+	private MObject transportToObject;
+
 	public void OnTransport ( InputArg arg )
 	{
-		
-		Debug.Log ("On Transport");
+		if (InputManager.Instance.FocusedObject != null && !IsTransporting ) {
 
-		if (InputManager.Instance.FocusedObject != null) {
-			Sequence seq = DOTween.Sequence ();
+			transportToObject = InputManager.Instance.FocusedObject;
+
+			if ( transportToObject == LogicManager.Instance.StayPasserBy)
+				return;
+
+			// fire the transport start event
+			LogicArg logicArg = new LogicArg (this);
+			logicArg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
+			M_Event.FireLogicEvent ( LogicEvents.TransportStart, logicArg);
+
+
+			// set up the animation sequence
+			transportSequence = DOTween.Sequence ();
+			// add the vfx if there is the image effect in the camera
 			if (toColorEffect != null && bloomAndFlares != null) {
-				seq.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0.7f, fadeTime));
-				seq.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
+				transportSequence.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0.7f, fadeTime));
+				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
 			}
-			
 
+
+			// calculate the transport varible
 			Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
 			Vector3 target = InputManager.Instance.FocusedObject.transform.position;
 			Vector3 offset = (myTrans.position - target);
 			offset.y = 0;
 			offset.Normalize (); 
 			offset *= transportOffset;
-			seq.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target + offset, transportTime));
 
+			transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target + offset, transportTime));
+			// add the vfx if there is the image effect in the camera
 			if (toColorEffect != null && bloomAndFlares != null) {
-				seq.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
-				seq.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
+				transportSequence.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
+				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
 			}
+
+			transportSequence.OnComplete (OnTransportCOmplete);
 		}
+	}
+
+	void OnTransportCOmplete()
+	{
+		transportSequence = null;
+
+		if (transportToObject != null) {
+			LogicArg arg = new LogicArg (this);
+			arg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
+
+			M_Event.FireLogicEvent ( LogicEvents.TransportEnd, arg);
+		}
+		transportToObject = null;
 	}
 }

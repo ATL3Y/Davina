@@ -15,7 +15,7 @@ public class InputManager : MBehavior {
 		if (s_Instance == null)
 			s_Instance = this;
 
-		senseLayer = LayerMask.GetMask ("PasserBy","Focus");
+		senseLayer = LayerMask.GetMask ("PasserBy","Focus","Collectable");
 	}
 
 

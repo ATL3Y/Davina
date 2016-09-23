@@ -18,7 +18,7 @@ public class ToColorEffect : ImageEffectBase {
 	[ImageEffectOpaque]
 	void OnRenderImage (RenderTexture source, RenderTexture destination)
 	{
-		GetComponent<Camera> ().depthTextureMode |= DepthTextureMode.DepthNormals;
+		GetComponent<Camera> ().depthTextureMode |= DepthTextureMode.DepthNormals | DepthTextureMode.Depth;
 
 		Vector2 sensitivity = new Vector2 (sensitivityDepth, sensitivityNormals);
 		material.SetVector ("_Sensitivity", new Vector4 (sensitivity.x, sensitivity.y, 1.0f, sensitivity.y));
