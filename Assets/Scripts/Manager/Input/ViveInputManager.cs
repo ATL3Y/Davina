@@ -8,12 +8,12 @@ public class ViveInputManager : InputManager {
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
-		if (ViveInputController.instance.ReceivedLeftButtonDownSignal ()
-		    || ViveInputController.instance.ReceivedRightButtonDownSignal ())
+		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal ()
+		    || ViveInputController.Instance.ReceivedRightButtonDownSignal ())
 			FireSelectObject ();
 
-		if (ViveInputController.instance.ReceivedLeftPadDownSignal ()
-		    || ViveInputController.instance.ReceivedRightPadDownSignal ())
+		if (ViveInputController.Instance.ReceivedLeftPadDownSignal ()
+		    || ViveInputController.Instance.ReceivedRightPadDownSignal ())
 			FireTransport ();
 
 	}
@@ -21,11 +21,11 @@ public class ViveInputManager : InputManager {
 
 	public override Ray GetCenterRayCast ()
 	{
-		if ( ViveInputController.instance.ReceivedLeftButtonPressSignal())
-			return new Ray (ViveInputController.instance.leftController.transform.position,
-				ViveInputController.instance.leftController.transform.forward);
+		if ( ViveInputController.Instance.ReceivedLeftButtonPressSignal())
+			return new Ray (ViveInputController.Instance.leftController.transform.position,
+				ViveInputController.Instance.leftController.transform.forward);
 		
-		return new Ray (ViveInputController.instance.rightController.transform.position,
-			ViveInputController.instance.rightController.transform.forward);
+		return new Ray (ViveInputController.Instance.rightController.transform.position,
+			ViveInputController.Instance.rightController.transform.forward);
 	}
 }

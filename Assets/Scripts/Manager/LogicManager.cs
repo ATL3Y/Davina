@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LogicManager : MBehavior {
 
@@ -16,12 +17,26 @@ public class LogicManager : MBehavior {
 
 	[SerializeField] GameObject Rain;
 
+	[SerializeField] TextStatic text;
+
 	private PasserBy m_stayPasserBy;
 	public PasserBy StayPasserBy
 	{
 		get { return m_stayPasserBy; }
 	}
 
+	public string introText = "IT IS NOT YOUR TIME YET";
+
+	public enum State
+	{
+		Init,
+		Intro,
+		IntroText,
+		Rain,
+		InRain,
+	}
+
+	public State state;
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -44,6 +59,35 @@ public class LogicManager : MBehavior {
 
 		DontDestroyOnLoad (gameObject);
 
+		Cursor.visible = false;
+
+	}
+
+	void Update(){
+		switch (state) {
+		case State.Init:
+			if ( SceneManager.GetActiveScene().name != "Intro" )
+				SceneManager.LoadScene ("Intro");
+			state = State.IntroText;
+			break;
+		case State.IntroText:
+			text.MakeTextGO (introText);
+			if (Time.timeSinceLevelLoad >= 12.0f) {
+				state = State.Rain;
+			} 
+			break;
+		case State.Rain:
+			if ( SceneManager.GetActiveScene().name != "RainSceneTestAL" )
+				SceneManager.LoadScene ("RainSceneTestAL");
+			state = State.InRain;
+			text.gameObject.SetActive (false);
+			break;
+		case State.InRain:
+			
+			break;
+		default:
+			break;
+		}
 	}
 
 	public Transform GetPlayerTransform()

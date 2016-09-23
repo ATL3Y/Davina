@@ -42,7 +42,7 @@ public class TestPasserBy : MonoBehaviour {
 			agent.SetDestination (new Vector3 (appearRange , 0, -rand2 ));
 		} else {
 
-			transform.position = new Vector3 (appearRange , 0, rand2 );
+			transform.position = new Vector3 (appearRange , 0, rand2 );	
 			agent.SetDestination (new Vector3 (-appearRange , 0, -rand2 ));
 		}
 
