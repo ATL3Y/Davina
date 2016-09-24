@@ -4,6 +4,8 @@ using System.Collections;
 public class PasserBy : MObject {
 
 	[SerializeField] MeshRenderer[] BodyRenders;
+	[SerializeField] MeshRenderer[] outlineRenders;
+
 	[Range(0,0.0001f)]
 	[SerializeField] float outLineWidth = 0.00005f;
 
@@ -40,6 +42,10 @@ public class PasserBy : MObject {
 		
 	}
 
+	/// <summary>
+	/// set this game object and all the body renders to a specific layer
+	/// </summary>
+	/// <param name="layer">Layer.</param>
 	void SetToLayer( string layer )
 	{
 		Debug.Log (name + "Set layer to " + layer);

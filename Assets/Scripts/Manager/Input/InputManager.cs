@@ -60,25 +60,35 @@ public class InputManager : MBehavior {
 		return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
 	}
 
+	/// <summary>
+	/// Fires the select object action (Input), call the M_Event.fireInput
+	/// </summary>
 	protected void FireSelectObject()
 	{
 		InputArg arg = new InputArg (this);
 		arg.type = MInputType.SelectObject;
-		M_Event.FireInput (arg);
+		M_Event.FireInput (MInputType.SelectObject, arg);
 	}
 
+	/// <summary>
+	/// Fires the transport action (Input), call the M_Event.fireInput
+	/// </summary>
 	protected void FireTransport()
 	{
 		InputArg arg = new InputArg (this);
 		arg.type = MInputType.Transport;
-		M_Event.FireInput (arg);
+		M_Event.FireInput (MInputType.Transport , arg);
 	}
 
+	/// <summary>
+	/// Fires the focus on new object action (Input), call the M_Event.fireInput
+	/// </summary>
+	/// <param name="newObj">New object.</param>
 	protected void FireFocusNewObject( GameObject newObj )
 	{
 		InputArg arg = new InputArg (this);
 		arg.type = MInputType.FocusNewObject;
 		arg.focusObject = newObj;
-		M_Event.FireInput (arg);
+		M_Event.FireInput (MInputType.FocusNewObject , arg);
 	}
 }

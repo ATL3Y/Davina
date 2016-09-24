@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class ViveInputController : MonoBehaviour 
 {
 
-	SteamVR_ControllerManager controllerManager;
+	[SerializeField] SteamVR_ControllerManager controllerManager;
 	private static ViveInputController m_Instance;
 	public static ViveInputController Instance { get { return m_Instance; } }
 

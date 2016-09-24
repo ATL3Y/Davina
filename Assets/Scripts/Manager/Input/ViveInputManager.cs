@@ -3,18 +3,18 @@ using System.Collections;
 
 public class ViveInputManager : InputManager {
 
-	bool  lastLeftSignal = false;
-	bool  lastRightSignal = false;
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
 		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal ()
-		    || ViveInputController.Instance.ReceivedRightButtonDownSignal ())
-			FireSelectObject ();
-
-		if (ViveInputController.Instance.ReceivedLeftPadDownSignal ()
-		    || ViveInputController.Instance.ReceivedRightPadDownSignal ())
+		    || ViveInputController.Instance.ReceivedRightButtonDownSignal ()) {
 			FireTransport ();
+			FireSelectObject ();
+		}
+
+//		if (ViveInputController.Instance.ReceivedLeftPadDownSignal ()
+//		    || ViveInputController.Instance.ReceivedRightPadDownSignal ())
+//			FireTransport ();
 
 	}
 

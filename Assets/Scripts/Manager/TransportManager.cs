@@ -56,10 +56,15 @@ public class TransportManager : MBehavior {
 
 	public void OnTransport ( InputArg arg )
 	{
-		if (InputManager.Instance.FocusedObject != null && !IsTransporting ) {
+		if (InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is PasserBy ) {
+
+			// do not make a mutiple transport
+			if (IsTransporting)
+				return;
 
 			transportToObject = InputManager.Instance.FocusedObject;
 
+			// do not transport to myself
 			if ( transportToObject == LogicManager.Instance.StayPasserBy)
 				return;
 
@@ -99,14 +104,15 @@ public class TransportManager : MBehavior {
 
 	void OnTransportCOmplete()
 	{
-		transportSequence = null;
-
+		// fire the transport end event
 		if (transportToObject != null) {
 			LogicArg arg = new LogicArg (this);
 			arg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
 
 			M_Event.FireLogicEvent ( LogicEvents.TransportEnd, arg);
 		}
+
+		transportSequence = null;
 		transportToObject = null;
 	}
 }
