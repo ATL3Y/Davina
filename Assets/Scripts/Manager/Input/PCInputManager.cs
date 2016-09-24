@@ -9,7 +9,7 @@ public class PCInputManager : InputManager {
 		base.MUpdate ();
 
 		// when left click, select the object and transport
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (0) || Input.GetKeyDown(KeyCode.Space) ) {
 			FireSelectObject ();
 			FireTransport ();
 		}

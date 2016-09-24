@@ -10,6 +10,7 @@ public enum MInputType
 	SelectObject,
 	Transport,
 	FocusNewObject,
+	OutOfFocusObject,
 }
 
 public enum LogicEvents

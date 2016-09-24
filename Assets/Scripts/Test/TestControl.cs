@@ -17,6 +17,7 @@ public class TestControl : MonoBehaviour {
 
 		speedV3 = Time.deltaTime * speed * ( Input.GetAxis ("Horizontal") * cam.transform.right + Input.GetAxis ("Vertical") * cam.transform.forward ) ;
 
+
 		rigidbody.velocity = speedV3 * (Input.GetKey(KeyCode.LeftShift)? 10f : 1f);
 	}
 

@@ -8,6 +8,7 @@ public class InputManager : MBehavior {
 	private static InputManager s_Instance;
 
 	public LayerMask senseLayer;
+	public static float DETECT_DISTANCE = 9999f;
 
 	protected override void MAwake ()
 	{
@@ -16,7 +17,10 @@ public class InputManager : MBehavior {
 			s_Instance = this;
 
 		senseLayer = LayerMask.GetMask ("PasserBy","Focus","Collectable");
+
 	}
+
+
 
 
 	/// <summary>
@@ -35,19 +39,22 @@ public class InputManager : MBehavior {
 		/// check if the the camera look at a Mobject
 		MObject lookObj = null;
 		RaycastHit hitInfo;
-		if (Physics.Raycast (GetCenterRayCast (), out hitInfo , 1000f , senseLayer)) {
+		if (Physics.Raycast (GetCenterRayCast (), out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
 		/// call the focus function of the focus object
 		if (lookObj != m_focusObj) {
-			if (m_focusObj != null)
+			if (m_focusObj != null) {
 				m_focusObj.OnOutofFocus ();
+				FireOutofFocusObject (m_focusObj.gameObject);
+			}
 			m_focusObj = lookObj;
 			if (m_focusObj != null) {
 				m_focusObj.OnFocus ();
 				FireFocusNewObject (m_focusObj.gameObject);
 			}
 		}
+
 	}
 
 	/// <summary>
@@ -66,7 +73,6 @@ public class InputManager : MBehavior {
 	protected void FireSelectObject()
 	{
 		InputArg arg = new InputArg (this);
-		arg.type = MInputType.SelectObject;
 		M_Event.FireInput (MInputType.SelectObject, arg);
 	}
 
@@ -76,7 +82,6 @@ public class InputManager : MBehavior {
 	protected void FireTransport()
 	{
 		InputArg arg = new InputArg (this);
-		arg.type = MInputType.Transport;
 		M_Event.FireInput (MInputType.Transport , arg);
 	}
 
@@ -87,8 +92,19 @@ public class InputManager : MBehavior {
 	protected void FireFocusNewObject( GameObject newObj )
 	{
 		InputArg arg = new InputArg (this);
-		arg.type = MInputType.FocusNewObject;
 		arg.focusObject = newObj;
 		M_Event.FireInput (MInputType.FocusNewObject , arg);
 	}
+
+	/// <summary>
+	/// Fires the focus on new object action (Input), call the M_Event.fireInput
+	/// </summary>
+	/// <param name="newObj">New object.</param>
+	protected void FireOutofFocusObject( GameObject obj )
+	{
+		InputArg arg = new InputArg (this);
+		arg.focusObject = obj;
+		M_Event.FireInput (MInputType.OutOfFocusObject , arg);
+	}
+
 }

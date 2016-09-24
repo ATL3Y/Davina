@@ -2,29 +2,36 @@
 using System.Collections;
 
 public class CollectableObj : MObject {
+	
+	[SerializeField] MeshRenderer[] outlineRenders;
 
-	[SerializeField] MeshRenderer[] bodyRenders;
-	[SerializeField] float outLineWidth = 0.0005f;
+	protected override void MAwake ()
+	{
+		base.MAwake ();
+		SetOutline (false);
+	}
 
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
 		Debug.Log ("On focuse " + name);
-		SetFloatParameter ("_Outline", outLineWidth);
+		SetOutline (true);
 	}
 
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
-		SetFloatParameter ("_Outline", 0);
+		SetOutline (false);
 	}
 		
-	void SetFloatParameter( string parameter, float toValue)
+	/// <summary>
+	/// Set the outline render on or off(enable)
+	/// </summary>
+	/// <param name="isOn">If set to <c>true</c> is on.</param>
+	void SetOutline( bool isOn )
 	{
-		foreach (MeshRenderer r in bodyRenders) {
-			foreach (Material m in r.materials) {
-				m.SetFloat (parameter, toValue);
-			}
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
 		}
 	}
 

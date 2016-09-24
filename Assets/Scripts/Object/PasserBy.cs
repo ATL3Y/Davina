@@ -3,11 +3,22 @@ using System.Collections;
 
 public class PasserBy : MObject {
 
-	[SerializeField] MeshRenderer[] BodyRenders;
+	[SerializeField] Transform outBody;
+	[SerializeField] Transform innerWorld;
 	[SerializeField] MeshRenderer[] outlineRenders;
+	[SerializeField] Transform observeLocation;
 
-	[Range(0,0.0001f)]
-	[SerializeField] float outLineWidth = 0.00005f;
+//	[Range(0,0.0001f)]
+//	[SerializeField] float outLineWidth = 0.00005f;
+
+	protected override void MAwake ()
+	{
+		base.MAwake ();
+
+		SetOutline (false);
+		if (observeLocation == null)
+			observeLocation = transform;
+	}
 
 	protected override void MOnEnable ()
 	{
@@ -30,7 +41,6 @@ public class PasserBy : MObject {
 			PasserBy pass = (PasserBy)obj;
 			if (pass == this) {
 				SetToLayer ("Focus");
-
 			} else {
 				SetToLayer ("PasserBy");
 			}
@@ -50,13 +60,24 @@ public class PasserBy : MObject {
 	{
 		Debug.Log (name + "Set layer to " + layer);
 		gameObject.layer = LayerMask.NameToLayer (layer);
-		foreach (MeshRenderer r in BodyRenders) {
-			r.gameObject.layer = LayerMask.NameToLayer (layer);
-			foreach (Transform t in r.transform.GetComponentsInChildren<Transform>()) {
-				t.gameObject.layer = LayerMask.NameToLayer (layer);
-			}
+		foreach (Transform t in outBody.GetComponentsInChildren<Transform>() ) {
+			t.gameObject.layer = LayerMask.NameToLayer (layer);
+		}
+		foreach (Transform t in innerWorld.GetComponentsInChildren<Transform>() ) {
+			t.gameObject.layer = LayerMask.NameToLayer (layer);
 		}
 
+	}
+
+	/// <summary>
+	/// Set the outline render on or off(enable)
+	/// </summary>
+	/// <param name="isOn">If set to <c>true</c> is on.</param>
+	void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
+		}
 	}
 
 
@@ -64,21 +85,18 @@ public class PasserBy : MObject {
 	{
 		base.OnFocus ();
 	
-		if (this != LogicManager.Instance.StayPasserBy) {
-				foreach (MeshRenderer r in BodyRenders) {
-					foreach (Material m in r.materials)
-						m.SetFloat ("_Outline", outLineWidth);
-				}
-		}
+		SetOutline (true);
 	}
 
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
-		foreach (MeshRenderer r in BodyRenders) {
-			foreach( Material m in r.materials )
-				m.SetFloat ("_Outline", 0);
-		}
 
+		SetOutline (false);
+	}
+
+	public Vector3 GetObservePosition()
+	{
+		return observeLocation.position;
 	}
 }
