@@ -42,7 +42,7 @@ public class TipsManager : MBehavior {
 				startPosition += Vector3.down ;
 			}
 			lineTips.SetPosition (0, startPosition);
-			lineTips.SetPosition (1, startPosition + InputManager.Instance.GetCenterRayCast ().direction * InputManager.DETECT_DISTANCE);
+			lineTips.SetPosition (1, startPosition + InputManager.Instance.GetCenterRayCast ().direction * 0.1f);
 
 		}
 	}

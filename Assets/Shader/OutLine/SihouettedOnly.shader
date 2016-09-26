@@ -35,7 +35,7 @@ v2f vert(appdata v) {
 ENDCG
  
 	SubShader {
-		Tags { "Queue" = "Transparent" }
+		Tags { "Queue" = "Geometry" }
  
 		Pass {
 			Name "BASE"

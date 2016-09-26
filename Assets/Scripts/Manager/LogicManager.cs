@@ -25,6 +25,12 @@ public class LogicManager : MBehavior {
 		get { return m_stayPasserBy; }
 	}
 
+	private MCharacter m_stayCharacter;
+	public MCharacter StayCharacter
+	{
+		get { return m_stayCharacter; }
+	}
+
 	public string introText = "IT IS NOT YOUR TIME YET";
 
 	public enum State
@@ -39,6 +45,7 @@ public class LogicManager : MBehavior {
 	public State state;
 	protected override void MAwake ()
 	{
+
 		base.MAwake ();
 
 		if (VREnable) {
@@ -64,6 +71,8 @@ public class LogicManager : MBehavior {
 	}
 
 	void Update(){
+
+
 		switch (state) {
 		case State.Init:
 			if ( SceneManager.GetActiveScene().name != "Intro" )
@@ -105,12 +114,16 @@ public class LogicManager : MBehavior {
 	{
 		base.MOnEnable ();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportToNewObject;
+		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
 	}
 
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportToNewObject;
+		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
 	}
 
 	void OnTransportToNewObject( LogicArg arg )
@@ -121,6 +134,19 @@ public class LogicManager : MBehavior {
 		}
 	}
 
+	void OnEnterInnerWorld(LogicArg arg )
+	{
+		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CHARACTER);
+		if (character != null)
+			m_stayCharacter = character;
+	}
+
+	void OnExitInnerWorld(LogicArg arg )
+	{
+		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_EXITINNERWORLD_CHARACTER);
+		if (m_stayCharacter == character)
+			m_stayCharacter = null;
+	}
 
 
 }

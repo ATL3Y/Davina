@@ -5,8 +5,8 @@
 		_SpecColor ("Specular Color", Color) = (.5,.5,.5,1)
 		_Shininess ("Shininess" , float ) = 1
 		_DisappearRange ("Disappear Range(Max,Min)" , float ) = 0.1
-     	_InColor ("Inner side Color" , Color ) = (1,1,1,1)
-		_MainTex ("Base (RGB)", 2D) = "white" { }
+//     	_InColor ("Inner side Color" , Color ) = (1,1,1,1)
+//		_MainTex ("Base (RGB)", 2D) = "white" { }
 //		_InTex("In Tex" , 2d ) = "white" {}
 		_FadeTex ("Fade Texture", 2D) = "white" {}
 		_FadeScale ("Fade Texture Scale" , float ) = 1

@@ -10,16 +10,18 @@ public class CollectableCube : CollectableObj {
 		base.MStart ();
 	}
 
-	public override void Select ()
+	public override bool Select ()
 	{
 		base.Select ();
 		SelectObjectManager.AttachToCamera (transform);
+		return true;
 	}
 
-	public override void UnSelect ()
+	public override bool UnSelect ()
 	{
 		base.UnSelect ();
 		SelectObjectManager.AttachToStayPasserBy (transform);
+		return true;
 
 	}
 }

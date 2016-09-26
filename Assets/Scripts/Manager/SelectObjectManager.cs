@@ -26,39 +26,67 @@ public class SelectObjectManager : MBehavior {
 
 	void OnSelectObject(InputArg arg)
 	{
-		// throw away old object
-		if (m_SelectObj != null) {
-			m_SelectObj.UnSelect ();
+		Debug.Log ("On Select Obj");
+		if (m_SelectObj == null) {
+			MObject focus = InputManager.Instance.FocusedObject;
+			if (focus != null && focus is CollectableObj) {
+				CollectableObj cobj = (CollectableObj)focus;
+				Debug.Log ("Try Select");
+				if (cobj.Select ()) {
+					Debug.Log ("Select success");
+					m_SelectObj = cobj;
+					LogicArg logicArg = new LogicArg (this);
+					logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
+					M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
+				}
+			}
+		} else {
+			if ( m_SelectObj.MatchWithOtherObject(InputManager.Instance.FocusedObject))
+			{
+				CollectableObj obj = m_SelectObj;
+				m_SelectObj = null;
 
-			LogicArg logicArg = new LogicArg(this);
-			logicArg.AddMessage(Global.EVENT_LOGIC_THROW_COBJECT,m_SelectObj);
-			M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
-
-			m_SelectObj = null;
+				LogicArg logicArg = new LogicArg(this);
+				logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT,obj);
+				M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
+			}
 		}
-		// select new object
-		MObject focus = InputManager.Instance.FocusedObject;
-		if (focus != null && focus is CollectableObj) {
-			CollectableObj cobj = (CollectableObj)focus;
-
-			if (m_SelectObj != null)
-				m_SelectObj.UnSelect ();
-			m_SelectObj = cobj;
-
-			m_SelectObj.Select ();
-
-			LogicArg logicArg = new LogicArg(this);
-			logicArg.AddMessage(Global.EVENT_LOGIC_SELECT_COBJECT,m_SelectObj);
-			M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
-
-		}
+//		// throw away old object
+//		if (m_SelectObj != null) {
+//			m_SelectObj.UnSelect ();
+//
+//			LogicArg logicArg = new LogicArg(this);
+//			logicArg.AddMessage(Global.EVENT_LOGIC_THROW_COBJECT,m_SelectObj);
+//			M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
+//
+//			m_SelectObj = null;
+//		}
+//		// select new object
+//		MObject focus = InputManager.Instance.FocusedObject;
+//		if (focus != null && focus is CollectableObj) {
+//			CollectableObj cobj = (CollectableObj)focus;
+//
+//			if (m_SelectObj != null)
+//				m_SelectObj.UnSelect ();
+//			m_SelectObj = cobj;
+//
+//			m_SelectObj.Select ();
+//
+//			LogicArg logicArg = new LogicArg(this);
+//			logicArg.AddMessage(Global.EVENT_LOGIC_SELECT_COBJECT,m_SelectObj);
+//			M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
+//		}
 	}
 
 	static public void AttachToCamera( Transform trans)
 	{
 		if (LogicManager.Instance.GetHandTransform () != null) {
 			trans.SetParent (LogicManager.Instance.GetHandTransform (), true);
-			trans.localPosition = Vector3.forward * 0.2f + Vector3.right * 0.2f;
+			if (LogicManager.Instance.VREnable) {
+				trans.localPosition = Vector3.up * 0.1f;
+			} else {
+				trans.localPosition = Vector3.forward * 0.2f + Vector3.right * 0.2f;
+			}
 		}
 	}
 
@@ -68,6 +96,11 @@ public class SelectObjectManager : MBehavior {
 
 			trans.SetParent (LogicManager.Instance.StayPasserBy.transform, true);
 		}
+	}
+
+	static public void AttachToCharacter( Transform trans)
+	{
+		
 	}
 
 }

@@ -17,11 +17,7 @@ public class InputManager : MBehavior {
 			s_Instance = this;
 
 		senseLayer = LayerMask.GetMask ("PasserBy","Focus","Collectable");
-
 	}
-
-
-
 
 	/// <summary>
 	/// Save the focused object 
@@ -55,6 +51,10 @@ public class InputManager : MBehavior {
 			}
 		}
 
+	}
+
+	void OnGUI()
+	{
 	}
 
 	/// <summary>
