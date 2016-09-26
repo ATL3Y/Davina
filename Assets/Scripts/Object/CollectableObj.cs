@@ -14,7 +14,6 @@ public class CollectableObj : MObject {
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
-		Debug.Log ("On focuse " + name);
 		SetOutline (true);
 	}
 

@@ -26,6 +26,17 @@ public class SelectObjectManager : MBehavior {
 
 	void OnSelectObject(InputArg arg)
 	{
+		// throw away old object
+		if (m_SelectObj != null) {
+			m_SelectObj.UnSelect ();
+
+			LogicArg logicArg = new LogicArg(this);
+			logicArg.AddMessage(Global.EVENT_LOGIC_THROW_COBJECT,m_SelectObj);
+			M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
+
+			m_SelectObj = null;
+		}
+		// select new object
 		MObject focus = InputManager.Instance.FocusedObject;
 		if (focus != null && focus is CollectableObj) {
 			CollectableObj cobj = (CollectableObj)focus;
@@ -38,14 +49,14 @@ public class SelectObjectManager : MBehavior {
 
 			LogicArg logicArg = new LogicArg(this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_SELECT_COBJECT,m_SelectObj);
-			M_Event.FireLogicEvent (LogicEvents.SelectSuccessful, logicArg);
+			M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
 
 		}
 	}
 
 	static public void AttachToCamera( Transform trans)
 	{
-		if (LogicManager.Instance.GetPlayerTransform () != null) {
+		if (LogicManager.Instance.GetHandTransform () != null) {
 			trans.SetParent (LogicManager.Instance.GetHandTransform (), true);
 			trans.localPosition = Vector3.forward * 0.2f + Vector3.right * 0.2f;
 		}

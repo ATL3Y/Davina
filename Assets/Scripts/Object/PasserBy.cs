@@ -8,6 +8,9 @@ public class PasserBy : MObject {
 	[SerializeField] MeshRenderer[] outlineRenders;
 	[SerializeField] Transform observeLocation;
 
+	// for the inner world
+	[SerializeField] AudioClip innerWorldClip;
+
 //	[Range(0,0.0001f)]
 //	[SerializeField] float outLineWidth = 0.00005f;
 
@@ -58,7 +61,6 @@ public class PasserBy : MObject {
 	/// <param name="layer">Layer.</param>
 	void SetToLayer( string layer )
 	{
-		Debug.Log (name + "Set layer to " + layer);
 		gameObject.layer = LayerMask.NameToLayer (layer);
 		foreach (Transform t in outBody.GetComponentsInChildren<Transform>() ) {
 			t.gameObject.layer = LayerMask.NameToLayer (layer);
@@ -98,5 +100,19 @@ public class PasserBy : MObject {
 	public Vector3 GetObservePosition()
 	{
 		return observeLocation.position;
+	}
+
+	public void EnterInnerWorld( Collider col )
+	{
+		LogicArg arg = new LogicArg (this);
+		arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_BGM, innerWorldClip);
+		M_Event.FireLogicEvent (LogicEvents.EnterInnerWorld, arg);
+	}
+
+	public void ExitInnerWorld( Collider col )
+	{
+		LogicArg arg = new LogicArg (this);
+
+		M_Event.FireLogicEvent (LogicEvents.ExitInnerWorld, arg);
 	}
 }

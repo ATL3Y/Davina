@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class AudioManager : MBehavior {
 
@@ -18,6 +19,9 @@ public class AudioManager : MBehavior {
 	};
 	[SerializeField] InputClipPair[] InputClipPairs;
 
+	/// <summary>
+	/// for pairing the logic event and the sound effect
+	/// </summary>
 	[System.Serializable]
 	public struct LogicClipPair
 	{
@@ -25,6 +29,15 @@ public class AudioManager : MBehavior {
 		public AudioClip clip;
 	};
 	[SerializeField] LogicClipPair[] LogicClipPairs;
+
+	[SerializeField] AudioClip defaultBGM;
+	private AudioSource bgmSource;
+
+	protected override void MAwake ()
+	{
+		base.MAwake ();
+		SwitchBGM (defaultBGM);
+	}
 
 	protected override void MOnEnable ()
 	{
@@ -35,6 +48,8 @@ public class AudioManager : MBehavior {
 		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
 			M_Event.logicEvents [i] += OnLogicEvent;
 		}
+		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
 	}
 
 	protected override void MOnDisable ()
@@ -46,6 +61,9 @@ public class AudioManager : MBehavior {
 		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
+		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
+
 	}
 
 	void OnInputEvent( InputArg input )
@@ -82,4 +100,37 @@ public class AudioManager : MBehavior {
 		Destroy (source);
 		
 	}
+
+	void OnEnterInnerWorld( LogicArg arg )
+	{
+		AudioClip clip = (AudioClip)arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_BGM);
+		if (clip != null) {
+			SwitchBGM (clip);
+		}
+	}
+
+	void OnExitInnerWorld( LogicArg arg )
+	{
+		SwitchBGM (defaultBGM);
+	}
+
+	void SwitchBGM( AudioClip to )
+	{
+		if (bgmSource == null) {
+			bgmSource = gameObject.AddComponent<AudioSource> ();
+			bgmSource.loop = true;
+			bgmSource.volume = 0.5f;
+		}
+		if (bgmSource != null) {
+			bgmSource.DOFade (0, 0.2f).OnComplete (delegate {
+				bgmSource.clip = to;
+				bgmSource.time = Random.Range (0, bgmSource.clip.length);
+				bgmSource.Play();
+				bgmSource.DOFade( 1f , 0.2f );
+			});
+		}
+
+	}
+
 }
+

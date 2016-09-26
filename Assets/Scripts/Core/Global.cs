@@ -16,5 +16,7 @@ public class Global {
 
 
 	static public string EVENT_LOGIC_TRANSPORTTO_MOBJECT = "MOBJECT";
-	static public string EVENT_LOGIC_SELECT_COBJECT = "COBJECT";
+	static public string EVENT_LOGIC_SELECT_COBJECT = "S_COBJECT";
+	static public string EVENT_LOGIC_THROW_COBJECT = "T_COBJECT";
+	static public string EVENT_LOGIC_ENTERINNERWORLD_BGM = "BGM";
 }

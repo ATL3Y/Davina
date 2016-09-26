@@ -18,7 +18,10 @@ public enum LogicEvents
 	None,
 	TransportStart,
 	TransportEnd,
-	SelectSuccessful,
+	SelectObject,
+	ThrowAway,
+	EnterInnerWorld,
+	ExitInnerWorld,
 }
 
 public class M_Event : MonoBehaviour {
