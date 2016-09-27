@@ -19,7 +19,8 @@ public enum LogicEvents
 	TransportStart,
 	TransportEnd,
 	SelectObject,
-	ThrowAway,
+	MatchObject,
+	UnselectObject,
 	EnterInnerWorld,
 	ExitInnerWorld,
 }

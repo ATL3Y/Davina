@@ -136,14 +136,14 @@ public class LogicManager : MBehavior {
 
 	void OnEnterInnerWorld(LogicArg arg )
 	{
-		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CHARACTER);
+		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER);
 		if (character != null)
 			m_stayCharacter = character;
 	}
 
 	void OnExitInnerWorld(LogicArg arg )
 	{
-		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_EXITINNERWORLD_CHARACTER);
+		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_EXITINNERWORLD_MCHARACTER);
 		if (m_stayCharacter == character)
 			m_stayCharacter = null;
 	}

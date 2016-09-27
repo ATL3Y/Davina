@@ -103,7 +103,7 @@ public class AudioManager : MBehavior {
 
 	void OnEnterInnerWorld( LogicArg arg )
 	{
-		AudioClip clip = (AudioClip)arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_BGM);
+		AudioClip clip = (AudioClip)arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP);
 		if (clip != null) {
 			SwitchBGM (clip);
 		}

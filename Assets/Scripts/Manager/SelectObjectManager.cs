@@ -16,17 +16,30 @@ public class SelectObjectManager : MBehavior {
 	{
 		base.MOnEnable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] += OnSelectObject;
+		M_Event.logicEvents [(int)LogicEvents.UnselectObject] += OnUnselectObject; 
 	}
 
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] -= OnSelectObject;
+		M_Event.logicEvents [(int)LogicEvents.UnselectObject] -= OnUnselectObject;
+	}
+
+	void OnUnselectObject(LogicArg arg )
+	{
+		CollectableObj cobj = (CollectableObj)arg.GetMessage (Global.EVENT_LOGIC_UNSELECT_COBJECT);
+		if (cobj != null) {
+			cobj.UnSelect ();
+			if (cobj == m_SelectObj) {
+				m_SelectObj = null;
+			}
+		}
 	}
 
 	void OnSelectObject(InputArg arg)
 	{
-		Debug.Log ("On Select Obj");
+		Debug.Log ("On Press Select Obj");
 		if (m_SelectObj == null) {
 			MObject focus = InputManager.Instance.FocusedObject;
 			if (focus != null && focus is CollectableObj) {
@@ -41,16 +54,13 @@ public class SelectObjectManager : MBehavior {
 				}
 			}
 		} else {
-			if ( m_SelectObj.MatchWithOtherObject(InputManager.Instance.FocusedObject))
-			{
-				CollectableObj obj = m_SelectObj;
-				m_SelectObj = null;
 
-				LogicArg logicArg = new LogicArg(this);
-				logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT,obj);
-				M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
-			}
+			LogicArg logicArg = new LogicArg (this);
+			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
+			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
 		}
+
+
 //		// throw away old object
 //		if (m_SelectObj != null) {
 //			m_SelectObj.UnSelect ();
@@ -85,7 +95,7 @@ public class SelectObjectManager : MBehavior {
 			if (LogicManager.Instance.VREnable) {
 				trans.localPosition = Vector3.up * 0.1f;
 			} else {
-				trans.localPosition = Vector3.forward * 0.2f + Vector3.right * 0.2f;
+				trans.localPosition = Vector3.forward * 0.1f + Vector3.right * 0.1f;
 			}
 		}
 	}
@@ -101,6 +111,16 @@ public class SelectObjectManager : MBehavior {
 	static public void AttachToCharacter( Transform trans)
 	{
 		
+	}
+
+	/// <summary>
+	/// Determines whether this instance is the selected object
+	/// </summary>
+	/// <returns><c>true</c> if this instance is the selected obj; otherwise, <c>false</c>.</returns>
+	/// <param name="obj">Object.</param>
+	public bool IsSelectObject( GameObject obj )
+	{
+		return m_SelectObj.gameObject == obj;
 	}
 
 }

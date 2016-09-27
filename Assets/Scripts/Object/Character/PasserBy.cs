@@ -105,7 +105,7 @@ public class PasserBy : MObject {
 	public void EnterInnerWorld( Collider col )
 	{
 		LogicArg arg = new LogicArg (this);
-		arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_BGM, innerWorldClip);
+		arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP, innerWorldClip);
 		M_Event.FireLogicEvent (LogicEvents.EnterInnerWorld, arg);
 	}
 

@@ -17,8 +17,9 @@ public class Global {
 
 	static public string EVENT_LOGIC_TRANSPORTTO_MOBJECT = "MOBJECT";
 	static public string EVENT_LOGIC_SELECT_COBJECT = "S_COBJECT";
+	static public string EVENT_LOGIC_MATCH_COBJECT = "M_COBJECT";
 	static public string EVENT_LOGIC_UNSELECT_COBJECT = "T_COBJECT";
-	static public string EVENT_LOGIC_ENTERINNERWORLD_BGM = "BGM";
-	static public string EVENT_LOGIC_ENTERINNERWORLD_CHARACTER = "Character";
-	static public string EVENT_LOGIC_EXITINNERWORLD_CHARACTER = "Character";
+	static public string EVENT_LOGIC_ENTERINNERWORLD_CLIP = "BGM";
+	static public string EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER = "Character";
+	static public string EVENT_LOGIC_EXITINNERWORLD_MCHARACTER = "Character";
 }
