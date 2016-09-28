@@ -25,11 +25,7 @@ public class ToColorEffect : ImageEffectBase {
 		material.SetColor ("_Color", bgColor);
 		material.SetColor ("_EdgeColor", edgeColor);
 		material.SetFloat ("_Rate", rate);
-//		edgeDetectMaterial.SetFloat ("_BgFade", edgesOnly);
 		material.SetFloat ("_SampleDistance", sampleDist);
-//		edgeDetectMaterial.SetVector ("_BgColor", edgesOnlyBgColor);
-//		edgeDetectMaterial.SetFloat ("_Exponent", edgeExp);
-//		edgeDetectMaterial.SetFloat ("_Threshold", lumThreshold);
 
 		Graphics.Blit (source, destination, material);
 	}
