@@ -73,6 +73,7 @@ public class MCharacter : MObject {
 
 	public void EnterInnerWorld( Collider col )
 	{
+		Debug.Log ("Enter Inner World");
 		if (!m_isInInnerWorld) {
 			LogicArg arg = new LogicArg (this);
 			arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP, innerWorldClip);
