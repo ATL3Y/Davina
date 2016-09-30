@@ -10,6 +10,8 @@ public class MakeMesh : MonoBehaviour
 	// Use this for initialization
 	public void Start () 
 	{
+		m_mesh = new Mesh ();
+
 		_color = new Color ();
 		ColorUtility.TryParseHtmlString ("#FFBDF7FF", out _color);
 		if (GetComponent<MeshFilter> () != null) m_mesh = GetComponent<MeshFilter> ().sharedMesh;
