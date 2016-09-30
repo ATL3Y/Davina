@@ -70,9 +70,9 @@ public class BrokenColorEffect : ImageEffectBase {
 //		Graphics.Blit (recordTex, source, material, 3);
 //
 //		 overflow pass
-		Graphics.Blit (source, overflowBuffer, material, 2);
+		Graphics.Blit (source, destination, material, 2);
 		// to gray pass
-		Graphics.Blit ( overflowBuffer, destination, material, 1);
+//		Graphics.Blit ( overflowBuffer, destination, material, 1);
 
 		RenderTexture.ReleaseTemporary (overflowBuffer);
 		RenderTexture.ReleaseTemporary (grayBuffer);
@@ -81,5 +81,6 @@ public class BrokenColorEffect : ImageEffectBase {
 	void OnDisable()
 	{
 		DestroyImmediate (recordTex);
+		recordTex = null;
 	}
 }

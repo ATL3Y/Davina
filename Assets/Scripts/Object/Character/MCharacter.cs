@@ -9,9 +9,10 @@ public class MCharacter : MObject {
 
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
-	[SerializeField] Renderer outerRender;
+	[SerializeField] Renderer[] outerRender;
 	[SerializeField] float enterInnerWorldScaleUp = 1.5f;
 	[SerializeField] BoxCollider innerWorldCollider;
+	[SerializeField] Vector3 fallingSpeed;
 
 
 	/// <summary>
@@ -30,7 +31,8 @@ public class MCharacter : MObject {
 		if (innerWorldCollider != null && innerWorld != null) {
 			pivot = new GameObject ();
 			pivot.transform.SetParent (transform);
-			pivot.transform.localPosition = innerWorldCollider.center * innerWorld.lossyScale.x;
+
+			pivot.transform.localPosition = innerWorldCollider.center * innerWorld.localScale.x;
 		}
 
 		originScale = transform.localScale;
@@ -86,8 +88,9 @@ public class MCharacter : MObject {
 				StopCoroutine (changeScale);
 			changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 0.33f));
 
-			if ( outerRender != null )
-				outerRender.enabled = false;
+			foreach (Renderer r in outerRender) {
+				r.enabled = false;
+			}
 
 //			transform.DOScale (transform.localScale.x * enterInnerWorldScaleUp, 0.5f);
 		}
@@ -106,8 +109,9 @@ public class MCharacter : MObject {
 				StopCoroutine (changeScale);
 			changeScale = StartCoroutine (ChangeScale ( originScale , 0.33f));
 
-			if ( outerRender != null )
-				outerRender.enabled = true;
+			foreach (Renderer r in outerRender) {
+				r.enabled = true;
+			}
 //			transform.DOScale (transform.localScale / enterInnerWorldScaleUp, 0.5f);
 		}
 	}
@@ -130,5 +134,13 @@ public class MCharacter : MObject {
 			yield return null;
 		}
 		changeScale = null;
+	}
+
+	protected override void MUpdate ()
+	{
+		base.MUpdate ();
+		if (!IsInInnerWorld) {
+			transform.position += fallingSpeed * Time.deltaTime;
+		}
 	}
 }
