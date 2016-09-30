@@ -55,13 +55,13 @@ public class BrokenColorEffect : ImageEffectBase {
 //		Graphics.Blit( source ,recordTex , material , 3 );
 
 
-		material.SetTexture ("_MainTex", recordTex);
-
-		recordTex.MarkRestoreExpected ();
-
-		Graphics.Blit (recordTex, recordTex, material, 4);
-
-		Graphics.Blit (recordTex, destination );
+//		material.SetTexture ("_MainTex", recordTex);
+//
+//		recordTex.MarkRestoreExpected ();
+//
+//		Graphics.Blit (recordTex, recordTex, material, 4);
+//
+//		Graphics.Blit (recordTex, destination );
 
 
 //		material.SetTexture ("_RecordTex" , source);
@@ -69,10 +69,10 @@ public class BrokenColorEffect : ImageEffectBase {
 //		material.SetFloat ("_Add_Rate" , RecordColorRate);
 //		Graphics.Blit (recordTex, source, material, 3);
 //
-		// overflow pass
-//		Graphics.Blit (source, overflowBuffer, material, 2);
-//		// togray pass
-//		Graphics.Blit ( overflowBuffer, destination, material, 1);
+//		 overflow pass
+		Graphics.Blit (source, overflowBuffer, material, 2);
+		// to gray pass
+		Graphics.Blit ( overflowBuffer, destination, material, 1);
 
 		RenderTexture.ReleaseTemporary (overflowBuffer);
 		RenderTexture.ReleaseTemporary (grayBuffer);
