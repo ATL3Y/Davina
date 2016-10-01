@@ -23,7 +23,10 @@ public class PCInputManager : InputManager {
 
 	public override Ray GetCenterRayCast ()
 	{
-		return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+		if ( Camera.main != null )
+			return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+
+		return new Ray (Vector3.zero, Vector3.forward);
 	}
 		
 }

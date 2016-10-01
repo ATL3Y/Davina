@@ -7,7 +7,7 @@ Shader "LemonSpawn/LazyClouds" {
 	}
 	SubShader {
 //	    Tags {"Queue"="Transparent-1" "IgnoreProjector"="True" "RenderType"="Transparent"}
-	    Tags {"Queue"="Transparent+100" "IgnoreProjector"="True" "RenderType"="Transparent"}
+	    Tags {"Queue"="Transparent-1" "IgnoreProjector"="True" "RenderType"="Transparent"}
         LOD 400
 
 
