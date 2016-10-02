@@ -23,6 +23,8 @@ public enum LogicEvents
 	UnselectObject,
 	EnterInnerWorld,
 	ExitInnerWorld,
+
+	IntoWork,
 }
 
 public class M_Event : MonoBehaviour {
