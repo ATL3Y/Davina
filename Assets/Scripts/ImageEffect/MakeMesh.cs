@@ -42,10 +42,13 @@ public class MakeMesh : MonoBehaviour
 			m_childOriginalMeshes[i].vertices = m_childMeshes [i].vertices;
 			m_childOriginalMeshes[i].triangles = m_childMeshes [i].triangles;
 
-			for(int j=0; j<m_childMeshes[i].uv.Length; j++)
+			m_childOriginalMeshes[i].uv = new Vector2[m_childMeshes[i].uv.Length];
+			/*
+			for(int j=0; j<m_childOriginalMeshes[i].uv.Length; j++)
 			{
 				m_childOriginalMeshes[i].uv [j] = m_childMeshes [i].uv [j];
 			}
+			*/
 		}
 
 		/* previous version for one mesh on this gameobject
@@ -71,21 +74,20 @@ public class MakeMesh : MonoBehaviour
 
 	void OnTriggerEnter( Collider col )
 	{
-		string tag = col.gameObject.tag;
-		if (col.gameObject.tag == tag) 
+		if (col.gameObject.tag == "GameController") 
 		{
+			print ("enter");
 			ToLines ();
 		}
 	}
 
 	void OnTriggerExit( Collider col )
 	{
-		string tag = col.gameObject.tag;
-		if (col.gameObject.tag == tag) 
+		if (col.gameObject.tag == "GameController") 
 		{
+			print ("exit");
 			ToOriginal ();
 		}
-
 	}
 
 	void ToLines()
@@ -100,15 +102,18 @@ public class MakeMesh : MonoBehaviour
 
 	void ToOriginal()
 	{
-		for (int i = 0; i < m_childrenWithMeshes.Count; i++) 
+		for (int i = 0; i < m_childMeshes.Count; i++) 
 		{
 			m_childMeshes[i].vertices = m_childOriginalMeshes[i].vertices;
 			m_childMeshes[i].triangles = m_childOriginalMeshes[i].triangles;
 
-			for (int j = 0; j < m_childOriginalMeshes[i].uv.Length; i++) 
+			/*
+			for (int j = 0; j < m_childMeshes[i].uv.Length; j++) //from original
 			{
-				m_childMeshes[i].uv [i] = m_childOriginalMeshes[i].uv [i];
+				m_childMeshes[i].uv [j] = m_childOriginalMeshes[i].uv [j];
 			}
+			*/
+
 		}
 	}
 		
