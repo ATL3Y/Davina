@@ -1,8 +1,6 @@
 ﻿Shader "Custom/ToColorEffect" {
 Properties {
 	_MainTex ("Base (RGB)", 2D) = "white" {}
-//	_Color ("To Color", 2D) = "grayscaleRamp" {}
-//	_Rate ("Rate " , float ) = 0.5
 }
 
 
