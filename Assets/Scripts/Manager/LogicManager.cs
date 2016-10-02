@@ -72,6 +72,11 @@ public class LogicManager : MBehavior {
 
 	void Update(){
 
+		if (Input.GetKeyDown (KeyCode.A)) {
+			LogicArg arg = new LogicArg (this);
+			M_Event.FireLogicEvent ( LogicEvents.IntoWork, arg);
+		}
+
 
 		switch (state) {
 		case State.Init:

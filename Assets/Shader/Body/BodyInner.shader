@@ -36,11 +36,11 @@
 			struct v2f
 			{
 				float2 uv : TEXCOORD0;
-//				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
 				float4 posScreen : TEXCOORD1;
 				float4 posWorld : TEXCOORD2;
 				float3 normal : TEXCCOORD3;
+//				UNITY_FOG_COORDS(1)
 			};
 
 			sampler2D _MainTex; 
@@ -53,22 +53,6 @@
 			float _DistortScale;
 			float4 _Speed;
 			float _DisappearRange;
-
-//			float depth2Alpha( float d )
-//			{
-//				float a = 1;
-//				float in_rate = 0.7f;
-//				d = -d ;
-//
-//				if ( d < _DisappearRange.x * in_rate )
-//				{
-//					a = 0;
-//				}else if ( d < _DisappearRange.x )
-//				{
-//					a = ( d - _DisappearRange.x * in_rate ) / ( _DisappearRange.x * ( 1 - in_rate) );
-//				}
-//				return a;
-//			}
 
 
 			v2f vert (appdata_base v)
