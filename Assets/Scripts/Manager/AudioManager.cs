@@ -119,14 +119,15 @@ public class AudioManager : MBehavior {
 		if (bgmSource == null) {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
-			bgmSource.volume = 0.5f;
+			bgmSource.volume = 0.7f;
+			bgmSource.spatialBlend = 1f;
 		}
 		if (bgmSource != null) {
-			bgmSource.DOFade (0, 0.2f).OnComplete (delegate {
+			bgmSource.DOFade (0, 1f).OnComplete (delegate {
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
 				bgmSource.Play();
-				bgmSource.DOFade( 1f , 0.2f );
+				bgmSource.DOFade( 1f , 1f );
 			});
 		}
 

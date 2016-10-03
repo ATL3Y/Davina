@@ -6,8 +6,11 @@ public class ViveInputManager : InputManager {
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
-		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal ()
-		    || ViveInputController.Instance.ReceivedRightButtonDownSignal ()) {
+		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal()
+			|| ViveInputController.Instance.ReceivedLeftButtonUpSignal() //Atley changed - added "up"
+			|| ViveInputController.Instance.ReceivedRightButtonDownSignal() 
+			|| ViveInputController.Instance.ReceivedRightButtonUpSignal())  //Atley changed - added "up"
+		{
 			FireTransport ();
 			FireSelectObject ();
 		}

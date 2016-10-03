@@ -103,7 +103,7 @@ public class ViveInputController : MonoBehaviour
         return false;
     }
 
-    bool ReceivedLeftButtonUpSignal()
+    public bool ReceivedLeftButtonUpSignal()
     {
         if (useViveInput && GetControllerIndices())
         {
@@ -114,7 +114,7 @@ public class ViveInputController : MonoBehaviour
         return false;
     }
 
-    bool ReceivedRightButtonUpSignal()
+    public bool ReceivedRightButtonUpSignal()
     {
         if (useViveInput && GetControllerIndices())
         {
