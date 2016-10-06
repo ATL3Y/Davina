@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class HoleObject : MObject {
 
 	Collider col;
 	[SerializeField] List<string> matchTagList = new List<string>();
+	[SerializeField] float fixInTime = 1f;
 
 	protected override void MAwake ()
 	{
@@ -52,7 +54,9 @@ public class HoleObject : MObject {
 			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
 
 			cobj.transform.parent = transform;
-			cobj.transform.localPosition = Vector3.zero ;
+			cobj.transform.DOLocalMove (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
+			cobj.transform.DOLocalRotate (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
+			cobj.transform.DOScale (1.05f, fixInTime).SetEase (Ease.InCirc);
 		}
 	}
 
@@ -68,6 +72,8 @@ public class HoleObject : MObject {
 		base.MOnDisable ();
 		M_Event.logicEvents [(int)LogicEvents.MatchObject] -= OnMatchObject;
 	}
+
+
 }
 
 

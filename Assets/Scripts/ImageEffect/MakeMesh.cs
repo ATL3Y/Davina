@@ -10,6 +10,9 @@ public class MakeMesh : MonoBehaviour
 	private List <Mesh> m_childMeshes;
 	private List <Mesh> m_childOriginalMeshes;
 
+	public bool IsLine{ get { return m_isLine ; } }
+	static bool m_isLine  = false ;
+
 	// Use this for initialization
 	public void Start () 
 	{
@@ -72,22 +75,37 @@ public class MakeMesh : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// A list to record the MakeMesh with the trigger in
+	/// </summary>
+	private static List<MakeMesh> MakeMeshWithTriggerIn = new List<MakeMesh>();
+
 	void OnTriggerEnter( Collider col )
 	{
-		if (col.gameObject.tag == "GameController") 
+		if ( col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") 
 		{
-			print ("enter");
+			foreach (MakeMesh mesh in MakeMeshWithTriggerIn) {
+				mesh.ToOriginal ();
+			}
+
 			ToLines ();
+			MakeMeshWithTriggerIn.Add (this);
 		}
 	}
 
 	void OnTriggerExit( Collider col )
 	{
-		if (col.gameObject.tag == "GameController") 
-		{
-			print ("exit");
-			ToOriginal ();
+		if (col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") {
+			if (MakeMeshWithTriggerIn.Contains (this)) {
+				MakeMeshWithTriggerIn.Remove (this);
+			}
+			if (m_isLine) {
+				ToOriginal ();
+				if (MakeMeshWithTriggerIn.Count > 0)
+					MakeMeshWithTriggerIn [0].ToLines ();
+			}
 		}
+
 	}
 
 	void ToLines()
@@ -98,6 +116,7 @@ public class MakeMesh : MonoBehaviour
 			if (m_childMeshes[i].GetTopology (0) != MeshTopology.Lines)
 				m_childMeshes[i].SetIndices (m_childMeshes[i].triangles, MeshTopology.Lines, 0);
 		}
+		m_isLine = true;
 	}
 
 	void ToOriginal()
@@ -115,6 +134,14 @@ public class MakeMesh : MonoBehaviour
 			*/
 
 		}
+		m_isLine = false;
+	}
+
+
+
+	void OnDisable()
+	{
+		ToOriginal ();
 	}
 		
 	
