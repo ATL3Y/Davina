@@ -26,7 +26,14 @@ public enum LogicEvents
 	EnterCharacterRange=8,
 	ExitCharacterRange=9,
 
-	IntoWork,
+	IntoWork=10,
+	CameraAttachPointChange =11,
+
+	OpenShotOneEnter = 101,
+	OpenShotTwoEnter = 102,
+	OpenShotThreeEnter = 103,
+
+	MotherSceneEnter = 201,
 }
 
 public class M_Event : MonoBehaviour {
@@ -42,7 +49,8 @@ public class M_Event : MonoBehaviour {
 
 	public delegate void LogicHandler( LogicArg arg );
 
-	public static LogicHandler[] logicEvents = new LogicHandler[System.Enum.GetNames (typeof (LogicEvents)).Length];
+//	public static LogicHandler[] logicEvents = new LogicHandler[System.Enum.GetNames (typeof (LogicEvents)).Length];
+	public static LogicHandler[] logicEvents = new LogicHandler[999];
 	public static void FireLogicEvent( LogicArg arg )
 	{
 		if (arg.type != LogicEvents.None) {

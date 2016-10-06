@@ -24,7 +24,7 @@ public class NarrativeManager : MBehavior {
 	{
 		base.MOnEnable ();
 
-		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
+		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] += OnLogicEvent;
 		}
 	}
@@ -32,7 +32,7 @@ public class NarrativeManager : MBehavior {
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
-		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
+		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
 	}
@@ -49,6 +49,9 @@ public class NarrativeManager : MBehavior {
 
 	void DoEvent( LogicArg arg,  NarrativeLoadSceneEvent e )
 	{
+		Debug.Log ("Load Scene " + e.loadScene);
+		SceneManager.LoadSceneAsync (e.loadScene , LoadSceneMode.Additive);
+
 		if (e.refreshScene) {
 			foreach( string scene in loadedScene )
 			{
@@ -57,8 +60,17 @@ public class NarrativeManager : MBehavior {
 			loadedScene.Clear ();
 		}
 
-
-		SceneManager.LoadSceneAsync (e.loadScene , LoadSceneMode.Additive);
 		loadedScene.Add (e.loadScene);
+	}
+
+	IEnumerator UnloadSceneDelay( float time , string addScene)
+	{
+		yield return new WaitForSeconds (time);
+		foreach( string scene in loadedScene )
+		{
+			SceneManager.UnloadScene (scene);
+		}
+		loadedScene.Clear ();
+		loadedScene.Add (addScene);
 	}
 }
