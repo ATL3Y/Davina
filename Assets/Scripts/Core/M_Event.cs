@@ -15,14 +15,16 @@ public enum MInputType
 
 public enum LogicEvents
 {
-	None,
-	TransportStart,
-	TransportEnd,
-	SelectObject,
-	MatchObject,
-	UnselectObject,
-	EnterInnerWorld,
-	ExitInnerWorld,
+	None=0,
+	TransportStart=1,
+	TransportEnd=2,
+	SelectObject=3,
+	MatchObject=4,
+	UnselectObject=5,
+	EnterInnerWorld=6,
+	ExitInnerWorld=7,
+	EnterCharacterRange=8,
+	ExitCharacterRange=9,
 
 	IntoWork,
 }

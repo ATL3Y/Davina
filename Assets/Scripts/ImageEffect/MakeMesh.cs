@@ -78,35 +78,35 @@ public class MakeMesh : MonoBehaviour
 	/// <summary>
 	/// A list to record the MakeMesh with the trigger in
 	/// </summary>
-	private static List<MakeMesh> MakeMeshWithTriggerIn = new List<MakeMesh>();
+//	private static List<MakeMesh> MakeMeshWithTriggerIn = new List<MakeMesh>();
 
-	void OnTriggerEnter( Collider col )
-	{
-		if ( col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") 
-		{
-			foreach (MakeMesh mesh in MakeMeshWithTriggerIn) {
-				mesh.ToOriginal ();
-			}
+//	void OnTriggerEnter( Collider col )
+//	{
+//		if ( col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") 
+//		{
+//			foreach (MakeMesh mesh in MakeMeshWithTriggerIn) {
+//				mesh.ToOriginal ();
+//			}
+//
+//			ToLines ();
+//			MakeMeshWithTriggerIn.Add (this);
+//		}
+//	}
 
-			ToLines ();
-			MakeMeshWithTriggerIn.Add (this);
-		}
-	}
-
-	void OnTriggerExit( Collider col )
-	{
-		if (col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") {
-			if (MakeMeshWithTriggerIn.Contains (this)) {
-				MakeMeshWithTriggerIn.Remove (this);
-			}
-			if (m_isLine) {
-				ToOriginal ();
-				if (MakeMeshWithTriggerIn.Count > 0)
-					MakeMeshWithTriggerIn [0].ToLines ();
-			}
-		}
-
-	}
+//	void OnTriggerExit( Collider col )
+//	{
+//		if (col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") {
+//			if (MakeMeshWithTriggerIn.Contains (this)) {
+//				MakeMeshWithTriggerIn.Remove (this);
+//			}
+//			if (m_isLine) {
+//				ToOriginal ();
+//				if (MakeMeshWithTriggerIn.Count > 0)
+//					MakeMeshWithTriggerIn [0].ToLines ();
+//			}
+//		}
+//
+//	}
 
 	void ToLines()
 	{
@@ -137,10 +137,30 @@ public class MakeMesh : MonoBehaviour
 		m_isLine = false;
 	}
 
+	void OnEnterCharacterRange( LogicArg arg )
+	{
+		MCharacter character = (MCharacter)arg.sender;
+		if ( character != null && character.gameObject == this.gameObject )
+			ToLines ();
+	}
 
+	void OnExitCharacterRange( LogicArg arg )
+	{
+		MCharacter character = (MCharacter)arg.sender;
+		if ( character != null && character.gameObject == this.gameObject )
+			ToOriginal ();
+	}
+
+	void OnEnable()
+	{
+		M_Event.logicEvents [(int)LogicEvents.EnterCharacterRange] += OnEnterCharacterRange;
+		M_Event.logicEvents [(int)LogicEvents.ExitCharacterRange] += OnExitCharacterRange;
+	}
 
 	void OnDisable()
 	{
+		M_Event.logicEvents [(int)LogicEvents.EnterCharacterRange] -= OnEnterCharacterRange;
+		M_Event.logicEvents [(int)LogicEvents.ExitCharacterRange] -= OnExitCharacterRange;
 		ToOriginal ();
 	}
 		

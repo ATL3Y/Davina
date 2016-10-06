@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 
 public class MCharacter : MObject {
@@ -14,6 +15,14 @@ public class MCharacter : MObject {
 	[SerializeField] BoxCollider innerWorldCollider;
 	[SerializeField] Vector3 fallingSpeed;
 
+	/// <summary>
+	/// The characters with controllers in its range
+	/// </summary>
+	static private List<MCharacter> triggeredCharacter = new List<MCharacter> ();
+	/// <summary>
+	/// The focused character.
+	/// </summary>
+	static private MCharacter focusedCharacter;
 
 	/// <summary>
 	/// the pivot for the inner world
@@ -36,6 +45,7 @@ public class MCharacter : MObject {
 		}
 
 		originScale = transform.localScale;
+		innerWorld.gameObject.SetActive (true);
 	}
 
 
@@ -72,6 +82,63 @@ public class MCharacter : MObject {
 	}
 
 	Coroutine changeScale;
+
+	void OnTriggerEnter( Collider col )
+	{
+		if ( (col.gameObject.tag == "GameController" &&
+			LogicManager.Instance.VREnable) || 
+			(col.gameObject.tag == "Player" &&
+			!LogicManager.Instance.VREnable) ) 
+		{
+			triggeredCharacter.Add (this);
+
+			if (focusedCharacter == null) {
+				focusedCharacter = this;
+				LogicArg arg = new LogicArg (this);
+				M_Event.FireLogicEvent (LogicEvents.EnterCharacterRange, arg);
+				focusedCharacter = this;
+				EnterCharacterRange ();
+			}
+		}
+	}
+
+	void OnTriggerExit( Collider col )
+	{
+		if ( (col.gameObject.tag == "GameController" &&
+			LogicManager.Instance.VREnable) || 
+			(col.gameObject.tag == "Player" &&
+				!LogicManager.Instance.VREnable) ) 
+		{
+			if ( triggeredCharacter.Contains(this))
+				triggeredCharacter.Remove (this);
+
+			if (focusedCharacter == this) {
+				focusedCharacter = null;
+				LogicArg arg = new LogicArg (this);
+				M_Event.FireLogicEvent (LogicEvents.ExitCharacterRange, arg);
+			}
+
+			if (focusedCharacter == null && triggeredCharacter.Count > 0) {
+				focusedCharacter = triggeredCharacter [0];
+				LogicArg arg = new LogicArg (focusedCharacter);
+				M_Event.FireLogicEvent (LogicEvents.EnterCharacterRange, arg);
+			}
+
+
+		}
+	}
+
+
+	public void EnterCharacterRange()
+	{
+		innerWorld.gameObject.SetActive (true);
+	}
+
+	public void ExitCharacterRange()
+	{
+		innerWorld.gameObject.SetActive (false);
+	}
+
 
 	public void EnterInnerWorld( Collider col )
 	{
