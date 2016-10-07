@@ -61,6 +61,7 @@ public class LogicManager : MBehavior {
 
 		Rain.transform.SetParent ( VREnable ? VR.transform : PC.transform);
 		Rain.transform.localPosition = Vector3.up * 5f;
+		//how freeze rain rotation?
 
 		DontDestroyOnLoad (gameObject);
 
@@ -93,9 +94,9 @@ public class LogicManager : MBehavior {
 			M_Event.FireLogicEvent(LogicEvents.MotherSceneEnter,new LogicArg(this));	
 		});
 
-
-		m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.OpenShotTwo, 2f);
-		m_stateMachine.BlindTimeStateChange (State.OpenShotTwo, State.MotherScene, 4f);
+		m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
+		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.OpenShotTwo, 2f);
+		//m_stateMachine.BlindTimeStateChange (State.OpenShotTwo, State.MotherScene, 4f);
 			
 		m_stateMachine.State = State.Init;
 	}
