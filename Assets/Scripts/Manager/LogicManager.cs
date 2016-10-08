@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class LogicManager : MBehavior {
 
@@ -31,21 +30,20 @@ public class LogicManager : MBehavior {
 		get { return m_stayCharacter; }
 	}
 
-	public string introText = "IT IS NOT YOUR TIME YET";
-
 	public enum State
 	{
 		Init,
-		Intro,
-		IntroText,
-		Rain,
-		InRain,
-	}
+		OpenShotOne,
+		OpenShotTwo,
+		OpenShotThree,
+		MotherScene,
 
-	public State state;
+	}
+	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
+
+
 	protected override void MAwake ()
 	{
-
 		base.MAwake ();
 
 		if (VREnable) {
@@ -68,41 +66,40 @@ public class LogicManager : MBehavior {
 
 		Cursor.visible = false;
 
+		InitStateMachine ();
 	}
 
-	void Update(){
-
-		if (Input.GetKeyDown (KeyCode.A)) {
-			LogicArg arg = new LogicArg (this);
-			M_Event.FireLogicEvent ( LogicEvents.IntoWork, arg);
-		}
+	void InitStateMachine()
+	{
 
 
-		switch (state) {
-		case State.Init:
-			if ( SceneManager.GetActiveScene().name != "Intro" )
-				SceneManager.LoadScene ("Intro");
-			state = State.IntroText;
-			break;
-		case State.IntroText:
-			text.MakeTextGO (introText);
-			if (Time.timeSinceLevelLoad >= 12.0f) {
-				state = State.Rain;
-			} 
-			break;
-		case State.Rain:
-			if ( SceneManager.GetActiveScene().name != "RainSceneTestAL" )
-				SceneManager.LoadScene ("RainSceneTestAL");
-			state = State.InRain;
-			text.gameObject.SetActive (false);
-			break;
-		case State.InRain:
+		m_stateMachine.AddUpdate (State.Init, delegate() {
+			m_stateMachine.State = State.OpenShotOne;
+		});
+
+		m_stateMachine.AddEnter (State.OpenShotOne, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.OpenShotOneEnter,new LogicArg(this));	
+		});
+
+		m_stateMachine.AddEnter (State.OpenShotTwo, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.OpenShotTwoEnter,new LogicArg(this));	
+		});
+
+		m_stateMachine.AddEnter (State.OpenShotThree, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.OpenShotThreeEnter,new LogicArg(this));	
+		});
+
+		m_stateMachine.AddEnter (State.MotherScene, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.MotherSceneEnter,new LogicArg(this));	
+		});
+
+
+		m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.OpenShotTwo, 2f);
+		m_stateMachine.BlindTimeStateChange (State.OpenShotTwo, State.MotherScene, 4f);
 			
-			break;
-		default:
-			break;
-		}
+		m_stateMachine.State = State.Init;
 	}
+
 
 	public Transform GetPlayerTransform()
 	{
@@ -121,6 +118,11 @@ public class LogicManager : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.CameraAttachPointChange] += OnNewAttachPoint;
+
+		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
+			M_Event.logicEvents [i] += OnLogicEvent;
+		}
 	}
 
 	protected override void MOnDisable ()
@@ -129,6 +131,26 @@ public class LogicManager : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.CameraAttachPointChange] -= OnNewAttachPoint;
+
+		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
+			M_Event.logicEvents [i] -= OnLogicEvent;
+		}
+	}
+
+	void OnNewAttachPoint( LogicArg arg )
+	{
+		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
+		if (point != null) {
+			transform.position = point.transform.position;
+			Quaternion cameraTurn = Quaternion.FromToRotation (Camera.main.transform.forward, point.transform.forward);
+			transform.rotation = point.transform.rotation;
+		}
+	}
+
+	void OnLogicEvent( LogicArg arg )
+	{
+		m_stateMachine.OnEvent (arg.type);
 	}
 
 	void OnTransportToNewObject( LogicArg arg )
@@ -153,5 +175,11 @@ public class LogicManager : MBehavior {
 			m_stayCharacter = null;
 	}
 
+	protected override void MUpdate ()
+	{
+		base.MUpdate ();
+
+		m_stateMachine.Update ();
+	}
 
 }
