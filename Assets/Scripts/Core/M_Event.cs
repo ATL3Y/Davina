@@ -29,6 +29,8 @@ public enum LogicEvents
 	IntoWork=10,
 	CameraAttachPointChange =11,
 
+	GetObject=12,
+
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
 	OpenShotThreeEnter = 103,
