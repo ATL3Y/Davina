@@ -15,8 +15,7 @@ public class Global
 			return GameObject.Find ("DWorld").transform;
 		}
 	}
-
-
+		
 	static public string EVENT_LOGIC_TRANSPORTTO_MOBJECT = "MOBJECT";
 	static public string EVENT_LOGIC_SELECT_COBJECT = "S_COBJECT";
 	static public string EVENT_LOGIC_MATCH_COBJECT = "M_COBJECT";
@@ -24,4 +23,5 @@ public class Global
 	static public string EVENT_LOGIC_ENTERINNERWORLD_CLIP = "BGM";
 	static public string EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER = "Character";
 	static public string EVENT_LOGIC_EXITINNERWORLD_MCHARACTER = "Character";
+
 }
