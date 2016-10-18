@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// 1. set up the input manager according to the VREnable
+/// 2. set up the state machine for different scenes
+/// </summary>
 public class LogicManager : MBehavior {
 
 	public LogicManager() { s_Instance = this; }
@@ -41,7 +46,6 @@ public class LogicManager : MBehavior {
 	}
 	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
 
-
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -72,8 +76,6 @@ public class LogicManager : MBehavior {
 
 	void InitStateMachine()
 	{
-
-
 		m_stateMachine.AddUpdate (State.Init, delegate() {
 			m_stateMachine.State = State.OpenShotOne;
 		});
@@ -147,6 +149,7 @@ public class LogicManager : MBehavior {
 			Quaternion cameraTurn = Quaternion.FromToRotation (Camera.main.transform.forward, point.transform.forward);
 			transform.rotation = point.transform.rotation;
 		}
+
 	}
 
 	void OnLogicEvent( LogicArg arg )

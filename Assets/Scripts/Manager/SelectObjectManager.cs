@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Save the selected object and handle with the interaction of the selected object.
+/// </summary>
 public class SelectObjectManager : MBehavior {
 
 	public SelectObjectManager() { s_Instance = this; }

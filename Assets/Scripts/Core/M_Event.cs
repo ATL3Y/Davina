@@ -4,15 +4,21 @@ using System.Collections.Generic;
 using System;
 
 
+/// <summary>
+/// enum of the different input action
+/// </summary>
 public enum MInputType
 {
 	None,
 	SelectObject,
-	Transport,
+	Transport, // not used
 	FocusNewObject,
 	OutOfFocusObject,
 }
 
+/// <summary>
+/// Logic events.
+/// </summary>
 public enum LogicEvents
 {
 	None=0,
@@ -93,6 +99,10 @@ public class M_Event : MonoBehaviour {
 
 }
 
+/// <summary>
+/// Basic argument.
+/// save the sender of the event
+/// </summary>
 public class BasicArg : EventArgs
 {
 	public BasicArg(object _this){m_sender = _this;}
@@ -100,6 +110,11 @@ public class BasicArg : EventArgs
 	public object sender{get{return m_sender;}}
 }
 
+/// <summary>
+/// Message argument.
+/// based on BasicArg
+/// add message dictionary for allowing to add expandable parameters
+/// </summary>
 public class MsgArg : BasicArg
 {
 	public MsgArg(object _this):base(_this){}
@@ -141,6 +156,11 @@ public class InputArg : BasicArg
 	public GameObject focusObject;
 }
 
+/// <summary>
+/// Logic argument.
+/// based on MsgArg
+/// save the type of the event
+/// </summary>
 public class LogicArg : MsgArg
 {
 	public LogicArg(object _this):base(_this){}

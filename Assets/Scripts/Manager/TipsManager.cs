@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Not useful
+/// </summary>
 public class TipsManager : MBehavior {
 
 	public TipsManager() { s_Instance = this; }
