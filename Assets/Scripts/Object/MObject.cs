@@ -51,6 +51,7 @@ public class MObject : MBehavior {
 		m_isFocus = false;
 	}
 
+
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();

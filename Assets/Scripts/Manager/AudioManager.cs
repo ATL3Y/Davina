@@ -2,6 +2,11 @@
 using System.Collections;
 using DG.Tweening;
 
+/// <summary>
+/// manage the sound effect
+/// play the sound effect when recieve an event 
+/// 
+/// </summary>
 public class AudioManager : MBehavior {
 
 	public AudioManager() { s_Instance = this; }

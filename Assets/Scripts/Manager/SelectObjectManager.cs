@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Save the selected object and handle with the interaction of the selected object.
+/// </summary>
 public class SelectObjectManager : MBehavior {
 
 	public SelectObjectManager() { s_Instance = this; }
@@ -36,10 +39,16 @@ public class SelectObjectManager : MBehavior {
 			}
 		}
 	}
+		
 
+	/// <summary>
+	/// React to the select object input event
+	/// </summary>
+	/// <param name="arg">Argument.</param>
 	void OnSelectObject(InputArg arg)
 	{
-		Debug.Log ("On Press Select Obj");
+//		Debug.Log ("On Press Select Obj");
+		// if player holds no object
 		if (m_SelectObj == null) {
 			MObject focus = InputManager.Instance.FocusedObject;
 			if (focus != null && focus is CollectableObj) {
@@ -54,7 +63,7 @@ public class SelectObjectManager : MBehavior {
 				}
 			}
 		} else {
-
+			// to match the object
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
