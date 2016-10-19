@@ -26,6 +26,9 @@ public class HoleObject : MObject {
 		base.OnOutofFocus ();
 	}
 
+	/// <summary>
+	/// TODO: find a better way to handle the match object algorithm
+	/// </summary>
 	GameObject matchObject;
 	void OnTriggerEnter(Collider col)
 	{
@@ -45,14 +48,22 @@ public class HoleObject : MObject {
 		}
 	}
 
+	/// <summary>
+	/// react to the match object event
+	/// try to match the object
+	/// </summary>
+	/// <param name="arg">Argument.</param>
 	void OnMatchObject( LogicArg arg )
 	{
 		CollectableObj cobj = (CollectableObj) arg.GetMessage (Global.EVENT_LOGIC_MATCH_COBJECT);
+		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
+			// unselect the hold object
 			LogicArg logicArg = new LogicArg(this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT,cobj);
 			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
 
+			// change the transform parent and position, scale, rotation of the object
 			cobj.transform.parent = transform;
 			cobj.transform.DOLocalMove (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOLocalRotate (Vector3.zero, fixInTime).SetEase (Ease.InCirc);

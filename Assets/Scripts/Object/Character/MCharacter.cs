@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
+/// <summary>
+/// Script for the character
+/// </summary>
 public class MCharacter : MObject {
 
 	[SerializeField] Transform outBody;
@@ -17,6 +20,7 @@ public class MCharacter : MObject {
 
 	/// <summary>
 	/// The characters with controllers in its range
+	/// to make sure only one character is scaled up
 	/// </summary>
 	static private List<MCharacter> triggeredCharacter = new List<MCharacter> ();
 	/// <summary>
@@ -83,6 +87,11 @@ public class MCharacter : MObject {
 
 	Coroutine changeScale;
 
+
+	/// <summary>
+	/// TODO: revise the scale design
+	/// </summary>
+	/// <param name="col">Col.</param>
 	void OnTriggerEnter( Collider col )
 	{
 		if ( (col.gameObject.tag == "GameController" &&
@@ -102,6 +111,10 @@ public class MCharacter : MObject {
 		}
 	}
 
+	/// <summary>
+	/// TODO: revise the scale design
+	/// </summary>
+	/// <param name="col">Col.</param>
 	void OnTriggerExit( Collider col )
 	{
 		if ( (col.gameObject.tag == "GameController" &&
@@ -123,8 +136,6 @@ public class MCharacter : MObject {
 				LogicArg arg = new LogicArg (focusedCharacter);
 				M_Event.FireLogicEvent (LogicEvents.EnterCharacterRange, arg);
 			}
-
-
 		}
 	}
 
@@ -140,10 +151,18 @@ public class MCharacter : MObject {
 	}
 
 
+	/// <summary>
+	/// Fire the enter inner world event
+	/// scale up the model
+	/// and disable the exterior model
+	/// </summary>
+	/// <param name="col">Col.</param>
 	public void EnterInnerWorld( Collider col )
 	{
 		Debug.Log ("Enter Inner World");
 		if (!m_isInInnerWorld) {
+
+			// fire the event
 			LogicArg arg = new LogicArg (this);
 			arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP, innerWorldClip);
 			arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER, this);
@@ -151,10 +170,12 @@ public class MCharacter : MObject {
 
 			m_isInInnerWorld = true;
 
+			// scale up the model
 			if (changeScale != null)
 				StopCoroutine (changeScale);
 			changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 0.33f));
 
+			// disable the exterior model
 			foreach (Renderer r in outerRender) {
 				r.enabled = false;
 			}
@@ -163,19 +184,28 @@ public class MCharacter : MObject {
 		}
 	}
 
+	/// <summary>
+	/// Called when exit the inner world
+	/// </summary>
+	/// <param name="col">Col.</param>
 	public void ExitInnerWorld( Collider col )
 	{
 		if (m_isInInnerWorld) {
+			// fire the exit event
 			LogicArg arg = new LogicArg (this);
 
 			arg.AddMessage (Global.EVENT_LOGIC_EXITINNERWORLD_MCHARACTER, this);
 			M_Event.FireLogicEvent (LogicEvents.ExitInnerWorld, arg);
 
+
 			m_isInInnerWorld = false;
+
+			// scale down the model
 			if (changeScale != null)
 				StopCoroutine (changeScale);
 			changeScale = StartCoroutine (ChangeScale ( originScale , 0.33f));
 
+			// enable the exterior model
 			foreach (Renderer r in outerRender) {
 				r.enabled = true;
 			}
@@ -183,6 +213,12 @@ public class MCharacter : MObject {
 		}
 	}
 
+	/// <summary>
+	/// Changes the scale of the model
+	/// </summary>
+	/// <returns>The scale.</returns>
+	/// <param name="_toScale">To scale.</param>
+	/// <param name="time">Time.</param>
 	IEnumerator ChangeScale( Vector3 _toScale , float time )
 	{
 		if ( pivot == null )
@@ -203,9 +239,12 @@ public class MCharacter : MObject {
 		changeScale = null;
 	}
 
+
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
+
+		// update the position of the character
 		if (!IsInInnerWorld) {
 			transform.position += fallingSpeed * Time.deltaTime;
 		}

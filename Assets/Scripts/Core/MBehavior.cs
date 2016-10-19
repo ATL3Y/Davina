@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Basic behaviour for the project
+/// </summary>
 public class MBehavior : MonoBehaviour {
 
 	void Awake()
@@ -13,6 +16,9 @@ public class MBehavior : MonoBehaviour {
 		MStart ();
 	}
 
+	/// <summary>
+	/// TODO: add the game pause function
+	/// </summary>
 	void Update()
 	{
 		MUpdate ();

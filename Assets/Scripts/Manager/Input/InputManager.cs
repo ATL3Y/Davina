@@ -21,8 +21,13 @@ public class InputManager : MBehavior {
 
 	/// <summary>
 	/// Save the focused object 
+	/// only one focused object at a time
 	/// </summary>
 	private MObject m_focusObj;
+	/// <summary>
+	/// Save the focused object 
+	/// only one focused object at a time
+	/// </summary>
 	public MObject FocusedObject
 	{
 		get { return m_focusObj; }
