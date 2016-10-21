@@ -77,7 +77,8 @@ public class LogicManager : MBehavior {
 	void InitStateMachine()
 	{
 		m_stateMachine.AddUpdate (State.Init, delegate() {
-			m_stateMachine.State = State.OpenShotOne;
+			//m_stateMachine.State = State.OpenShotOne;
+			m_stateMachine.State = State.MotherScene;
 		});
 
 		m_stateMachine.AddEnter (State.OpenShotOne, delegate() {
@@ -95,8 +96,8 @@ public class LogicManager : MBehavior {
 		m_stateMachine.AddEnter (State.MotherScene, delegate() {
 			M_Event.FireLogicEvent(LogicEvents.MotherSceneEnter,new LogicArg(this));	
 		});
-
-		m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
+			
+		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
 		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.OpenShotTwo, 2f);
 		//m_stateMachine.BlindTimeStateChange (State.OpenShotTwo, State.MotherScene, 4f);
 			

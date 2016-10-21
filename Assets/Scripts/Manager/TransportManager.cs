@@ -62,7 +62,7 @@ public class TransportManager : MBehavior {
 	public void OnFocusNew( InputArg arg )
 	{
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
-		if (p != null) {
+		if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why doesn't this work?
 			focusPasserby = p;
 			if (transportLine != null) {
 				Vector3 transportStart = Camera.main.transform.position;

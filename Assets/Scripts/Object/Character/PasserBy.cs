@@ -115,4 +115,5 @@ public class PasserBy : MObject {
 
 		M_Event.FireLogicEvent (LogicEvents.ExitInnerWorld, arg);
 	}
+		
 }
