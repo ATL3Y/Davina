@@ -39,13 +39,14 @@ public class TipsManager : MBehavior {
 	void UpdateMainRayLineTips()
 	{
 		if (lineTips != null ) {
-			Vector3 startPosition = InputManager.Instance.GetCenterRayCast ().origin;
+			/// for VR, this only takes the left controller
+			Vector3 startPosition = InputManager.Instance.GetCenterRayCast ()[0].origin;
 			if ((startPosition - Camera.main.transform.position).magnitude < 0.1f) {
 				// the ray start from the camera
 				startPosition += Vector3.down ;
 			}
 			lineTips.SetPosition (0, startPosition);
-			lineTips.SetPosition (1, startPosition + InputManager.Instance.GetCenterRayCast ().direction * 0.1f);
+			lineTips.SetPosition (1, startPosition + InputManager.Instance.GetCenterRayCast ()[0].direction * 0.1f);
 
 		}
 	}

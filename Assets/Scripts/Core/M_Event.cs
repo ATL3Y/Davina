@@ -33,9 +33,11 @@ public enum LogicEvents
 	ExitCharacterRange=9,
 
 	IntoWork=10,
-	CameraAttachPointChange =11,
+	CameraAttachPointChange=11,
 
 	GetObject=12,
+
+	/// RaiseFallingCharacter=13,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
@@ -143,6 +145,11 @@ public class MsgArg : BasicArg
 	}
 }
 
+public enum ClickType{
+	Mouse, 
+	LeftController,
+	RightController,
+}
 
 public class InputArg : BasicArg
 {
@@ -152,6 +159,7 @@ public class InputArg : BasicArg
 	/// The type of the arg.
 	/// </summary>
 	public MInputType type;
+	public ClickType clickType = ClickType.Mouse;
 
 	public GameObject focusObject;
 }

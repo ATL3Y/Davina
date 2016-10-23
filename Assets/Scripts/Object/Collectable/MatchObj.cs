@@ -8,10 +8,10 @@ public class MatchObj : CollectableObj {
 	[SerializeField] MCharacter parent;
 	[SerializeField] List<string> matchTags;
 
-	public override bool Select ()
+	public override bool Select (ClickType clickType)
 	{
 		Debug.Log ("Select");
-		base.Select ();
+		base.Select (clickType);
 		return true;
 	}
 

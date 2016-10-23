@@ -10,10 +10,10 @@ public class CollectableCube : CollectableObj {
 		base.MStart ();
 	}
 
-	public override bool Select ()
+	public override bool Select (ClickType clickType)
 	{
-		base.Select ();
-		SelectObjectManager.AttachToCamera (transform);
+		base.Select (clickType);
+		SelectObjectManager.AttachToCamera (transform, clickType);
 		return true;
 	}
 

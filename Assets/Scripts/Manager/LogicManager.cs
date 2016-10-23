@@ -17,7 +17,8 @@ public class LogicManager : MBehavior {
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
-	[SerializeField] Transform VRHand;
+	[SerializeField] Transform VRHandLeft;
+	[SerializeField] Transform VRHandRight;
 
 	[SerializeField] GameObject Rain;
 
@@ -110,9 +111,17 @@ public class LogicManager : MBehavior {
 		return VREnable ? VR.transform : PC.transform;
 	}
 
-	public Transform GetHandTransform()
+	public Transform GetHandTransform( ClickType clickType )
 	{
-		return VREnable ? VRHand : PCHand;
+		switch (clickType) 
+		{
+		case ClickType.LeftController:
+			return VRHandLeft;
+		case ClickType.RightController:
+			return VRHandRight;
+		default:
+			return PCHand;
+		}
 	}
 
 

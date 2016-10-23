@@ -40,9 +40,20 @@ public class InputManager : MBehavior {
 		/// check if the the camera look at a Mobject
 		MObject lookObj = null;
 		RaycastHit hitInfo;
-		if (Physics.Raycast (GetCenterRayCast (), out hitInfo , DETECT_DISTANCE , senseLayer)) {
+
+		/// make array of 2 for the 2 controllers. PC mouse input is same for [0] and [1]
+		/// this will prefer the left controller if users are trying to select two things at once
+		Ray[] centers = new Ray[2];
+		centers = GetCenterRayCast ();
+
+		/// if centers[1] is null, it should not return? 
+		if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
+		} else if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
+			
+
 		/// call the focus function of the focus object
 		if (lookObj != m_focusObj) {
 			if (m_focusObj != null) {
@@ -67,17 +78,23 @@ public class InputManager : MBehavior {
 	/// </summary>
 	/// <returns><c>true</c>, if screen position was gotten, <c>false</c> otherwise.</returns>
 	/// <param name="screenPos">the position of the screen point.</param>
-	public virtual Ray GetCenterRayCast( )
+	public virtual Ray[] GetCenterRayCast( )
 	{
-		return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+		Ray[] centers = new Ray[2];
+		centers [0] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+		centers [1] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));;
+
+		return  centers;
 	}
 
 	/// <summary>
 	/// Fires the select object action (Input), call the M_Event.fireInput
 	/// </summary>
-	protected void FireSelectObject()
+	protected void FireSelectObject( ClickType clickType = ClickType.Mouse ) //bool left 
 	{
+		
 		InputArg arg = new InputArg (this);
+		arg.clickType = clickType;
 		M_Event.FireInput (MInputType.SelectObject, arg);
 	}
 

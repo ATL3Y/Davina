@@ -10,7 +10,7 @@ public class PCInputManager : InputManager {
 
 		// when left click, select the object and transport
 		if (Input.GetMouseButtonDown (0) || Input.GetKeyDown(KeyCode.Space) ) {
-			FireSelectObject ();
+			FireSelectObject ( ClickType.Mouse );
 			FireTransport ();
 		}
 
@@ -21,12 +21,18 @@ public class PCInputManager : InputManager {
 //		Debug.DrawLine (GetCenterRayCast ().origin, GetCenterRayCast ().direction * 1000f);
 	}
 
-	public override Ray GetCenterRayCast ()
+	public override Ray[] GetCenterRayCast ()
 	{
-		if ( Camera.main != null )
-			return  Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+		Ray[] centers = new Ray[2];
 
-		return new Ray (Vector3.zero, Vector3.forward);
+		if (Camera.main != null) {
+			centers[0] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+			centers[1] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));
+			return centers;
+		}
+
+		centers [0] = new Ray (Vector3.zero, Vector3.forward);
+		return centers;
 	}
 		
 }

@@ -54,7 +54,7 @@ public class SelectObjectManager : MBehavior {
 			if (focus != null && focus is CollectableObj) {
 				CollectableObj cobj = (CollectableObj)focus;
 				Debug.Log ("Try Select");
-				if (cobj.Select ()) {
+				if (cobj.Select (arg.clickType)) {
 					Debug.Log ("Select success");
 					m_SelectObj = cobj;
 					LogicArg logicArg = new LogicArg (this);
@@ -67,6 +67,7 @@ public class SelectObjectManager : MBehavior {
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+			/// M_Event.FireLogicEvent (LogicEvents.RaiseFallingCharacter, logicArg); /// TODO: check problem
 		}
 
 
@@ -97,10 +98,10 @@ public class SelectObjectManager : MBehavior {
 //		}
 	}
 
-	static public void AttachToCamera( Transform trans)
+	static public void AttachToCamera( Transform trans, ClickType clickType )
 	{
-		if (LogicManager.Instance.GetHandTransform () != null) {
-			trans.SetParent (LogicManager.Instance.GetHandTransform (), true);
+		if (LogicManager.Instance.GetHandTransform (clickType) != null) {
+			trans.SetParent (LogicManager.Instance.GetHandTransform (clickType), true);
 			if (LogicManager.Instance.VREnable) {
 				trans.localPosition = Vector3.up * 0.1f;
 			} else {

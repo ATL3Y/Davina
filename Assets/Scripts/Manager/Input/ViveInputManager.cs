@@ -6,29 +6,26 @@ public class ViveInputManager : InputManager {
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
-		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal()
-			|| ViveInputController.Instance.ReceivedLeftButtonUpSignal() //Atley changed - added "up"
-			|| ViveInputController.Instance.ReceivedRightButtonDownSignal() 
-			|| ViveInputController.Instance.ReceivedRightButtonUpSignal())  //Atley changed - added "up"
-		{
+
+		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal()){
+			FireTransport ( );
+			FireSelectObject ( ClickType.LeftController ); // the left controller
+		} else if(ViveInputController.Instance.ReceivedRightButtonDownSignal()){
 			FireTransport ();
-			FireSelectObject ();
+			FireSelectObject ( ClickType.RightController ); //not the left controller
 		}
-
-//		if (ViveInputController.Instance.ReceivedLeftPadDownSignal ()
-//		    || ViveInputController.Instance.ReceivedRightPadDownSignal ())
-//			FireTransport ();
-
 	}
 
-
-	public override Ray GetCenterRayCast ()
+	public override Ray[] GetCenterRayCast ()
 	{
-		if ( ViveInputController.Instance.ReceivedLeftButtonPressSignal())
-			return new Ray (ViveInputController.Instance.leftController.transform.position,
-				ViveInputController.Instance.leftController.transform.forward);
-		
-		return new Ray (ViveInputController.Instance.rightController.transform.position,
+		//if ( ViveInputController.Instance.ReceivedLeftButtonPressSignal())
+		Ray[] centers = new Ray[2];
+
+		centers[0] = new Ray (ViveInputController.Instance.leftController.transform.position,
+			ViveInputController.Instance.leftController.transform.forward);
+		centers[1] = new Ray (ViveInputController.Instance.rightController.transform.position,
 			ViveInputController.Instance.rightController.transform.forward);
+		
+		return centers;
 	}
 }

@@ -68,10 +68,10 @@ public class CollectableObj : MObject {
 	/// return false when it fails
 	/// TODO: finish the unselectable situation
 	/// </summary>
-	virtual public bool Select()
+	virtual public bool Select( ClickType clickType)
 	{
 		// set transform parent to the camera
-		SelectObjectManager.AttachToCamera (transform);
+		SelectObjectManager.AttachToCamera (transform, clickType);
 		// set all the object to 'Hold' Layer
 		gameObject.layer = LayerMask.NameToLayer ("Hold");
 		foreach (Transform t in GetComponentsInChildren<Transform>())
