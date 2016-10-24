@@ -32,6 +32,7 @@ public class AudioManager : MBehavior {
 	{
 		public LogicEvents type;
 		public AudioClip clip;
+
 	};
 	[SerializeField] LogicClipPair[] LogicClipPairs;
 
@@ -124,7 +125,7 @@ public class AudioManager : MBehavior {
 		if (bgmSource == null) {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
-			bgmSource.volume = 0.7f;
+			bgmSource.volume = 1.0f;
 			bgmSource.spatialBlend = 1f;
 		}
 		if (bgmSource != null) {
