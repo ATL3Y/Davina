@@ -67,7 +67,7 @@ public class SelectObjectManager : MBehavior {
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
-			/// M_Event.FireLogicEvent (LogicEvents.RaiseFallingCharacter, logicArg); /// TODO: check problem
+			/// M_Event.FireLogicEvent (LogicEvents.RaiseFallingCharacter, logicArg); /// TODO: make raising action its own event 
 		}
 
 
