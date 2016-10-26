@@ -12,7 +12,7 @@ public class TransportManager : MBehavior {
 	[SerializeField] ToColorEffect toColorEffect;
 	[SerializeField] BloomAndFlares bloomAndFlares;
 //	[SerializeField] float transportOffset = 1f;
-	[SerializeField] float fadeTime = 1f;
+	[SerializeField] float fadeTime = .5f;
 	[SerializeField] float transportTime = 2f;
 	[SerializeField] LineRenderer transportLine;
 	[SerializeField] ParticleSystem transportCircle;

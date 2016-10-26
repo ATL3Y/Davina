@@ -8,6 +8,8 @@ public class PasserBy : MObject {
 	[SerializeField] MeshRenderer[] outlineRenders;
 	[SerializeField] Transform observeLocation;
 
+	private Quaternion rotation;
+
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
 
@@ -17,6 +19,8 @@ public class PasserBy : MObject {
 	protected override void MAwake ()
 	{
 		base.MAwake ();
+
+		rotation = transform.rotation;
 
 		SetOutline (false);
 		if (observeLocation == null)
@@ -35,6 +39,11 @@ public class PasserBy : MObject {
 		base.MOnDisable ();
 		M_Event.logicEvents [(int)LogicEvents.TransportStart] -= OnTransportStart;
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportEnd;
+	}
+
+	void Update()
+	{
+		transform.rotation = rotation;
 	}
 
 	void OnTransportStart( LogicArg arg )

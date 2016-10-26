@@ -66,7 +66,6 @@ public class LogicManager : MBehavior {
 
 		Rain.transform.SetParent ( VREnable ? VR.transform : PC.transform);
 		Rain.transform.localPosition = Vector3.up * 5f;
-		//how freeze rain rotation?
 
 		DontDestroyOnLoad (gameObject);
 

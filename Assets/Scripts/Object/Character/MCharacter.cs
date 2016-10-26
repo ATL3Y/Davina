@@ -254,6 +254,7 @@ public class MCharacter : MObject {
 	void OnEnable()
 	{
 		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] += OnRaise;
+		Debug.Log ( "In onenable, raise falling character number is " + M_Event.logicEvents.Length);
 	}
 
 	void OnDisable()
@@ -263,8 +264,18 @@ public class MCharacter : MObject {
 
 	void OnRaise( LogicArg arg )
 	{
+		transform.DOLocalMove (transform.position + new Vector3 (0f, .2f, 0f), 1f).SetEase (Ease.InCirc);
+
+		/*
 		bool isUp = (bool)arg.GetMessage ("isUp");
+
+		if (isUp) {
+			transform.position += new Vector3 (0f, .2f, 0f);
+		} else {
+			transform.position -= new Vector3 (0f, .2f, 0f);
+		}
 		Debug.Log ( name + " Raise the character " + isUp);
+		*/
 	}
 
 }

@@ -11,7 +11,7 @@ public class MatchObj : CollectableObj {
 
 	public override bool Select (ClickType clickType)
 	{
-		Debug.Log ("Select");
+		///Debug.Log ("Select");
 		base.Select (clickType);
 		return true;
 	}
