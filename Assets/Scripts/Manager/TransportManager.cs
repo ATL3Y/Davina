@@ -62,13 +62,13 @@ public class TransportManager : MBehavior {
 	public void OnFocusNew( InputArg arg )
 	{
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
-		if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why doesn't this work?
+		if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why can't i stop from focusing on current focus object?
 			focusPasserby = p;
 			if (transportLine != null) {
 				Vector3 transportStart = Camera.main.transform.position;
 				Vector3 transportToward = focusPasserby.GetObservePosition ();
 				float length = (transportStart - transportToward).magnitude;
-				transportStart.y = transportToward.y = 0.2f;
+				transportStart.y = transportToward.y = .25f; 
 
 				transportLine.enabled = true;
 				transportLine.SetPosition (0, transportStart);
@@ -78,7 +78,7 @@ public class TransportManager : MBehavior {
 
 			if (transportCircle != null) {
 				Vector3 transportToward = focusPasserby.GetObservePosition ();
-				transportToward.y = 0.25f;
+				transportToward.y = .25f; 
 				transportCircle.transform.position = transportToward;
 				transportCircle.gameObject.SetActive (true);
 			}
@@ -143,7 +143,7 @@ public class TransportManager : MBehavior {
 //			offset.Normalize (); 
 //			offset *= transportOffset;
 			Vector3 target = p.GetObservePosition();
-			target.y = transform.position.y;
+			target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
 			transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));
 			// add the vfx if there is the image effect in the camera
