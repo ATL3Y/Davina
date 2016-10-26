@@ -96,4 +96,11 @@ public class CollectableObj : MObject {
 		return true;
 	}
 
+	/// <summary>
+	/// Called when the object fills in the hole
+	/// </summary>
+	virtual public void OnFill()
+	{
+	}
+
 }

@@ -194,6 +194,17 @@ public class LogicManager : MBehavior {
 		base.MUpdate ();
 
 		m_stateMachine.Update ();
+
+
+		if (Input.GetKeyDown (KeyCode.F))
+			RaiseTheBody ();
+	}
+
+	void RaiseTheBody()
+	{
+		LogicArg arg = new LogicArg (this);
+		arg.AddMessage ("isUp", true);
+		M_Event.FireLogicEvent (LogicEvents.RaiseFallingCharacter, arg);
 	}
 
 }

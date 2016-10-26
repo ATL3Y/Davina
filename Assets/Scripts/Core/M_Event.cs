@@ -37,7 +37,7 @@ public enum LogicEvents
 
 	GetObject=12,
 
-	/// RaiseFallingCharacter=13, /// TODO: make raising action its own event 
+	RaiseFallingCharacter=13,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
