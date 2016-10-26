@@ -68,6 +68,9 @@ public class HoleObject : MObject {
 			cobj.transform.DOLocalMove (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOLocalRotate (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOScale (1.05f, fixInTime).SetEase (Ease.InCirc);
+
+			// tell the object it is filled in the hole
+			cobj.OnFill ();
 		}
 	}
 

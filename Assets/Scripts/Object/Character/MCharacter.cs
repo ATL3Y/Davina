@@ -249,4 +249,22 @@ public class MCharacter : MObject {
 			transform.position += fallingSpeed * Time.deltaTime;
 		}
 	}
+
+
+	void OnEnable()
+	{
+		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] += OnRaise;
+	}
+
+	void OnDisable()
+	{
+		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] -= OnRaise;
+	}
+
+	void OnRaise( LogicArg arg )
+	{
+		bool isUp = (bool)arg.GetMessage ("isUp");
+		Debug.Log ( name + " Raise the character " + isUp);
+	}
+
 }
