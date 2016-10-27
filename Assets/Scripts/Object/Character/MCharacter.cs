@@ -9,7 +9,7 @@ using DG.Tweening;
 public class MCharacter : MObject {
 
 	[SerializeField] Transform outBody;
-	[SerializeField] Transform innerWorld ;
+	[SerializeField] Transform innerWorld;
 
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
