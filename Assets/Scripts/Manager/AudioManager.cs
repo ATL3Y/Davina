@@ -24,6 +24,7 @@ public class AudioManager : MBehavior {
 	};
 	[SerializeField] InputClipPair[] InputClipPairs;
 
+
 	/// <summary>
 	/// for pairing the logic event and the sound effect
 	/// </summary>

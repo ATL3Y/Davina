@@ -17,11 +17,12 @@ public class SelectObjectManager : MBehavior {
 
 	protected override void MOnEnable ()
 	{
+		
 		base.MOnEnable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] += OnSelectObject;
 		M_Event.logicEvents [(int)LogicEvents.UnselectObject] += OnUnselectObject; 
 	}
-
+		
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
@@ -61,6 +62,19 @@ public class SelectObjectManager : MBehavior {
 					logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
 					M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
 				}
+			}
+		} // unselect option once object it held
+		else if (m_SelectObj != null) {
+			//calls unselect in MatchObj: CollectableObj
+			if (m_SelectObj.UnSelect ()) {
+				
+				//do this if anyone else needs to listen for this event
+				LogicArg logicArg = new LogicArg (this);
+				logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
+				M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
+
+				Debug.Log ("Unselect success");
+				m_SelectObj = null;
 			}
 		} else {
 			// to match the object

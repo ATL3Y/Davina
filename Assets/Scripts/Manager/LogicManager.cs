@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 /// <summary>
 /// 1. set up the input manager according to the VREnable
@@ -194,9 +194,11 @@ public class LogicManager : MBehavior {
 
 		m_stateMachine.Update ();
 
-
+		/*
+		// test function
 		if (Input.GetKeyDown (KeyCode.F))
 			RaiseTheBody ();
+		*/
 	}
 
 	void RaiseTheBody()
@@ -204,6 +206,13 @@ public class LogicManager : MBehavior {
 		LogicArg arg = new LogicArg (this);
 		arg.AddMessage ("isUp", true);
 		M_Event.FireLogicEvent (LogicEvents.RaiseFallingCharacter, arg);
+	}
+
+	void LowerTheBody()
+	{
+		LogicArg arg = new LogicArg (this);
+		arg.AddMessage ("down", true);
+		M_Event.FireLogicEvent (LogicEvents.LowerFallingCharacter, arg);
 	}
 
 }

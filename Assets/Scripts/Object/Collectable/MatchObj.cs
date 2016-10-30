@@ -6,8 +6,9 @@ using System.Collections.Generic;
 public class MatchObj : CollectableObj {
 
 	[SerializeField] MCharacter parent;
-	[SerializeField] List<string> matchTags;
-	[SerializeField] LogicEvents onFillEvent;
+	[SerializeField] List<string> matchTags; //tags of the item this will match to
+	[SerializeField] LogicEvents onFillRaiseEvent;
+	[SerializeField] LogicEvents onFillLowerEvent;
 
 	public override bool Select (ClickType clickType)
 	{
@@ -26,9 +27,17 @@ public class MatchObj : CollectableObj {
 	{
 		base.OnFill ();
 
-		M_Event.FireLogicEvent (onFillEvent, new LogicArg (this));
+		// other option: one "on fill" event, bool on arg for up or down, check bool in MCharacter
+		if (gameObject.tag == "Raise") {
+			M_Event.FireLogicEvent (onFillRaiseEvent, new LogicArg (this));
+		} else if (gameObject.tag == "Lower") {
+			M_Event.FireLogicEvent (onFillLowerEvent, new LogicArg (this));
+		}
+		//
 
-		///LogicManager.Instance.
+		LogicArg logicArg = new LogicArg (this);
+		//logicArg.AddMessage (Global.EVENT_LOGIC_EXITSTORYOBJ);
+		M_Event.FireLogicEvent (LogicEvents.ExitStory, logicArg);
 	}
 
 }

@@ -38,6 +38,10 @@ public enum LogicEvents
 	GetObject=12,
 
 	RaiseFallingCharacter=13,
+	LowerFallingCharacter=14,
+
+	EnterStory=15,
+	ExitStory=16,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,

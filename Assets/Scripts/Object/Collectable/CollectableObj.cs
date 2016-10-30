@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 /// <summary>
 /// The object that can be select and hold by the player
@@ -12,12 +13,22 @@ public class CollectableObj : MObject {
 	[SerializeField] protected AudioClip unselectSound;
 	private AudioSource unselectSoundSource;
 
+	[SerializeField] protected AudioClip storySound;
+	private AudioSource storySoundSource;
+
+	[SerializeField] protected Transform originalParentTransform;
+	private Vector3 originalPos;
+	private Quaternion originalRot;
 
 	protected override void MAwake ()
 	{
 		base.MAwake ();
 		// turn off the outline 
 		SetOutline (false);
+
+		originalParentTransform = transform.parent;
+		originalPos = transform.localPosition;
+		originalRot = transform.localRotation;
 
 		// set up the select sound
 		if (selectSound != null) {
@@ -36,6 +47,15 @@ public class CollectableObj : MObject {
 			unselectSoundSource.volume = 0.5f;
 			unselectSoundSource.spatialBlend = 1f;
 			unselectSoundSource.clip = unselectSound;
+		}
+		// set up the story sound
+		if (storySound != null) {
+			storySoundSource = gameObject.AddComponent<AudioSource> ();
+			storySoundSource.playOnAwake = false;
+			storySoundSource.loop = false;
+			storySoundSource.volume = 0.5f;
+			storySoundSource.spatialBlend = 1f;
+			storySoundSource.clip = storySound;
 		}
 	}
 
@@ -64,7 +84,7 @@ public class CollectableObj : MObject {
 
 	/// <summary>
 	/// called by SelectObjectManager when the object is selected
-	/// return turn when it is successfully selected
+	/// return true when it is successfully selected
 	/// return false when it fails
 	/// TODO: finish the unselectable situation
 	/// </summary>
@@ -79,6 +99,9 @@ public class CollectableObj : MObject {
 		// play the sound effect
 		if ( selectSoundSource != null )
 			selectSoundSource.Play ();
+		if ( storySoundSource != null )
+			storySoundSource.Play ();
+		
 		
 		return true;
 	}
@@ -90,9 +113,26 @@ public class CollectableObj : MObject {
 	/// <returns><c>true</c>, if select was uned, <c>false</c> otherwise.</returns>
 	virtual public bool UnSelect()
 	{
+		//need to send clicktype arg? need to undo attach to camera?
+
 		// play the sound effect
 		if ( unselectSoundSource != null )
 			unselectSoundSource.Play ();
+
+		//stop the story sound - fade out?
+		if ( storySoundSource != null && storySoundSource.isPlaying)
+			storySoundSource.Stop ();
+
+		// set all the object to 'Focus' Layer
+		gameObject.layer = LayerMask.NameToLayer ("Focus");
+		foreach (Transform t in GetComponentsInChildren<Transform>())
+			t.gameObject.layer = LayerMask.NameToLayer ("Focus");
+
+		transform.SetParent (originalParentTransform);
+		//how do at the same time? how do rotate?
+		transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
+		//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
+
 		return true;
 	}
 
@@ -101,6 +141,7 @@ public class CollectableObj : MObject {
 	/// </summary>
 	virtual public void OnFill()
 	{
+		
 	}
 
 }
