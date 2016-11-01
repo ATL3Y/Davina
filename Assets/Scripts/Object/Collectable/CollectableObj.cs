@@ -9,16 +9,17 @@ public class CollectableObj : MObject {
 	
 	[SerializeField] MeshRenderer[] outlineRenders;
 	[SerializeField] protected AudioClip selectSound;
-	private AudioSource selectSoundSource;
+	protected AudioSource selectSoundSource;
 	[SerializeField] protected AudioClip unselectSound;
-	private AudioSource unselectSoundSource;
+	protected AudioSource unselectSoundSource;
 
 	[SerializeField] protected AudioClip storySound;
-	private AudioSource storySoundSource;
+	protected AudioSource storySoundSource;
 
 	[SerializeField] protected Transform originalParentTransform;
 	private Vector3 originalPos;
 	private Quaternion originalRot;
+	public bool matched = false;
 
 	protected override void MAwake ()
 	{
@@ -85,8 +86,7 @@ public class CollectableObj : MObject {
 	/// <summary>
 	/// called by SelectObjectManager when the object is selected
 	/// return true when it is successfully selected
-	/// return false when it fails
-	/// TODO: finish the unselectable situation
+	/// should return false when it fails
 	/// </summary>
 	virtual public bool Select( ClickType clickType)
 	{
@@ -102,7 +102,6 @@ public class CollectableObj : MObject {
 		if ( storySoundSource != null )
 			storySoundSource.Play ();
 		
-		
 		return true;
 	}
 
@@ -111,29 +110,35 @@ public class CollectableObj : MObject {
 	/// TODO: finish the unable to unselect situation
 	/// </summary>
 	/// <returns><c>true</c>, if select was uned, <c>false</c> otherwise.</returns>
-	virtual public bool UnSelect()
+	virtual public bool UnSelect( )
 	{
-		//need to send clicktype arg? need to undo attach to camera?
-
 		// play the sound effect
 		if ( unselectSoundSource != null )
 			unselectSoundSource.Play ();
 
-		//stop the story sound - fade out?
 		if ( storySoundSource != null && storySoundSource.isPlaying)
 			storySoundSource.Stop ();
 
-		// set all the object to 'Focus' Layer
-		gameObject.layer = LayerMask.NameToLayer ("Focus");
-		foreach (Transform t in GetComponentsInChildren<Transform>())
-			t.gameObject.layer = LayerMask.NameToLayer ("Focus");
+		// matched is set in HoleObject
+		if (!matched) {
+			// set all the object to 'Focus' Layer
+			gameObject.layer = LayerMask.NameToLayer ("Focus");
+			foreach (Transform t in GetComponentsInChildren<Transform>())
+				t.gameObject.layer = LayerMask.NameToLayer ("Focus");
 
-		transform.SetParent (originalParentTransform);
-		//how do at the same time? how do rotate?
-		transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
-		//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
+			transform.SetParent (originalParentTransform);
+			//how do at the same time? how do rotate?
+			transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
+			//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
+			return true;
+		} else if (matched) {
+			//fires match object event on pressing trigger instead of unselect
+			LogicArg logicArg = new LogicArg (this);
+			logicArg.AddMessage(Global.EVENT_LOGIC_MATCH_COBJECT, this);
+			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+		}
+		return false;
 
-		return true;
 	}
 
 	/// <summary>

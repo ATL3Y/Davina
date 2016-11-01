@@ -11,7 +11,7 @@ public enum MInputType
 {
 	None,
 	SelectObject,
-	Transport, // not used
+	Transport, 
 	FocusNewObject,
 	OutOfFocusObject,
 }
@@ -42,6 +42,8 @@ public enum LogicEvents
 
 	EnterStory=15,
 	ExitStory=16,
+
+	End=17,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,

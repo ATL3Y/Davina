@@ -17,8 +17,8 @@ public class LogicManager : MBehavior {
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
-	[SerializeField] Transform VRHandLeft;
-	[SerializeField] Transform VRHandRight;
+	//[SerializeField] Transform VRHandLeft; // need to get this from ViveInputController
+	//[SerializeField] Transform VRHandRight; // need to get this from ViveInputController
 
 	[SerializeField] GameObject Rain;
 
@@ -115,9 +115,9 @@ public class LogicManager : MBehavior {
 		switch (clickType) 
 		{
 		case ClickType.LeftController:
-			return VRHandLeft;
+			return ViveInputController.Instance.leftController.transform;
 		case ClickType.RightController:
-			return VRHandRight;
+			return ViveInputController.Instance.rightController.transform;
 		default:
 			return PCHand;
 		}

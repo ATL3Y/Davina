@@ -15,6 +15,17 @@ public class StoryObjManager : MBehavior {
 
 	private List<GameObject> currentStory = new List<GameObject>();
 
+	public int endMatchCount = 0; //set from FinalMatchObj
+	private bool once = false;
+
+	[SerializeField] GameObject Davina;
+
+	protected override void MAwake ()
+	{
+		base.MAwake ();
+		currentStory = storyObjA;
+	}
+
 	protected override void MOnEnable(){
 
 		base.MOnEnable ();
@@ -34,6 +45,7 @@ public class StoryObjManager : MBehavior {
 		currentStory.Clear ();
 		currentStory = GetStory ();
 		if (currentStory != null) {
+
 			for (int i = 0; i < currentStory.Count; i++) {
 				currentStory [i].SetActive (true);
 			}
@@ -45,17 +57,21 @@ public class StoryObjManager : MBehavior {
 	//exit last story before entering new one 
 	void OnExitStory(LogicArg arg){
 		//disable remaining objects in mother
+		//Debug.Log("length of current story obj = " + currentStory.Count);
 		for (int i = 0; i < currentStory.Count; i++) {
-			if (currentStory [i].layer.ToString() == "Focus") {
+			if (currentStory [i].layer == 16) { // Focus is layer 16
 				currentStory [i].SetActive (false);
 			}
 		}
 
 		//iterate count and enter next story upon exiting last one 
 		count++;
-		LogicArg logicArg = new LogicArg (this);
-		//logicArg.AddMessage (Global.EVENT_LOGIC_ENTERSTORYOBJ);
-		M_Event.FireLogicEvent (LogicEvents.EnterStory, logicArg);
+		if (GetStory () != null) {
+			LogicArg logicArg = new LogicArg (this);
+			//logicArg.AddMessage (Global.EVENT_LOGIC_ENTERSTORYOBJ);
+			M_Event.FireLogicEvent (LogicEvents.EnterStory, logicArg);
+		}
+
 	}
 
 	//returns the next batch of story obj
@@ -73,10 +89,12 @@ public class StoryObjManager : MBehavior {
 			break;
 		case 2:
 			if (storyObjC != null) {
+				// any special end things could be here or in FinalHoleObject (now active) 
 				return storyObjC;
 			}
 			break;
-		default: 
+		default:
+			Debug.Log("In default of Story Obj Manager");
 			return null;
 			break;
 		}
@@ -90,6 +108,14 @@ public class StoryObjManager : MBehavior {
 	
 	// Update is called once per frame
 	void Update () {
+		if (endMatchCount == 2 && !once) {
+			once = true;
+			// call end logic event 
+			Debug.Log("end event sent from story obj manager");
+			LogicArg logicArg = new LogicArg (this);
+			M_Event.FireLogicEvent (LogicEvents.End, logicArg);
+
+		}
 	
 	}
 }

@@ -12,7 +12,6 @@ public class MatchObj : CollectableObj {
 
 	public override bool Select (ClickType clickType)
 	{
-		///Debug.Log ("Select");
 		base.Select (clickType);
 		return true;
 	}
@@ -33,7 +32,8 @@ public class MatchObj : CollectableObj {
 		} else if (gameObject.tag == "Lower") {
 			M_Event.FireLogicEvent (onFillLowerEvent, new LogicArg (this));
 		}
-		//
+
+		gameObject.layer = 18; //change layer from Hold (17) to Done (18)
 
 		LogicArg logicArg = new LogicArg (this);
 		//logicArg.AddMessage (Global.EVENT_LOGIC_EXITSTORYOBJ);

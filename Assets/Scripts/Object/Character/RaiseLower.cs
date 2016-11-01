@@ -20,22 +20,11 @@ public class RaiseLower : MonoBehaviour {
 	void OnRaise( LogicArg arg )
 	{
 		//something obvious here
-		transform.DOLocalMove (transform.position + new Vector3 (0f, .3f, 0f), 1f).SetEase (Ease.InCirc);
-
-		/*
-		bool isUp = (bool)arg.GetMessage ("isUp");
-
-		if (isUp) {
-			transform.position += new Vector3 (0f, .2f, 0f);
-		} else {
-			transform.position -= new Vector3 (0f, .2f, 0f);
-		}
-		Debug.Log ( name + " Raise the character " + isUp);
-		*/
+		transform.DOLocalMove (transform.position + new Vector3 (0f, .15f, 0f), 2f).SetEase (Ease.InOutSine);
 	}
 
 	void OnLower(LogicArg arg)
 	{
-		transform.DOLocalMove (transform.position + new Vector3 (0f, -.3f, 0f), 1f).SetEase (Ease.InCirc);
+		transform.DOLocalMove (transform.position + new Vector3 (0f, -.15f, 0f), 2f).SetEase (Ease.InOutSine);
 	}
 }

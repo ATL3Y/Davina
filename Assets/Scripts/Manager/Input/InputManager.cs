@@ -53,7 +53,6 @@ public class InputManager : MBehavior {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
 			
-
 		/// call the focus function of the focus object
 		if (lookObj != m_focusObj) {
 			if (m_focusObj != null) {
@@ -85,6 +84,11 @@ public class InputManager : MBehavior {
 		centers [1] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));;
 
 		return  centers;
+	}
+
+	public virtual void VibrateController( int index )
+	{
+
 	}
 
 	/// <summary>
@@ -128,5 +132,5 @@ public class InputManager : MBehavior {
 		arg.focusObject = obj;
 		M_Event.FireInput (MInputType.OutOfFocusObject , arg);
 	}
-
+		
 }

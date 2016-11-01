@@ -9,6 +9,7 @@ public class PasserBy : MObject {
 	[SerializeField] Transform observeLocation;
 
 	private Quaternion rotation;
+	private GameObject player;
 
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
@@ -30,6 +31,7 @@ public class PasserBy : MObject {
 	protected override void MOnEnable ()
 	{
 		base.MOnEnable ();
+		player = GameObject.FindGameObjectWithTag ("Player");
 		M_Event.logicEvents [(int)LogicEvents.TransportStart] += OnTransportStart;
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportEnd;
 	}
@@ -108,7 +110,10 @@ public class PasserBy : MObject {
 
 	public Vector3 GetObservePosition()
 	{
-		return observeLocation.position;
+		Vector3 dirToPlayer = player.transform.position - observeLocation.transform.position;
+		dirToPlayer = dirToPlayer.normalized;
+		Vector3 pos = observeLocation.transform.position + dirToPlayer * .6f;
+		return pos;
 	}
 
 	public void EnterInnerWorld( Collider col )

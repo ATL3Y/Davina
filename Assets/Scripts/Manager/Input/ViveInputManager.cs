@@ -8,12 +8,18 @@ public class ViveInputManager : InputManager {
 		base.MUpdate ();
 
 		if (ViveInputController.Instance.ReceivedLeftButtonDownSignal()){
-			FireTransport ( );
 			FireSelectObject ( ClickType.LeftController ); // the left controller
 		} else if(ViveInputController.Instance.ReceivedRightButtonDownSignal()){
-			FireTransport ();
 			FireSelectObject ( ClickType.RightController ); //not the left controller
 		}
+
+		if (ViveInputController.Instance.ReceivedLeftPadDownSignal()){
+			FireTransport ( );
+		} else if(ViveInputController.Instance.ReceivedRightPadDownSignal()){
+			FireTransport ();
+		}
+
+
 	}
 
 	public override Ray[] GetCenterRayCast ()
@@ -28,4 +34,11 @@ public class ViveInputManager : InputManager {
 		
 		return centers;
 	}
+
+	public override void VibrateController (int index)
+	{
+		Debug.Log ("Vibrate vive input manager called index = " + index);
+		ViveInputController.Instance.VibrateController (index);
+	}
+
 }

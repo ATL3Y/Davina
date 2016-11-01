@@ -12,7 +12,7 @@ public class ViveInputController : MonoBehaviour
 
     public bool useViveInput = true;
 
-    int leftControllerIndex = -1, rightControllerIndex = -1;
+    public int leftControllerIndex = -1, rightControllerIndex = -1;
 
     public GameObject leftController;
     public GameObject rightController;
@@ -49,7 +49,7 @@ public class ViveInputController : MonoBehaviour
 			leftControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost); //controllerManager.leftIndex; 
 			rightControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost); //controllerManager.rightIndex; 
         }
-        return leftControllerIndex != -1 || rightControllerIndex != -1;
+        return leftControllerIndex != -1 || rightControllerIndex != -1; 
     }
 
 	//triggerLeftPressed returns true while trigger Left pressed down
@@ -244,6 +244,12 @@ public class ViveInputController : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	public void VibrateController( int index )
+	{
+		Debug.Log ("Vibrate vive input controller called index = " + index);
+		SteamVR_Controller.Input(index).TriggerHapticPulse((ushort) 50000, EVRButtonId.k_EButton_SteamVR_Touchpad); // microseconds, should omit 2nd param
 	}
 		
     // Update is called once per frame

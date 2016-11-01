@@ -27,10 +27,10 @@ public class SelectObjectManager : MBehavior {
 	{
 		base.MOnDisable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] -= OnSelectObject;
-		M_Event.logicEvents [(int)LogicEvents.UnselectObject] -= OnUnselectObject;
+		M_Event.logicEvents [(int)LogicEvents.UnselectObject] -= OnUnselectObject; 
 	}
 
-	void OnUnselectObject(LogicArg arg )
+	void OnUnselectObject( LogicArg arg )
 	{
 		CollectableObj cobj = (CollectableObj)arg.GetMessage (Global.EVENT_LOGIC_UNSELECT_COBJECT);
 		if (cobj != null) {
@@ -41,14 +41,12 @@ public class SelectObjectManager : MBehavior {
 		}
 	}
 		
-
 	/// <summary>
 	/// React to the select object input event
 	/// </summary>
 	/// <param name="arg">Argument.</param>
 	void OnSelectObject(InputArg arg)
 	{
-//		Debug.Log ("On Press Select Obj");
 		// if player holds no object
 		if (m_SelectObj == null) {
 			MObject focus = InputManager.Instance.FocusedObject;
@@ -63,24 +61,11 @@ public class SelectObjectManager : MBehavior {
 					M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
 				}
 			}
-		} // unselect option once object it held
+		} // unselect option available once object is held
 		else if (m_SelectObj != null) {
-			//calls unselect in MatchObj: CollectableObj
-			if (m_SelectObj.UnSelect ()) {
-				
-				//do this if anyone else needs to listen for this event
-				LogicArg logicArg = new LogicArg (this);
-				logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
-				M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
-
-				Debug.Log ("Unselect success");
-				m_SelectObj = null;
-			}
-		} else {
-			// to match the object
 			LogicArg logicArg = new LogicArg (this);
-			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
-			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
+			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
 		}
 
 
@@ -116,7 +101,7 @@ public class SelectObjectManager : MBehavior {
 		if (LogicManager.Instance.GetHandTransform (clickType) != null) {
 			trans.SetParent (LogicManager.Instance.GetHandTransform (clickType), true);
 			if (LogicManager.Instance.VREnable) {
-				trans.localPosition = Vector3.up * 0.1f;
+				trans.localPosition = Vector3.up * 0.1f + Vector3.forward * 0.1f;
 			} else {
 				trans.localPosition = Vector3.forward * 0.1f + Vector3.right * 0.1f;
 			}

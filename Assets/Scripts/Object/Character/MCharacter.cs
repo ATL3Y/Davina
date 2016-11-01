@@ -14,7 +14,7 @@ public class MCharacter : MObject {
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
 	[SerializeField] Renderer[] outerRender;
-	[SerializeField] float enterInnerWorldScaleUp = 1.5f;
+	public float enterInnerWorldScaleUp = 1.5f; //make get/set
 	[SerializeField] BoxCollider innerWorldCollider;
 	[SerializeField] Vector3 fallingSpeed;
 
@@ -159,7 +159,6 @@ public class MCharacter : MObject {
 	/// <param name="col">Col.</param>
 	public void EnterInnerWorld( Collider col )
 	{
-		Debug.Log ("Enter Inner World");
 		if (!m_isInInnerWorld) {
 
 			// fire the event
@@ -173,7 +172,7 @@ public class MCharacter : MObject {
 			// scale up the model
 			if (changeScale != null)
 				StopCoroutine (changeScale);
-			changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 0.33f));
+			changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 2f));
 
 			// disable the exterior model
 			foreach (Renderer r in outerRender) {
@@ -203,7 +202,7 @@ public class MCharacter : MObject {
 			// scale down the model
 			if (changeScale != null)
 				StopCoroutine (changeScale);
-			changeScale = StartCoroutine (ChangeScale ( originScale , 0.33f));
+			changeScale = StartCoroutine (ChangeScale ( originScale , 2f));
 
 			// enable the exterior model
 			foreach (Renderer r in outerRender) {
@@ -224,7 +223,7 @@ public class MCharacter : MObject {
 		if ( pivot == null )
 			yield break;
 		Vector3 originPosition = pivot.transform.position;
-		Debug.Log ("pivot pos " + pivot.transform.position);
+		//Debug.Log ("pivot pos " + pivot.transform.position);
 
 		float timer = 0;
 		Vector3 fromSclae = transform.localScale;
@@ -249,42 +248,5 @@ public class MCharacter : MObject {
 			transform.position += fallingSpeed * Time.deltaTime;
 		}
 	}
-
-	/* MOVED TO RAISELOWER
-	// called when object enabled 
-	void OnEnable()
-	{
-		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] += OnRaise;
-		M_Event.logicEvents [(int)LogicEvents.LowerFallingCharacter] += OnLower;
-	}
-
-	void OnDisable()
-	{
-		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] -= OnRaise;
-		M_Event.logicEvents [(int)LogicEvents.LowerFallingCharacter] -= OnLower;
-	}
-
-	void OnRaise( LogicArg arg )
-	{
-		//something obvious here
-		transform.DOLocalMove (transform.position + new Vector3 (0f, .3f, 0f), 1f).SetEase (Ease.InCirc);
-
-		/*
-		bool isUp = (bool)arg.GetMessage ("isUp");
-
-		if (isUp) {
-			transform.position += new Vector3 (0f, .2f, 0f);
-		} else {
-			transform.position -= new Vector3 (0f, .2f, 0f);
-		}
-		Debug.Log ( name + " Raise the character " + isUp);
-
-	}
-
-	void OnLower(LogicArg arg)
-	{
-		transform.DOLocalMove (transform.position + new Vector3 (0f, -.3f, 0f), 1f).SetEase (Ease.InCirc);
-	}
-	*/
 
 }
