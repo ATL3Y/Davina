@@ -26,6 +26,7 @@ public class FinalHoleObject : HoleObject
 	protected override void MOnEnable ()
 	{
 		//base.MOnEnable ();
+		Debug.Log("in final hole onenable");
 		if (gameObject.name == "Cylinder (left)") {
 			toMatchObject = GameObject.Find ("Controller (left)");
 		} else {
@@ -59,7 +60,7 @@ public class FinalHoleObject : HoleObject
 			return;
 
 		//rotate the parent so the pivot is in the hand
-		transform.parent.localRotation = toMatchObject.transform.localRotation;
+		transform.parent.localRotation = Quaternion.Inverse(toMatchObject.transform.localRotation);
 	}
 
 	/// <summary>
@@ -67,13 +68,18 @@ public class FinalHoleObject : HoleObject
 	/// </summary>
 	protected override void OnTriggerEnter(Collider col)
 	{
-		if (col.gameObject.name == toMatchObject.name) {
-			CollectableObj cobj = toMatchObject.GetComponent<CollectableObj>();
+		Debug.Log ("in final hole on trigger enter");
+		//works for either controller
+		if (col.gameObject.tag == "GameController") {
+			Debug.Log ("passed final game controller tag condition");
+			//if (col.gameObject.name == toMatchObject.name) {
+			CollectableObj cobj = col.gameObject.GetComponent<CollectableObj> ();
 			if (cobj != null) {
+				Debug.Log ("passed final Collectable obj condition");
 				// make it so the next click will not trigger Unselect's transform change in CollectableObject
 				cobj.matched = true;
-			}
-		}
+			} 
+		} 
 	}
 
 	protected override void OnTriggerExit(Collider col)
@@ -94,7 +100,7 @@ public class FinalHoleObject : HoleObject
 		//CollectableObj cobj = matchObject.GetComponent<CollectableObj>();
 		CollectableObj cobj = (CollectableObj) arg.GetMessage (Global.EVENT_LOGIC_MATCH_COBJECT);
 
-		// if the match succeeds
+		// if the match succeeds (if it was set backwards here, you'd need to do that again
 		if (cobj != null && cobj.gameObject == toMatchObject) {
 			StoryObjManager.Instance.endMatchCount++;
 			Debug.Log ("Match succeeds from finalHoleObj");
@@ -106,7 +112,7 @@ public class FinalHoleObject : HoleObject
 			}
 
 			//Hole disappears...
-			this.gameObject.SetActive(false);
+			//this.gameObject.SetActive(false);
 		}
 	}
 }

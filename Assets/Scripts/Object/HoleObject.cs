@@ -9,6 +9,9 @@ public class HoleObject : MObject {
 	[SerializeField] List<string> matchTagList = new List<string>();
 	[SerializeField] float fixInTime = 1f;
 
+	// i want the holes to have an outline too
+	[SerializeField] MeshRenderer[] outlineRenders;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -19,11 +22,33 @@ public class HoleObject : MObject {
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
+		SetOutline (true);
 	}
 
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
+		SetOutline (false);
+	}
+
+	/// <summary>
+	/// Set the outline render on or off(enable)
+	/// </summary>
+	/// <param name="isOn">If set to <c>true</c> is on.</param>
+	protected void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
+		}
+	}
+
+	/// <summary>
+	/// Shake this object 
+	/// </summary>
+	protected void Shake( )
+	{
+		Vector3 strength = new Vector3 (50f, 50f, 0f); // scale of 0-1
+		transform.DOShakeRotation(1f, strength, 10, 40f, true);
 	}
 
 	protected override void MOnEnable ()
@@ -45,15 +70,22 @@ public class HoleObject : MObject {
 	protected virtual void OnTriggerEnter(Collider col)
 	{
 		string tag = col.gameObject.tag;
-		if (matchTagList.Contains (tag)) {
-			if (SelectObjectManager.Instance.IsSelectObject (col.gameObject)) {
-				matchObject = col.gameObject;	
-
-				CollectableObj cobj = matchObject.GetComponent<CollectableObj>();
-				if (cobj != null) {
-					// make it so the next click will not trigger Unselect's transform change in CollectableObject
-					cobj.matched = true;
+		if (matchTagList.Contains (tag) && SelectObjectManager.Instance.IsSelectObject (col.gameObject)) {
+			matchObject = col.gameObject;	
+			CollectableObj cobj = matchObject.GetComponent<CollectableObj> ();
+			if (cobj != null) {
+				// make it so the next click will not trigger Unselect's transform change in CollectableObject
+				cobj.matched = true;
+			} 
+		} else if (tag == "GameController" && matchObject == null) {
+			bool shake = true;
+			foreach (Transform child in col.gameObject.transform) {
+				if (child.gameObject.layer.ToString() == "17") { // 17 is "Hold"
+					shake = false;
 				}
+			}
+			if (shake) {
+				Shake ();
 			}
 		}
 	}
@@ -78,6 +110,7 @@ public class HoleObject : MObject {
 		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
 			// vibrate the controller holding the matchObject
+
 			if (cobj.transform.gameObject.name == "Controller (left)") {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 			} else {
@@ -96,7 +129,6 @@ public class HoleObject : MObject {
 			cobj.OnFill ();
 
 			//this.gameObject.SetActive (false);
-
 		}
 	}
 }
