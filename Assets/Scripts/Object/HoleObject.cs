@@ -104,13 +104,11 @@ public class HoleObject : MObject {
 	/// <param name="arg">Argument.</param>
 	protected virtual void OnMatchObject( LogicArg arg )
 	{
-		//CollectableObj cobj = matchObject.GetComponent<CollectableObj>();
 		CollectableObj cobj = (CollectableObj) arg.GetMessage (Global.EVENT_LOGIC_MATCH_COBJECT);
 
 		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
 			// vibrate the controller holding the matchObject
-
 			if (cobj.transform.gameObject.name == "Controller (left)") {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 			} else {
@@ -127,7 +125,6 @@ public class HoleObject : MObject {
 
 			// tell the object it is filled in the hole
 			cobj.OnFill ();
-
 			//this.gameObject.SetActive (false);
 		}
 	}

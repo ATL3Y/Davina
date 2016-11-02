@@ -131,7 +131,7 @@ public class TransportManager : MBehavior {
 			// add the vfx if there is the image effect in the camera
 			if (toColorEffect != null && bloomAndFlares != null) {
 				transportSequence.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime));
-				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
+				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
 			}
 
 
@@ -149,7 +149,7 @@ public class TransportManager : MBehavior {
 			// add the vfx if there is the image effect in the camera
 			if (toColorEffect != null && bloomAndFlares != null) {
 				transportSequence.Append (DOTween.To (() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
-				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
+				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
 			}
 
 			transportSequence.OnComplete (OnTransportCOmplete);

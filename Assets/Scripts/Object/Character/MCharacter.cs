@@ -52,6 +52,16 @@ public class MCharacter : MObject {
 		innerWorld.gameObject.SetActive (true);
 	}
 
+	protected override void MOnEnable(){
+		base.MOnEnable ();
+		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+	}
+
+	protected override void MOnDisable(){
+		base.MOnDisable ();
+		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+	}
+
 
 	/// <summary>
 	/// set this game object and all the body renders to a specific layer
@@ -247,6 +257,10 @@ public class MCharacter : MObject {
 		if (!IsInInnerWorld) {
 			transform.position += fallingSpeed * Time.deltaTime;
 		}
+	}
+
+	void OnEnd( LogicArg arg ){
+		Debug.Log ("onend in mcharacter");
 	}
 
 }

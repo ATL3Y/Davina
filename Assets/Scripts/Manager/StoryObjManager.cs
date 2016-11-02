@@ -15,9 +15,6 @@ public class StoryObjManager : MBehavior {
 
 	private List<GameObject> currentStory = new List<GameObject>();
 
-	public int endMatchCount = 0; //set from FinalMatchObj
-	private bool once = false;
-
 	[SerializeField] GameObject Davina;
 
 	protected override void MAwake ()
@@ -100,22 +97,5 @@ public class StoryObjManager : MBehavior {
 		}
 		return null;
 	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (endMatchCount == 2 && !once) {
-			once = true;
-			// call end logic event 
-			Debug.Log("end event sent from story obj manager");
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.End, logicArg);
-
-		}
-	
-	}
+		
 }
