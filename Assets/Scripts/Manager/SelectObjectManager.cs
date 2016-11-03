@@ -52,9 +52,9 @@ public class SelectObjectManager : MBehavior {
 			MObject focus = InputManager.Instance.FocusedObject;
 			if (focus != null && focus is CollectableObj) {
 				CollectableObj cobj = (CollectableObj)focus;
-				Debug.Log ("Try Select");
+				//Debug.Log ("Try Select");
 				if (cobj.Select (arg.clickType)) {
-					Debug.Log ("Select success");
+					//Debug.Log ("Select success");
 					m_SelectObj = cobj;
 					LogicArg logicArg = new LogicArg (this);
 					logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
@@ -63,6 +63,7 @@ public class SelectObjectManager : MBehavior {
 			}
 		} // unselect option available once object is held
 		else if (m_SelectObj != null) {
+			//print (" in on select obj and m_SelectObj = " + m_SelectObj.name);
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);

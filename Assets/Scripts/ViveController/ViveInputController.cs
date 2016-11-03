@@ -249,7 +249,7 @@ public class ViveInputController : MonoBehaviour
 	public void VibrateController( int index )
 	{
 		Debug.Log ("Vibrate vive input controller called index = " + index);
-		SteamVR_Controller.Input(index).TriggerHapticPulse((ushort) 50000, EVRButtonId.k_EButton_SteamVR_Touchpad); // microseconds, should omit 2nd param
+		SteamVR_Controller.Input(index).TriggerHapticPulse((ushort) 3999); // microseconds, should omit 2nd param
 	}
 		
     // Update is called once per frame

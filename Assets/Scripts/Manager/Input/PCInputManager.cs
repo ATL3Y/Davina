@@ -34,5 +34,15 @@ public class PCInputManager : InputManager {
 		centers [0] = new Ray (Vector3.zero, Vector3.forward);
 		return centers;
 	}
+
+	public override int[] GetPointing(){
+
+		int[] pointingOrder = new int[2];
+
+		pointingOrder [0] = 0;
+		pointingOrder [1] = 1;
+
+		return pointingOrder;
+	}
 		
 }

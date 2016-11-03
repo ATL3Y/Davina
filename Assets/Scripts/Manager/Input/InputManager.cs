@@ -42,14 +42,16 @@ public class InputManager : MBehavior {
 		RaycastHit hitInfo;
 
 		/// make array of 2 for the 2 controllers. PC mouse input is same for [0] and [1]
-		/// this will prefer the left controller if users are trying to select two things at once
 		Ray[] centers = new Ray[2];
 		centers = GetCenterRayCast ();
 
-		/// if centers[1] is null, it should not return? 
-		if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+		int[] pointingOrder = new int[2];
+		pointingOrder = GetPointing ();
+
+		/// this evaluates the controller that is most horizontal first
+		if (Physics.Raycast (centers[pointingOrder[0]], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
-		} else if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+		} else if (Physics.Raycast (centers[pointingOrder[1]], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
 			
@@ -62,6 +64,7 @@ public class InputManager : MBehavior {
 			m_focusObj = lookObj;
 			if (m_focusObj != null) {
 				m_focusObj.OnFocus ();
+				Debug.Log ("name of focus obj = " + m_focusObj.name);
 				FireFocusNewObject (m_focusObj.gameObject);
 			}
 		}
@@ -84,6 +87,16 @@ public class InputManager : MBehavior {
 		centers [1] = Camera.main.ScreenPointToRay (new Vector2 (Screen.width / 2f, Screen.height / 2f));;
 
 		return  centers;
+	}
+
+	public virtual int[] GetPointing(){
+		int[] pointingOrder = new int[2];
+
+		pointingOrder [0] = 0;
+		pointingOrder [1] = 1;
+
+		return pointingOrder;
+		
 	}
 
 	public virtual void VibrateController( int index )

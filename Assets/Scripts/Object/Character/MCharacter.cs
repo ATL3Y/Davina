@@ -129,8 +129,8 @@ public class MCharacter : MObject {
 	{
 		if ( (col.gameObject.tag == "GameController" &&
 			LogicManager.Instance.VREnable) || 
-			(col.gameObject.tag == "Player" &&
-				!LogicManager.Instance.VREnable) ) 
+			(col.gameObject.tag == "Player")) 
+				//&& !LogicManager.Instance.VREnable) ) //so head triggers mesh for vr or no
 		{
 			if ( triggeredCharacter.Contains(this))
 				triggeredCharacter.Remove (this);

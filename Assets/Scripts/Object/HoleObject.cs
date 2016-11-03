@@ -71,11 +71,13 @@ public class HoleObject : MObject {
 	{
 		string tag = col.gameObject.tag;
 		if (matchTagList.Contains (tag) && SelectObjectManager.Instance.IsSelectObject (col.gameObject)) {
-			matchObject = col.gameObject;	
+			matchObject = col.gameObject;
+			//print ("hole match obj name = " + matchObject.name);
 			CollectableObj cobj = matchObject.GetComponent<CollectableObj> ();
 			if (cobj != null) {
 				// make it so the next click will not trigger Unselect's transform change in CollectableObject
 				cobj.matched = true;
+				//print ("in hole set matched = " + cobj.matched);
 			} 
 		} else if (tag == "GameController" && matchObject == null) {
 			bool shake = true;
@@ -105,9 +107,10 @@ public class HoleObject : MObject {
 	protected virtual void OnMatchObject( LogicArg arg )
 	{
 		CollectableObj cobj = (CollectableObj) arg.GetMessage (Global.EVENT_LOGIC_MATCH_COBJECT);
-
+		//print ("in hole on match obj");
 		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
+			//print ("in hole on match obj condition");
 			// vibrate the controller holding the matchObject
 			if (cobj.transform.gameObject.name == "Controller (left)") {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);

@@ -16,6 +16,8 @@ public class TextStatic : MonoBehaviour
 	private Vector3 origScale;
 	private float tracking = .5f;
 
+	[SerializeField] string firstPhrase;
+
 	public void Start () 
 	{
 		origPos = transform.position;
@@ -35,8 +37,11 @@ public class TextStatic : MonoBehaviour
 		foreach (GameObject letter in alphabet) //for each letter in the array loaded from resources 
 		{
 			GameObject l = (GameObject)letter;
+			l.layer = 20; //add to Bridge layer so it's visible by near camera
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
+
+		MakeTextGO (firstPhrase);
 	}
 
 	public void Update () 
@@ -69,7 +74,8 @@ public class TextStatic : MonoBehaviour
 					GameObject newLetter = Instantiate (_alphabet [j]);
 					newLetter.transform.SetParent (transform);
 					newLetter.transform.localPosition = new Vector3 (-tracking * count * i, 0f, 0f);
-					newLetter.transform.localRotation = transform.rotation;
+					//newLetter.transform.localRotation = transform.rotation;
+					newLetter.transform.localRotation = Quaternion.identity;
 					_letters.Add (newLetter);
 					count = 1;
 				} 

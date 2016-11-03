@@ -25,7 +25,7 @@ public class MatchObj : CollectableObj {
 	public override void OnFill ()
 	{
 		base.OnFill ();
-
+		//print ("in match on fill");
 		// other option: one "on fill" event, bool on arg for up or down, check bool in MCharacter
 		if (gameObject.tag == "Raise") {
 			M_Event.FireLogicEvent (onFillRaiseEvent, new LogicArg (this));

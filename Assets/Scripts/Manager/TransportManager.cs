@@ -78,7 +78,7 @@ public class TransportManager : MBehavior {
 
 			if (transportCircle != null) {
 				Vector3 transportToward = focusPasserby.GetObservePosition ();
-				transportToward.y = .25f; 
+				transportToward.y = .25f;
 				transportCircle.transform.position = transportToward;
 				transportCircle.gameObject.SetActive (true);
 			}
@@ -143,7 +143,15 @@ public class TransportManager : MBehavior {
 //			offset.Normalize (); 
 //			offset *= transportOffset;
 			Vector3 target = p.GetObservePosition();
-			target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
+			print ("my target.y is = " + target.y); //make sure world coord
+			// if on bridge, set higher
+			if (target.y > 10f) {
+				target.y = 22.286f;
+			} else {
+				target.y = .14f;
+			}
+
+			//target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
 			transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));
 			// add the vfx if there is the image effect in the camera

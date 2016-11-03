@@ -41,4 +41,22 @@ public class ViveInputManager : InputManager {
 		ViveInputController.Instance.VibrateController (index);
 	}
 
+	public override int[] GetPointing(){
+
+		int[] pointingOrder = new int[2];
+
+		float dot0 = Vector3.Dot (Vector3.up, ViveInputController.Instance.leftController.transform.forward);
+		float dot1 = Vector3.Dot (Vector3.up, ViveInputController.Instance.rightController.transform.forward);
+
+		if (dot0 < dot1) {
+			pointingOrder [0] = 0;
+			pointingOrder [1] = 1;
+		} else {
+			pointingOrder [0] = 1;
+			pointingOrder [1] = 0;
+		}
+
+		return pointingOrder;
+	}
+
 }
