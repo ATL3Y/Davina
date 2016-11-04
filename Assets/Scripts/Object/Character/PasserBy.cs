@@ -113,6 +113,7 @@ public class PasserBy : MObject {
 		Vector3 dirToPlayer = player.transform.position - observeLocation.transform.position;
 		dirToPlayer = dirToPlayer.normalized;
 		Vector3 pos = observeLocation.transform.position + dirToPlayer * .35f;
+		print ("observe ps from passerby = " + pos);
 		return pos;
 	}
 

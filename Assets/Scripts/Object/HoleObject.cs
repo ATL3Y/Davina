@@ -12,11 +12,24 @@ public class HoleObject : MObject {
 	// i want the holes to have an outline too
 	[SerializeField] MeshRenderer[] outlineRenders;
 
+	[SerializeField] protected AudioClip storySound;
+	protected AudioSource storySoundSource;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
 		col = GetComponent<Collider> ();
 		col.isTrigger = true;
+
+		// set up the story sound
+		if (storySound != null) {
+			storySoundSource = gameObject.AddComponent<AudioSource> ();
+			storySoundSource.playOnAwake = false;
+			storySoundSource.loop = false;
+			storySoundSource.volume = 1f;
+			storySoundSource.spatialBlend = 1f;
+			storySoundSource.clip = storySound;
+		}
 	}
 
 	public override void OnFocus ()
@@ -66,7 +79,7 @@ public class HoleObject : MObject {
 	/// <summary>
 	/// TODO: find a better way to handle the match object algorithm
 	/// </summary>
-	GameObject matchObject;
+	public GameObject matchObject;
 	protected virtual void OnTriggerEnter(Collider col)
 	{
 		string tag = col.gameObject.tag;
@@ -78,7 +91,11 @@ public class HoleObject : MObject {
 				// make it so the next click will not trigger Unselect's transform change in CollectableObject
 				cobj.matched = true;
 				//print ("in hole set matched = " + cobj.matched);
-			} 
+				SetOutline(true);
+			}
+			// play story
+			if ( storySoundSource != null )
+				storySoundSource.Play ();
 		} else if (tag == "GameController" && matchObject == null) {
 			bool shake = true;
 			foreach (Transform child in col.gameObject.transform) {
@@ -89,13 +106,17 @@ public class HoleObject : MObject {
 			if (shake) {
 				Shake ();
 			}
+			// play story
+			if ( storySoundSource != null && gameObject.layer != 18) // object is not Done
+				storySoundSource.Play ();
 		}
 	}
 
 	protected virtual void OnTriggerExit(Collider col)
 	{
 		if (matchObject == col.gameObject) {
-			matchObject = null;
+			//matchObject = null;
+			SetOutline(false);
 		}
 	}
 

@@ -5,6 +5,10 @@ using System.Linq;
 
 public class TextInstructions : MonoBehaviour 
 {
+	public TextInstructions() { s_Instance = this; }
+	public static TextInstructions Instance { get { return s_Instance; } }
+	private static TextInstructions s_Instance;
+
 	private List < GameObject > _alphabet = new List<GameObject> (); //these are all the letters of the alphabet to spell with
 	private List < GameObject > _letters = new List<GameObject> (); //letters in the given phrase
 
@@ -53,39 +57,47 @@ public class TextInstructions : MonoBehaviour
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] += OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] += OnOutofFocus;
+		M_Event.logicEvents [(int)LogicEvents.MatchObject] += OnMatchObject;
 	}
 
 	public void OnDisable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] -= OnOutofFocus;
+		M_Event.logicEvents [(int)LogicEvents.MatchObject] -= OnMatchObject;
 	}
 	PasserBy focusPasserby;	
 	public void OnFocusNew( InputArg arg ){
-		print ("in on focus new in text");
+		//print ("in on focus new in text");
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		CollectableObj cobj = arg.focusObject.GetComponent<CollectableObj> ();
-		if (cobj != null) {
+		if (cobj != null && cobj.matched) {
 			MakeTextGO (instructions [3]);
-			print ("in on focus new in text c conditional");
+		} else if (cobj != null ) {
+			MakeTextGO (instructions [3]);
+			//print ("in on focus new in text c conditional");
 		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why can't i stop from focusing on current focus object?
 			focusPasserby = p;
 			MakeTextGO (instructions [1]);
-			print ("in on focus new in text p conditional");
+			//print ("in on focus new in text p conditional");
 		} 
 	}
 
 	public void OnOutofFocus( InputArg arg )
 	{
+		/*
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		if ( focusPasserby == p) {
-			MakeTextGO (instructions [2]);
+			MakeTextGO (instructions [0]);
 			focusPasserby = null;
-		}
+		} 
+		*/
+
+		MakeTextGO (instructions [4]);
 	}
 
 	public void OnTransport(InputArg arg){
-		print ("in on transport in text");
+		//print ("in on transport in text");
 
 		if (transform.position.y < 10f) {
 			//have gone to lower level
@@ -95,8 +107,12 @@ public class TextInstructions : MonoBehaviour
 
 		if (InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is PasserBy) {
 			MakeTextGO (instructions [2]);
-			print ("in on transport in text transport conditional");
+			//print ("in on transport in text transport conditional");
 		}
+	}
+
+	public void OnMatchObject(LogicArg arg ){
+		MakeTextGO ("GOOD JOB LOOK DOWN");
 	}
 
 	public void MakeTextGO ( string text ) //could have size, shader... //assuming all uppercase 

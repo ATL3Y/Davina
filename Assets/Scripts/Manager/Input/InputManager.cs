@@ -45,13 +45,22 @@ public class InputManager : MBehavior {
 		Ray[] centers = new Ray[2];
 		centers = GetCenterRayCast ();
 
+
+
+		/*
+		/// this evaluates the controller that is most horizontal first
 		int[] pointingOrder = new int[2];
 		pointingOrder = GetPointing ();
-
-		/// this evaluates the controller that is most horizontal first
 		if (Physics.Raycast (centers[pointingOrder[0]], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		} else if (Physics.Raycast (centers[pointingOrder[1]], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
+		}
+		*/
+
+		if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
+		} else if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
 			

@@ -15,6 +15,9 @@ public class FinalHoleObject : MObject
 	// i want the holes to have an outline too
 	[SerializeField] MeshRenderer[] outlineRenders;
 
+	[SerializeField] protected AudioClip storySound;
+	protected AudioSource storySoundSource;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -25,6 +28,16 @@ public class FinalHoleObject : MObject
 			toMatchObject = GameObject.Find ("Controller (left)");
 		} else {
 			toMatchObject = GameObject.Find ("Controller (right)");
+		}
+
+		// set up the story sound
+		if (storySound != null) {
+			storySoundSource = gameObject.AddComponent<AudioSource> ();
+			storySoundSource.playOnAwake = false;
+			storySoundSource.loop = false;
+			storySoundSource.volume = 1f;
+			storySoundSource.spatialBlend = 1f;
+			storySoundSource.clip = storySound;
 		}
 
 		/* 
@@ -64,15 +77,6 @@ public class FinalHoleObject : MObject
 		}
 	}
 
-	/// <summary>
-	/// Shake this object 
-	/// </summary>
-	protected void Shake( )
-	{
-		Vector3 strength = new Vector3 (50f, 50f, 0f); // scale of 0-1
-		transform.DOShakeRotation(1f, strength, 10, 40f, true);
-	}
-
 	protected override void MOnEnable ()
 	{
 		base.MOnEnable ();
@@ -104,6 +108,9 @@ public class FinalHoleObject : MObject
 		//works for either controller
 		if (col.gameObject.tag == "GameController") {
 		//if (col.gameObject.name == toMatchObject.name) {
+			// play story
+			if ( storySoundSource != null )
+				storySoundSource.Play ();
 			LogicArg logicArg = new LogicArg (this);
 
 			M_Event.FireLogicEvent (LogicEvents.End, logicArg);

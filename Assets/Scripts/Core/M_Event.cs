@@ -44,6 +44,7 @@ public enum LogicEvents
 	ExitStory=16,
 
 	End=17,
+	Credits=18,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,

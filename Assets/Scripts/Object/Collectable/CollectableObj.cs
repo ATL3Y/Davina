@@ -54,7 +54,7 @@ public class CollectableObj : MObject {
 			storySoundSource = gameObject.AddComponent<AudioSource> ();
 			storySoundSource.playOnAwake = false;
 			storySoundSource.loop = false;
-			storySoundSource.volume = 0.5f;
+			storySoundSource.volume = 1f;
 			storySoundSource.spatialBlend = 1f;
 			storySoundSource.clip = storySound;
 		}
@@ -64,6 +64,9 @@ public class CollectableObj : MObject {
 	{
 		base.OnFocus ();
 		SetOutline (true);
+		if ( storySoundSource != null )
+			storySoundSource.Play ();
+
 	}
 
 	public override void OnOutofFocus ()
@@ -99,8 +102,6 @@ public class CollectableObj : MObject {
 		// play the sound effect
 		if ( selectSoundSource != null )
 			selectSoundSource.Play ();
-		if ( storySoundSource != null )
-			storySoundSource.Play ();
 		
 		return true;
 	}
@@ -130,6 +131,7 @@ public class CollectableObj : MObject {
 			//how do at the same time? how do rotate?
 			transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
 			//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
+			transform.localRotation = Quaternion.identity;
 			return true;
 		} else if (matched) {
 			//fires match object event on pressing trigger instead of unselect
@@ -146,7 +148,9 @@ public class CollectableObj : MObject {
 	/// </summary>
 	virtual public void OnFill()
 	{
-		
+		// repeat story once filled (could play both stories at this point)
+		if ( storySoundSource != null )
+			storySoundSource.Play ();
 	}
 
 }

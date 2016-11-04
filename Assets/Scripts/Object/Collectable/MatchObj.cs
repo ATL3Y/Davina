@@ -35,6 +35,10 @@ public class MatchObj : CollectableObj {
 
 		gameObject.layer = 18; //change layer from Hold (17) to Done (18)
 
+		if (LogicManager.Instance.GetPlayerTransform ().position.y > 10f)
+			return;
+
+		//don't call this from tutorial 
 		LogicArg logicArg = new LogicArg (this);
 		//logicArg.AddMessage (Global.EVENT_LOGIC_EXITSTORYOBJ);
 		M_Event.FireLogicEvent (LogicEvents.ExitStory, logicArg);
