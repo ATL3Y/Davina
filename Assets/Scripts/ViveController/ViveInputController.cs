@@ -82,6 +82,7 @@ public class ViveInputController : MonoBehaviour
         if (useViveInput && GetControllerIndices())
         {
             if (leftControllerIndex > -1 && SteamVR_Controller.Input(leftControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedLeftButtonDownSignal() (Trigger)");
                 return true;
         }
 
@@ -97,6 +98,7 @@ public class ViveInputController : MonoBehaviour
         {
             //Debug.Log("in UVI and GCI");
             if (rightControllerIndex > -1 && SteamVR_Controller.Input(rightControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedRightButtonDownSignal() (Trigger)");
                 return true;
         }
 
@@ -205,7 +207,8 @@ public class ViveInputController : MonoBehaviour
 	{
 		if (useViveInput && GetControllerIndices())
 		{
-			if (rightControllerIndex > -1 && SteamVR_Controller.Input(rightControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+			if (rightControllerIndex > -1 && SteamVR_Controller.Input (rightControllerIndex).GetPressDown (EVRButtonId.k_EButton_SteamVR_Touchpad))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedRightPadDownSignal()");
 				return true;
 		}
 
@@ -218,6 +221,7 @@ public class ViveInputController : MonoBehaviour
 		if (useViveInput && GetControllerIndices())
 		{
 			if (leftControllerIndex > -1 && SteamVR_Controller.Input(leftControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedLeftPadDownSignal()");
 				return true;
 		}
 
@@ -248,7 +252,7 @@ public class ViveInputController : MonoBehaviour
 
 	public void VibrateController( int index )
 	{
-		Debug.Log ("Vibrate vive input controller called index = " + index);
+		//Debug.Log ("Vibrate vive input controller called index = " + index);
 		SteamVR_Controller.Input(index).TriggerHapticPulse((ushort) 3999); // microseconds, should omit 2nd param
 	}
 		

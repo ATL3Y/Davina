@@ -91,7 +91,7 @@ public class StoryObjManager : MBehavior {
 			}
 			break;
 		default:
-			Debug.Log("In default of Story Obj Manager");
+			//Debug.Log("In default of Story Obj Manager");
 			return null;
 			break;
 		}

@@ -64,7 +64,7 @@ public class CollectableObj : MObject {
 	{
 		base.OnFocus ();
 		SetOutline (true);
-		if ( storySoundSource != null )
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
 			storySoundSource.Play ();
 
 	}
@@ -100,7 +100,7 @@ public class CollectableObj : MObject {
 		foreach (Transform t in GetComponentsInChildren<Transform>())
 			t.gameObject.layer = LayerMask.NameToLayer ("Hold");
 		// play the sound effect
-		if ( selectSoundSource != null )
+		if ( selectSoundSource != null)
 			selectSoundSource.Play ();
 		
 		return true;
@@ -138,6 +138,7 @@ public class CollectableObj : MObject {
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_MATCH_COBJECT, this);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+			Debug.Log (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
 		}
 		return false;
 
@@ -149,7 +150,7 @@ public class CollectableObj : MObject {
 	virtual public void OnFill()
 	{
 		// repeat story once filled (could play both stories at this point)
-		if ( storySoundSource != null )
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
 			storySoundSource.Play ();
 	}
 

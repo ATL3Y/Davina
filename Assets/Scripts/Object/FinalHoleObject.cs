@@ -18,6 +18,8 @@ public class FinalHoleObject : MObject
 	[SerializeField] protected AudioClip storySound;
 	protected AudioSource storySoundSource;
 
+	private int count = 0;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -109,8 +111,8 @@ public class FinalHoleObject : MObject
 		if (col.gameObject.tag == "GameController") {
 		//if (col.gameObject.name == toMatchObject.name) {
 			// play story
-			if ( storySoundSource != null )
-				storySoundSource.Play ();
+
+
 			LogicArg logicArg = new LogicArg (this);
 
 			M_Event.FireLogicEvent (LogicEvents.End, logicArg);
@@ -121,6 +123,8 @@ public class FinalHoleObject : MObject
 	{
 		if (col.gameObject.name == toMatchObject.name) {
 			//matchObject = null;
+			if ( storySoundSource != null && !storySoundSource.isPlaying)
+				storySoundSource.Play ();
 		}
 	}
 
@@ -131,19 +135,19 @@ public class FinalHoleObject : MObject
 	protected void OnEnd( LogicArg arg )
 	{
 		SteamVR_TrackedObject eobj = (SteamVR_TrackedObject)arg.GetMessage (Global.EVENT_LOGIC_END_EOBJECT);
-		Debug.Log ("end reached");
+		//Debug.Log ("end reached");
 		// check that obj sending event is this toMatchObj
 		if (eobj != null && eobj.gameObject == toMatchObject) {
 			
 			// vibrate the controller holding the toMatchObject
 			if (toMatchObject.name == "Controller (left)") {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
-				Debug.Log ("left controller shakes");
+				//Debug.Log ("left controller shakes");
 			} else {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
-				Debug.Log ("right controller shakes");
+				//Debug.Log ("right controller shakes");
 			}
 		}
 	}
 }
-
+	

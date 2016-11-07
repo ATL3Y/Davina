@@ -17,12 +17,28 @@ public class TextInstructions : MonoBehaviour
 	private Vector3 origPos;
 	private Quaternion origRot;
 	private Vector3 origScale;
-	private float tracking = .03f;
+	private float tracking = .025f;
 
-	[SerializeField] List<string> instructions;
+	private List<string> instructions = new List<string>();
+
+	private bool selected = false;
+	private bool matched = false;
 
 	public void Start () 
 	{
+		instructions.Add ("HEY POINT AT THE PERSON"); //0
+		instructions.Add ("PRESS PAD"); //1
+		instructions.Add ("REACH INSIDE CHEST AND TAP BRIGHT OBJECT"); //2
+		instructions.Add ("TAP THE BRIGHT OBJECT"); //3
+		instructions.Add ("PULL TRIGGER"); //4
+		instructions.Add ("POINT AT THE NEXT PERSON"); //5
+
+		instructions.Add ("THAT IS YOU"); //6
+		instructions.Add ("THATS YOU AND YOU HAVE A HOLE IN YOUR HEART TO FILL"); //7
+		instructions.Add ("FILL IT"); //8
+
+		instructions.Add ("KEEP GOING LOOK DOWN"); //9
+
 		origPos = transform.localPosition;
 		origRot = transform.localRotation;
 		origScale = transform.localScale;
@@ -34,7 +50,7 @@ public class TextInstructions : MonoBehaviour
 
 		if (alphabet == null || alphabet.Length == 0) 
 		{
-			print ("no files found");
+			//print ("no files found");
 		}
 
 		foreach (GameObject letter in alphabet) //for each letter in the array loaded from resources 
@@ -44,7 +60,7 @@ public class TextInstructions : MonoBehaviour
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
 
-		MakeTextGO (instructions [0]);
+		MakeTextGO (instructions [0]); // point at the person
 			
 	}
 
@@ -68,18 +84,21 @@ public class TextInstructions : MonoBehaviour
 	}
 	PasserBy focusPasserby;	
 	public void OnFocusNew( InputArg arg ){
-		//print ("in on focus new in text");
+
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		CollectableObj cobj = arg.focusObject.GetComponent<CollectableObj> ();
+		if (SelectObjectManager.Instance.SelectObj != null) {
+			selected = true;
+		}
 		if (cobj != null && cobj.matched) {
-			MakeTextGO (instructions [3]);
+			MakeTextGO (instructions [4]); // pull trigger
 		} else if (cobj != null ) {
-			MakeTextGO (instructions [3]);
-			//print ("in on focus new in text c conditional");
-		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why can't i stop from focusing on current focus object?
+			MakeTextGO (instructions [4]); // pull trigger
+
+		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { 
 			focusPasserby = p;
-			MakeTextGO (instructions [1]);
-			//print ("in on focus new in text p conditional");
+			MakeTextGO (instructions [1]); // press pad
+		
 		} 
 	}
 
@@ -93,7 +112,25 @@ public class TextInstructions : MonoBehaviour
 		} 
 		*/
 
-		MakeTextGO (instructions [4]);
+		//MakeTextGO (instructions [4]);
+
+		if (transform.position.z > -30f && transform.position.z < -12f && !matched && !selected) {
+			MakeTextGO (instructions [2]); // reach in chest 
+
+			//StartCoroutine (Delay (3f));
+			//MakeTextGO (instructions [3]); // tap bright obj
+
+			//StartCoroutine (Delay (3f));
+		}else if (transform.position.z > -12f && transform.position.z < 5f && !matched) {
+			//MakeTextGO (instructions [6]); // that's you
+
+			//StartCoroutine (Delay (3f));
+			MakeTextGO (instructions [7]);
+
+			//StartCoroutine (Delay (3f));
+			//MakeTextGO (instructions [8]);
+			//StartCoroutine (Delay (3f));
+		}
 	}
 
 	public void OnTransport(InputArg arg){
@@ -104,26 +141,34 @@ public class TextInstructions : MonoBehaviour
 			Clear();
 			transform.parent.GetComponent<Disable> ().DisableClidren ();
 		}
-
+			
 		if (InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is PasserBy) {
-			MakeTextGO (instructions [2]);
-			//print ("in on transport in text transport conditional");
+			MakeTextGO (instructions [2]); // reach in chest 
+			//Pause(4f);
+			//StartCoroutine (Delay (3f));
+			//MakeTextGO (instructions [3]); // tap bright obj
 		}
 	}
 
 	public void OnMatchObject(LogicArg arg ){
-		MakeTextGO ("GOOD JOB LOOK DOWN");
+		matched = true;
+		MakeTextGO (instructions[9]);
 	}
 
 	public void MakeTextGO ( string text ) //could have size, shader... //assuming all uppercase 
 	{
 		Clear ();
-		//Pause ();
+		//Pause (.5f);
+		//StartCoroutine (Delay (.5f));
+
+		InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
 		//center text
+		/*
 		size = text.Length;
 		float length = size * tracking;
 		transform.position += transform.right * length / 2 * transform.localScale.x;
+		*/
 
 		for (int i=0; i < text.Length; i++) 
 		{
@@ -186,11 +231,15 @@ public class TextInstructions : MonoBehaviour
 
 	}
 
-	public void Pause(){
-		float time = 1.5f;
+	public void Pause( float time){
 
 		while (time > 0f) {
 			time -= Time.deltaTime;
 		}
+	}
+
+	IEnumerator Delay( float delay )
+	{
+		yield return new WaitForSeconds (delay);
 	}
 }

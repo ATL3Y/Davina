@@ -17,6 +17,7 @@ public class TransportManager : MBehavior {
 	[SerializeField] LineRenderer transportLine;
 	[SerializeField] ParticleSystem transportCircle;
 	[SerializeField] Transform endPosition;
+	[SerializeField] GameObject endCharacter;
 
 	/// <summary>
 	/// For the transport animation
@@ -129,6 +130,7 @@ public class TransportManager : MBehavior {
 			M_Event.FireLogicEvent ( LogicEvents.TransportStart, logicArg);
 
 
+
 			// set up the animation sequence
 			transportSequence = DOTween.Sequence ();
 			// add the vfx if there is the image effect in the camera
@@ -146,7 +148,7 @@ public class TransportManager : MBehavior {
 //			offset.Normalize (); 
 //			offset *= transportOffset;
 			Vector3 target = p.GetObservePosition();
-			print ("my target.y is = " + target.y); //make sure world coord
+			//print ("my target.y is = " + target.y); //make sure world coord
 			// if on bridge, set higher
 			if (target.y > 10f) {
 				target.y = 22.286f;
@@ -154,6 +156,8 @@ public class TransportManager : MBehavior {
 				Disable.Instance.DisableClidren ();
 				target.y = .346f;
 			}
+
+			Debug.Log (Time.timeSinceLevelLoad + "; TransportStart to: " + target);
 
 			//target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
@@ -184,7 +188,9 @@ public class TransportManager : MBehavior {
 
 	void OnCredits( LogicArg arg ){
 
-		Debug.Log ("on end from transport manager");
+		endCharacter.SetActive (true);
+
+		//Debug.Log ("on end from transport manager");
 		// fire the transport start event
 		LogicArg logicArg = new LogicArg (this);
 		logicArg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);

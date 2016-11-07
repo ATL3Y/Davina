@@ -50,7 +50,7 @@ public enum LogicEvents
 	OpenShotTwoEnter = 102,
 	OpenShotThreeEnter = 103,
 
-	MotherSceneEnter = 201,
+	CharacterSceneEnter = 201,
 }
 
 public class M_Event : MonoBehaviour {

@@ -13,7 +13,7 @@ public class HoleObject : MObject {
 	[SerializeField] MeshRenderer[] outlineRenders;
 
 	[SerializeField] protected AudioClip storySound;
-	protected AudioSource storySoundSource;
+	[SerializeField] protected AudioSource storySoundSource;
 
 	protected override void MAwake ()
 	{
@@ -29,6 +29,7 @@ public class HoleObject : MObject {
 			storySoundSource.volume = 1f;
 			storySoundSource.spatialBlend = 1f;
 			storySoundSource.clip = storySound;
+
 		}
 	}
 
@@ -107,7 +108,7 @@ public class HoleObject : MObject {
 				Shake ();
 			}
 			// play story
-			if ( storySoundSource != null && gameObject.layer != 18) // object is not Done
+			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
 				storySoundSource.Play ();
 		}
 	}
@@ -144,6 +145,11 @@ public class HoleObject : MObject {
 			cobj.transform.DOLocalMove (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOLocalRotate (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOScale (1.02f, fixInTime).SetEase (Ease.InCirc);
+
+			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
+				storySoundSource.Play ();
+
+			//would be nice to then repeat match sound here 
 
 			gameObject.layer = 18; //change layer from Focus (16) to Done (18)
 

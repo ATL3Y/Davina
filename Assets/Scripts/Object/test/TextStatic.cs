@@ -31,7 +31,7 @@ public class TextStatic : MonoBehaviour
 
 		if (alphabet == null || alphabet.Length == 0) 
 		{
-			print ("no files found");
+			//print ("no files found");
 		}
 
 		foreach (GameObject letter in alphabet) //for each letter in the array loaded from resources 

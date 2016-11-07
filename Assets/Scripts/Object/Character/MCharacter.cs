@@ -260,7 +260,7 @@ public class MCharacter : MObject {
 	}
 
 	void OnEnd( LogicArg arg ){
-		Debug.Log ("onend in mcharacter");
+		//Debug.Log ("onend in mcharacter");
 	}
 
 }

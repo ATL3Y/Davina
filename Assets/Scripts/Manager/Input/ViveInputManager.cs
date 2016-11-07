@@ -37,7 +37,7 @@ public class ViveInputManager : InputManager {
 
 	public override void VibrateController (int index)
 	{
-		Debug.Log ("Vibrate vive input manager called index = " + index);
+		//Debug.Log ("Vibrate vive input manager called index = " + index);
 		ViveInputController.Instance.VibrateController (index);
 	}
 

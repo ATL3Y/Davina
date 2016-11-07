@@ -39,10 +39,7 @@ public class LogicManager : MBehavior {
 	public enum State
 	{
 		Init,
-		OpenShotOne,
-		OpenShotTwo,
-		OpenShotThree,
-		MotherScene,
+		CharacterScene,
 
 	}
 	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
@@ -78,23 +75,11 @@ public class LogicManager : MBehavior {
 	{
 		m_stateMachine.AddUpdate (State.Init, delegate() {
 			//m_stateMachine.State = State.OpenShotOne;
-			m_stateMachine.State = State.MotherScene;
+			m_stateMachine.State = State.CharacterScene;
 		});
 
-		m_stateMachine.AddEnter (State.OpenShotOne, delegate() {
-			M_Event.FireLogicEvent(LogicEvents.OpenShotOneEnter,new LogicArg(this));	
-		});
-
-		m_stateMachine.AddEnter (State.OpenShotTwo, delegate() {
-			M_Event.FireLogicEvent(LogicEvents.OpenShotTwoEnter,new LogicArg(this));	
-		});
-
-		m_stateMachine.AddEnter (State.OpenShotThree, delegate() {
-			M_Event.FireLogicEvent(LogicEvents.OpenShotThreeEnter,new LogicArg(this));	
-		});
-
-		m_stateMachine.AddEnter (State.MotherScene, delegate() {
-			M_Event.FireLogicEvent(LogicEvents.MotherSceneEnter,new LogicArg(this));	
+		m_stateMachine.AddEnter (State.CharacterScene, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter,new LogicArg(this));	
 		});
 			
 		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
