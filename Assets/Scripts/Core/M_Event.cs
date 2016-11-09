@@ -43,14 +43,17 @@ public enum LogicEvents
 	EnterStory=15,
 	ExitStory=16,
 
-	End=17,
-	Credits=18,
+	Main=17,
+	End=18, // maybe these should be separate scenes and scene enter functions
+	Credits=19,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
 	OpenShotThreeEnter = 103,
+	TutorialSceneEnter = 104,
 
 	CharacterSceneEnter = 201,
+
 }
 
 public class M_Event : MonoBehaviour {

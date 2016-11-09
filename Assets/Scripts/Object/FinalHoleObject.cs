@@ -59,7 +59,7 @@ public class FinalHoleObject : MObject
 	public override void OnFocus()
 	{
 		base.OnFocus ();
-		SetOutline (true);
+		//SetOutline (true);
 	}
 
 	public override void OnOutofFocus ()

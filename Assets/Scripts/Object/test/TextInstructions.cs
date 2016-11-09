@@ -24,6 +24,10 @@ public class TextInstructions : MonoBehaviour
 	private bool selected = false;
 	private bool matched = false;
 
+	private float lineLengthLimit = 15f;
+	private float lineHeightLimit = .05f;
+	private int numberOfLines = 1;
+
 	public void Start () 
 	{
 		instructions.Add ("HEY POINT AT THE PERSON"); //0
@@ -60,7 +64,7 @@ public class TextInstructions : MonoBehaviour
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
 
-		MakeTextGO (instructions [0]); // point at the person
+		MakeLines (instructions [0]); // point at the person
 			
 	}
 
@@ -91,13 +95,13 @@ public class TextInstructions : MonoBehaviour
 			selected = true;
 		}
 		if (cobj != null && cobj.matched) {
-			MakeTextGO (instructions [4]); // pull trigger
+			MakeLines (instructions [4]); // pull trigger
 		} else if (cobj != null ) {
-			MakeTextGO (instructions [4]); // pull trigger
+			MakeLines (instructions [4]); // pull trigger
 
 		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { 
 			focusPasserby = p;
-			MakeTextGO (instructions [1]); // press pad
+			MakeLines (instructions [1]); // press pad
 		
 		} 
 	}
@@ -107,28 +111,28 @@ public class TextInstructions : MonoBehaviour
 		/*
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		if ( focusPasserby == p) {
-			MakeTextGO (instructions [0]);
+			MakeLines (instructions [0]);
 			focusPasserby = null;
 		} 
 		*/
 
-		//MakeTextGO (instructions [4]);
+		//MakeLines (instructions [4]);
 
 		if (transform.position.z > -30f && transform.position.z < -12f && !matched && !selected) {
-			MakeTextGO (instructions [2]); // reach in chest 
+			MakeLines (instructions [2]); // reach in chest 
 
 			//StartCoroutine (Delay (3f));
-			//MakeTextGO (instructions [3]); // tap bright obj
+			//MakeLines (instructions [3]); // tap bright obj
 
 			//StartCoroutine (Delay (3f));
 		}else if (transform.position.z > -12f && transform.position.z < 5f && !matched) {
-			//MakeTextGO (instructions [6]); // that's you
+			//MakeLines (instructions [6]); // that's you
 
 			//StartCoroutine (Delay (3f));
-			MakeTextGO (instructions [7]);
+			MakeLines (instructions [7]);
 
 			//StartCoroutine (Delay (3f));
-			//MakeTextGO (instructions [8]);
+			//MakeLines (instructions [8]);
 			//StartCoroutine (Delay (3f));
 		}
 	}
@@ -143,32 +147,64 @@ public class TextInstructions : MonoBehaviour
 		}
 			
 		if (InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is PasserBy) {
-			MakeTextGO (instructions [2]); // reach in chest 
-			//Pause(4f);
+			MakeLines (instructions [2]); // reach in chest 
 			//StartCoroutine (Delay (3f));
-			//MakeTextGO (instructions [3]); // tap bright obj
+			//MakeLines (instructions [3]); // tap bright obj
 		}
 	}
 
 	public void OnMatchObject(LogicArg arg ){
 		matched = true;
-		MakeTextGO (instructions[9]);
+		MakeLines (instructions[9]);
 	}
 
-	public void MakeTextGO ( string text ) //could have size, shader... //assuming all uppercase 
-	{
-		Clear ();
-		//Pause (.5f);
-		//StartCoroutine (Delay (.5f));
+	public void MakeLines (string text){
 
+		//Clear ();
+		//StartCoroutine (Delay (.5f));
 		InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
-		//center text
-		/*
+		List<string> lines = new List<string>();
+
+		//place all the words into an array
+		string[] words = text.Split (' ', '\t', System.Environment.NewLine.ToCharArray () [0]);
+		//intantiate a line
+		System.Text.StringBuilder line = new System.Text.StringBuilder ();
+
+		for (int i = 0; i < words.Length; i++) {
+			if (line.Length + words [i].Length + 1 > lineLengthLimit)
+			{
+				//add full line to the list of lines
+				lines.Add (line.ToString ());
+				//clear the line
+				line.Remove (0, line.Length);
+			}
+			//add the word that put the last line over the limit to the new line
+			line.Append (words[ i ] + " " );
+		}
+		// if there is a word left, add the final word
+		if (line.Length > 0) {
+			lines.Add (line.ToString ());
+		}
+			
+		numberOfLines = lines.Count;
+		print (numberOfLines);
+		for (int i = 0; i < lines.Count; i++) {
+			MakeTextGO (lines [i], i);
+			print ("new line");
+		}
+	}
+
+	public void MakeTextGO ( string text, int height ) //could have size, shader... //assuming all uppercase 
+	{
+
+
+		//center text using size of string
 		size = text.Length;
 		float length = size * tracking;
 		transform.position += transform.right * length / 2 * transform.localScale.x;
-		*/
+
+		float lineHeight =  lineHeightLimit * (float) (numberOfLines - height - 1);
 
 		for (int i=0; i < text.Length; i++) 
 		{
@@ -185,8 +221,7 @@ public class TextInstructions : MonoBehaviour
 				{ 
 					GameObject newLetter = Instantiate (_alphabet [j]);
 					newLetter.transform.SetParent (transform);
-					newLetter.transform.localPosition = new Vector3 (-tracking * count * i, 0f, 0f);
-					//newLetter.transform.localRotation = transform.rotation;
+					newLetter.transform.localPosition = new Vector3 (-tracking * count * i, lineHeight, 0f);
 					newLetter.transform.localRotation = Quaternion.identity;
 					_letters.Add (newLetter);
 					count = 1;
@@ -195,7 +230,27 @@ public class TextInstructions : MonoBehaviour
 		}
 	}
 
-	public void SwapCharGO ( char c, int item ) //could have size, shader... //assuming all uppercase 
+	public void Clear ()
+	{
+		foreach (Transform child in transform) 
+		{
+			GameObject.Destroy(child.gameObject);
+		}
+
+		_letters.Clear ();
+		//could have light fade down and back 
+		transform.localPosition = origPos; //Vector3.zero; 
+		transform.localRotation = origRot; //Quaternion.identity; 
+		transform.localScale = origScale; //new Vector3(1f, 1f, 1f); 
+	}
+
+	IEnumerator Delay( float delay )
+	{
+		yield return new WaitForSeconds (delay);
+	}
+
+	/*
+	 * 	public void SwapCharGO ( char c, int item ) //could have size, shader... //assuming all uppercase 
 	{
 		GameObject newLetter = new GameObject ();
 
@@ -214,32 +269,5 @@ public class TextInstructions : MonoBehaviour
 		GameObject.Destroy (_letters [item]); //need?
 		_letters [item] = newLetter;
 	}
-
-	public void Clear ()
-	{
-		foreach (Transform child in transform) 
-		{
-			GameObject.Destroy(child.gameObject);
-		}
-
-		_letters.Clear ();
-		//could have light fade down and back 
-
-		transform.localPosition = origPos; //Vector3.zero; 
-		transform.localRotation = origRot; //Quaternion.identity; 
-		transform.localScale = origScale; //new Vector3(1f, 1f, 1f); 
-
-	}
-
-	public void Pause( float time){
-
-		while (time > 0f) {
-			time -= Time.deltaTime;
-		}
-	}
-
-	IEnumerator Delay( float delay )
-	{
-		yield return new WaitForSeconds (delay);
-	}
+	*/
 }

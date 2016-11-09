@@ -16,8 +16,8 @@ public class TransportManager : MBehavior {
 	[SerializeField] float transportTime = 2f;
 	[SerializeField] LineRenderer transportLine;
 	[SerializeField] ParticleSystem transportCircle;
+
 	[SerializeField] Transform endPosition;
-	[SerializeField] GameObject endCharacter;
 
 	/// <summary>
 	/// For the transport animation
@@ -151,7 +151,7 @@ public class TransportManager : MBehavior {
 			//print ("my target.y is = " + target.y); //make sure world coord
 			// if on bridge, set higher
 			if (target.y > 10f) {
-				target.y = 22.286f;
+				target.y = 12.286f;
 			} else {
 				Disable.Instance.DisableClidren ();
 				target.y = .346f;
@@ -187,8 +187,6 @@ public class TransportManager : MBehavior {
 	}
 
 	void OnCredits( LogicArg arg ){
-
-		endCharacter.SetActive (true);
 
 		//Debug.Log ("on end from transport manager");
 		// fire the transport start event

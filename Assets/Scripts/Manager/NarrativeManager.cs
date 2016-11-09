@@ -77,7 +77,7 @@ public class NarrativeManager : MBehavior {
 	}
 
 	void OnEnd( LogicArg arg ){
-		StartCoroutine (ToCreditsDelay (30f));
+		StartCoroutine (ToCreditsDelay (20f));
 	}
 
 	IEnumerator ToCreditsDelay( float delay )

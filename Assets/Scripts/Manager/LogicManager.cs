@@ -39,9 +39,11 @@ public class LogicManager : MBehavior {
 	public enum State
 	{
 		Init,
+		Tutorial,
 		CharacterScene,
 
 	}
+
 	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
 
 	protected override void MAwake ()
@@ -69,22 +71,33 @@ public class LogicManager : MBehavior {
 		Cursor.visible = false;
 
 		InitStateMachine ();
+
+
 	}
 
 	void InitStateMachine()
 	{
 		m_stateMachine.AddUpdate (State.Init, delegate() {
-			//m_stateMachine.State = State.OpenShotOne;
+			m_stateMachine.State = State.Tutorial;
+		});
+
+		m_stateMachine.AddEnter (State.Tutorial, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.TutorialSceneEnter, new LogicArg(this));	
+		});
+
+		/*
+		m_stateMachine.AddUpdate (State.Init, delegate() {
 			m_stateMachine.State = State.CharacterScene;
 		});
 
 		m_stateMachine.AddEnter (State.CharacterScene, delegate() {
-			M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter,new LogicArg(this));	
+			M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this));	
 		});
 			
 		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
-		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.OpenShotTwo, 2f);
-		//m_stateMachine.BlindTimeStateChange (State.OpenShotTwo, State.MotherScene, 4f);
+
+		*/
+
 			
 		m_stateMachine.State = State.Init;
 	}
@@ -116,6 +129,7 @@ public class LogicManager : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.CameraAttachPointChange] += OnNewAttachPoint;
+		M_Event.logicEvents [(int)LogicEvents.Main] += OnMain;
 
 		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] += OnLogicEvent;
@@ -129,10 +143,24 @@ public class LogicManager : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.CameraAttachPointChange] -= OnNewAttachPoint;
+		M_Event.logicEvents [(int)LogicEvents.Main] -= OnMain;
 
 		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
+	}
+
+	void OnMain (LogicArg arg )
+	{
+
+		m_stateMachine.AddUpdate (State.Init, delegate() {
+			m_stateMachine.State = State.CharacterScene;
+		});
+
+		m_stateMachine.AddEnter (State.CharacterScene, delegate() {
+			M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this));	
+		});
+		
 	}
 
 	void OnNewAttachPoint( LogicArg arg )

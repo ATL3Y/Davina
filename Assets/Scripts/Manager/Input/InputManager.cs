@@ -73,7 +73,7 @@ public class InputManager : MBehavior {
 			m_focusObj = lookObj;
 			if (m_focusObj != null) {
 				m_focusObj.OnFocus ();
-				Debug.Log ("name of focus obj = " + m_focusObj.name);
+				//Debug.Log ("name of focus obj = " + m_focusObj.name);
 				FireFocusNewObject (m_focusObj.gameObject);
 			}
 		}
