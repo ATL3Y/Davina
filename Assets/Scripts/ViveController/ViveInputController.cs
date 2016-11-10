@@ -12,7 +12,7 @@ public class ViveInputController : MonoBehaviour
 
     public bool useViveInput = true;
 
-    int leftControllerIndex = -1, rightControllerIndex = -1;
+    public int leftControllerIndex = -1, rightControllerIndex = -1;
 
     public GameObject leftController;
     public GameObject rightController;
@@ -49,7 +49,7 @@ public class ViveInputController : MonoBehaviour
 			leftControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost); //controllerManager.leftIndex; 
 			rightControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost); //controllerManager.rightIndex; 
         }
-        return leftControllerIndex != -1 || rightControllerIndex != -1;
+        return leftControllerIndex != -1 || rightControllerIndex != -1; 
     }
 
 	//triggerLeftPressed returns true while trigger Left pressed down
@@ -82,6 +82,7 @@ public class ViveInputController : MonoBehaviour
         if (useViveInput && GetControllerIndices())
         {
             if (leftControllerIndex > -1 && SteamVR_Controller.Input(leftControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedLeftButtonDownSignal() (Trigger)");
                 return true;
         }
 
@@ -97,6 +98,7 @@ public class ViveInputController : MonoBehaviour
         {
             //Debug.Log("in UVI and GCI");
             if (rightControllerIndex > -1 && SteamVR_Controller.Input(rightControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Trigger))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedRightButtonDownSignal() (Trigger)");
                 return true;
         }
 
@@ -205,7 +207,8 @@ public class ViveInputController : MonoBehaviour
 	{
 		if (useViveInput && GetControllerIndices())
 		{
-			if (rightControllerIndex > -1 && SteamVR_Controller.Input(rightControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+			if (rightControllerIndex > -1 && SteamVR_Controller.Input (rightControllerIndex).GetPressDown (EVRButtonId.k_EButton_SteamVR_Touchpad))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedRightPadDownSignal()");
 				return true;
 		}
 
@@ -218,6 +221,7 @@ public class ViveInputController : MonoBehaviour
 		if (useViveInput && GetControllerIndices())
 		{
 			if (leftControllerIndex > -1 && SteamVR_Controller.Input(leftControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				//Debug.Log (Time.timeSinceLevelLoad + "; Position = " + transform.position + "; ReceivedLeftPadDownSignal()");
 				return true;
 		}
 
@@ -244,6 +248,12 @@ public class ViveInputController : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	public void VibrateController( int index )
+	{
+		//Debug.Log ("Vibrate vive input controller called index = " + index);
+		SteamVR_Controller.Input(index).TriggerHapticPulse((ushort) 3999); // microseconds, should omit 2nd param
 	}
 		
     // Update is called once per frame

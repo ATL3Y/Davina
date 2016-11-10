@@ -110,7 +110,7 @@ public class MakeMesh : MonoBehaviour
 
 	void ToLines()
 	{
-		print ("in to lines, child count = " + m_childrenWithMeshes.Count + "and child mesh count = " + m_childMeshes.Count);
+		//print ("in to lines, child count = " + m_childrenWithMeshes.Count + "and child mesh count = " + m_childMeshes.Count);
 		for (int i = 0; i < m_childrenWithMeshes.Count; i++) 
 		{
 			if (m_childMeshes[i].GetTopology (0) != MeshTopology.Lines)

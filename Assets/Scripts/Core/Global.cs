@@ -20,8 +20,11 @@ public class Global
 	static public string EVENT_LOGIC_SELECT_COBJECT = "EVENT_LOGIC_SELECT_COBJECT";
 	static public string EVENT_LOGIC_MATCH_COBJECT = "EVENT_LOGIC_MATCH_COBJECT";
 	static public string EVENT_LOGIC_UNSELECT_COBJECT = "T_COBJECT";
+	static public string EVENT_LOGIC_END_EOBJECT = "EVENT_LOGIC_END_EOBJECT";
 	static public string EVENT_LOGIC_ENTERINNERWORLD_CLIP = "BGM";
 	static public string EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER = "Character";
 	static public string EVENT_LOGIC_EXITINNERWORLD_MCHARACTER = "Character";
+	//static public string EVENT_LOGIC_ENTERSTORYOBJ = "EVENT_LOGIC_ENTERSTORYOBJ"; //need?
+	//static public string EVENT_LOGIC_EXITSTORYOBJ = "EVENT_LOGIC_EXITSTORYOBJ";
 
 }

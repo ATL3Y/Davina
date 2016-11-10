@@ -21,15 +21,15 @@ public class SelectObjectManager : MBehavior {
 		M_Event.inputEvents [(int)MInputType.SelectObject] += OnSelectObject;
 		M_Event.logicEvents [(int)LogicEvents.UnselectObject] += OnUnselectObject; 
 	}
-
+		
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] -= OnSelectObject;
-		M_Event.logicEvents [(int)LogicEvents.UnselectObject] -= OnUnselectObject;
+		M_Event.logicEvents [(int)LogicEvents.UnselectObject] -= OnUnselectObject; 
 	}
 
-	void OnUnselectObject(LogicArg arg )
+	void OnUnselectObject( LogicArg arg )
 	{
 		CollectableObj cobj = (CollectableObj)arg.GetMessage (Global.EVENT_LOGIC_UNSELECT_COBJECT);
 		if (cobj != null) {
@@ -40,33 +40,35 @@ public class SelectObjectManager : MBehavior {
 		}
 	}
 		
-
 	/// <summary>
 	/// React to the select object input event
 	/// </summary>
 	/// <param name="arg">Argument.</param>
 	void OnSelectObject(InputArg arg)
 	{
-//		Debug.Log ("On Press Select Obj");
 		// if player holds no object
 		if (m_SelectObj == null) {
 			MObject focus = InputManager.Instance.FocusedObject;
 			if (focus != null && focus is CollectableObj) {
 				CollectableObj cobj = (CollectableObj)focus;
-				Debug.Log ("Try Select");
+				//Debug.Log ("Try Select");
 				if (cobj.Select (arg.clickType)) {
-					Debug.Log ("Select success");
+					//Debug.Log ("Select success");
 					m_SelectObj = cobj;
+					Debug.Log (Time.timeSinceLevelLoad + "; SelectObject ");
 					LogicArg logicArg = new LogicArg (this);
 					logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
 					M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
+
 				}
 			}
-		} else {
-			// to match the object
+		} // unselect option available once object is held
+		else if (m_SelectObj != null) {
+			//print (" in on select obj and m_SelectObj = " + m_SelectObj.name);
+			Debug.Log (Time.timeSinceLevelLoad + "; UnSelectObject ");
 			LogicArg logicArg = new LogicArg (this);
-			logicArg.AddMessage (Global.EVENT_LOGIC_MATCH_COBJECT, m_SelectObj);
-			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
+			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
 		}
 
 
@@ -102,7 +104,7 @@ public class SelectObjectManager : MBehavior {
 		if (LogicManager.Instance.GetHandTransform (clickType) != null) {
 			trans.SetParent (LogicManager.Instance.GetHandTransform (clickType), true);
 			if (LogicManager.Instance.VREnable) {
-				trans.localPosition = Vector3.up * 0.1f;
+				trans.localPosition = Vector3.up * 0.1f + Vector3.forward * 0.1f;
 			} else {
 				trans.localPosition = Vector3.forward * 0.1f + Vector3.right * 0.1f;
 			}

@@ -24,6 +24,7 @@ public class AudioManager : MBehavior {
 	};
 	[SerializeField] InputClipPair[] InputClipPairs;
 
+
 	/// <summary>
 	/// for pairing the logic event and the sound effect
 	/// </summary>
@@ -125,7 +126,7 @@ public class AudioManager : MBehavior {
 		if (bgmSource == null) {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
-			bgmSource.volume = 1.0f;
+			bgmSource.volume = .2f;
 			bgmSource.spatialBlend = 1f;
 		}
 		if (bgmSource != null) {
@@ -133,7 +134,7 @@ public class AudioManager : MBehavior {
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
 				bgmSource.Play();
-				bgmSource.DOFade( 1f , 1f );
+				bgmSource.DOFade( .2f , 1f );
 			});
 		}
 

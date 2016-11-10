@@ -24,7 +24,7 @@ public class TestLogicManager : MonoBehaviour {
 	}
 	public void Trade(float value )
 	{
-		Debug.Log ("Trade");
+		//Debug.Log ("Trade");
 		float rand = Random.Range (0, 1f);
 
 		if (value < 0.125f)

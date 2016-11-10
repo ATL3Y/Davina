@@ -35,6 +35,7 @@ public class NarrativeManager : MBehavior {
 		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
+
 	}
 
 	void OnLogicEvent( LogicArg arg )
@@ -49,7 +50,7 @@ public class NarrativeManager : MBehavior {
 
 	void DoEvent( LogicArg arg,  NarrativeLoadSceneEvent e )
 	{
-		Debug.Log ("Load Scene " + e.loadScene);
+		//Debug.Log ("Load Scene " + e.loadScene);
 		SceneManager.LoadSceneAsync (e.loadScene , LoadSceneMode.Additive);
 
 		if (e.refreshScene) {

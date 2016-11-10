@@ -25,7 +25,7 @@ public class HeartItemBehavior : MonoBehaviour
 		if (m_StickTo != null) 
 		{
 			if (attachToHeart) {
-				print ("heart");
+				//print ("heart");
 				Quaternion rot = Quaternion.Lerp (transform.localRotation, m_StickTo.localRotation, .07f);
 				Vector3 pos = Vector3.Lerp (transform.position, m_StickTo.position, .07f);
 
@@ -33,7 +33,7 @@ public class HeartItemBehavior : MonoBehaviour
 				transform.position = pos;
 				return;
 			} else if (attachToHand) {
-				print ("hand");
+				//print ("hand");
 				Quaternion rot = Quaternion.Lerp (transform.localRotation, m_StickTo.localRotation * Quaternion.Euler(0, 90, 0), .07f);
 				Vector3 pos = Vector3.Lerp (transform.position, m_StickTo.position + m_StickTo.forward * .2f - m_StickTo.up * .2f, .07f);
 
@@ -47,7 +47,7 @@ public class HeartItemBehavior : MonoBehaviour
 	{
 		if (col.gameObject.tag == "HeartHole" && !attachToHand) 
 		{
-			print ("hole hit");
+			//print ("hole hit");
 			transform.SetParent (col.gameObject.transform);
 			attachToHand = false;
 			attachToHeart = true;
@@ -61,7 +61,7 @@ public class HeartItemBehavior : MonoBehaviour
 		}
 		if (col.gameObject.tag == "GameController" && !attachToHeart) 
 		{
-			print ("collision hit");
+			//print ("collision hit");
 			transform.SetParent (m_StickTo);
 			m_StickTo = col.gameObject.transform;
 			attachToHand = true;

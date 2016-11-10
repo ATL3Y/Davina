@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 
 /// <summary>
 /// The object that can be select and hold by the player
@@ -8,17 +10,54 @@ public class CollectableObj : MObject {
 	
 	[SerializeField] MeshRenderer[] outlineRenders;
 	[SerializeField] protected AudioClip selectSound;
-	private AudioSource selectSoundSource;
+	protected AudioSource selectSoundSource;
 	[SerializeField] protected AudioClip unselectSound;
-	private AudioSource unselectSoundSource;
+	protected AudioSource unselectSoundSource;
 
+	[SerializeField] protected AudioClip storySound;
+	protected AudioSource storySoundSource;
+
+	[SerializeField] protected Transform originalParentTransform;
+	private Vector3 originalPos;
+	private Quaternion originalRot;
+	public bool matched = false;
+	[SerializeField] float offset;
+	private Material material;
+	private Color color;
+	[SerializeField] float outlineWidth;
 
 	protected override void MAwake ()
 	{
 		base.MAwake ();
+
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
 		// turn off the outline 
 		SetOutline (false);
 
+		if (gameObject.tag == "Raise" || gameObject.tag == "TutorialRight") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition += new Vector3(0f, 0f, offset);
+		} else if (gameObject.tag == "Lower" || gameObject.tag == "TutorialLeft") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition += new Vector3(0f, 0f, -offset);
+			transform.localRotation = Quaternion.AngleAxis(180f, transform.up);
+		} 
+
+		originalParentTransform = transform.parent;
+		originalPos = transform.localPosition;
+		originalRot = transform.localRotation;
+			
 		// set up the select sound
 		if (selectSound != null) {
 			selectSoundSource = gameObject.AddComponent<AudioSource> ();
@@ -37,12 +76,24 @@ public class CollectableObj : MObject {
 			unselectSoundSource.spatialBlend = 1f;
 			unselectSoundSource.clip = unselectSound;
 		}
+		// set up the story sound
+		if (storySound != null) {
+			storySoundSource = gameObject.AddComponent<AudioSource> ();
+			storySoundSource.playOnAwake = false;
+			storySoundSource.loop = false;
+			storySoundSource.volume = 1f;
+			storySoundSource.spatialBlend = 1f;
+			storySoundSource.clip = storySound;
+		}
 	}
 
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
 		SetOutline (true);
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
+			storySoundSource.Play ();
+
 	}
 
 	public override void OnOutofFocus ()
@@ -64,9 +115,8 @@ public class CollectableObj : MObject {
 
 	/// <summary>
 	/// called by SelectObjectManager when the object is selected
-	/// return turn when it is successfully selected
-	/// return false when it fails
-	/// TODO: finish the unselectable situation
+	/// return true when it is successfully selected
+	/// should return false when it fails
 	/// </summary>
 	virtual public bool Select( ClickType clickType)
 	{
@@ -77,7 +127,7 @@ public class CollectableObj : MObject {
 		foreach (Transform t in GetComponentsInChildren<Transform>())
 			t.gameObject.layer = LayerMask.NameToLayer ("Hold");
 		// play the sound effect
-		if ( selectSoundSource != null )
+		if ( selectSoundSource != null)
 			selectSoundSource.Play ();
 		
 		return true;
@@ -88,12 +138,38 @@ public class CollectableObj : MObject {
 	/// TODO: finish the unable to unselect situation
 	/// </summary>
 	/// <returns><c>true</c>, if select was uned, <c>false</c> otherwise.</returns>
-	virtual public bool UnSelect()
+	virtual public bool UnSelect( )
 	{
 		// play the sound effect
 		if ( unselectSoundSource != null )
 			unselectSoundSource.Play ();
-		return true;
+
+		if ( storySoundSource != null && storySoundSource.isPlaying)
+			storySoundSource.Stop ();
+
+		// matched is set in HoleObject
+		if (!matched) {
+			// set all the object to 'Focus' Layer
+			gameObject.layer = LayerMask.NameToLayer ("Focus");
+			foreach (Transform t in GetComponentsInChildren<Transform>())
+				t.gameObject.layer = LayerMask.NameToLayer ("Focus");
+
+			transform.SetParent (originalParentTransform);
+			//how do at the same time? how do rotate?
+			transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
+			//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
+			transform.localRotation = Quaternion.identity;
+			return true;
+		} else if (matched) {
+			//fires match object event on pressing trigger instead of unselect
+			LogicArg logicArg = new LogicArg (this);
+			logicArg.AddMessage(Global.EVENT_LOGIC_MATCH_COBJECT, this);
+			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
+			Debug.Log (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
+			//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
+		}
+		return false;
+
 	}
 
 	/// <summary>
@@ -101,6 +177,9 @@ public class CollectableObj : MObject {
 	/// </summary>
 	virtual public void OnFill()
 	{
+		// repeat story once filled (could play both stories at this point)
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
+			storySoundSource.Play ();
 	}
 
 }

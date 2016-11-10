@@ -11,7 +11,7 @@ public enum MInputType
 {
 	None,
 	SelectObject,
-	Transport, // not used
+	Transport, 
 	FocusNewObject,
 	OutOfFocusObject,
 }
@@ -38,12 +38,25 @@ public enum LogicEvents
 	GetObject=12,
 
 	RaiseFallingCharacter=13,
+	LowerFallingCharacter=14,
+
+	EnterStory=15,
+	ExitStory=16,
+
+	Characters=17,
+	End=18, // maybe these should be separate scenes and scene enter functions
+	Credits=19,
+
+	EnterStoryTutorial=20,
+	ExitStoryTutorial=21,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
 	OpenShotThreeEnter = 103,
+	TutorialSceneEnter = 104,
 
-	MotherSceneEnter = 201,
+	CharacterSceneEnter = 201,
+
 }
 
 public class M_Event : MonoBehaviour {
