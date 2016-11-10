@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 
 /// <summary>
@@ -20,17 +21,43 @@ public class CollectableObj : MObject {
 	private Vector3 originalPos;
 	private Quaternion originalRot;
 	public bool matched = false;
+	[SerializeField] float offset;
+	private Material material;
+	private Color color;
+	[SerializeField] float outlineWidth;
 
 	protected override void MAwake ()
 	{
 		base.MAwake ();
+
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
 		// turn off the outline 
 		SetOutline (false);
+
+		if (gameObject.tag == "Raise" || gameObject.tag == "TutorialRight") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition += new Vector3(0f, 0f, offset);
+		} else if (gameObject.tag == "Lower" || gameObject.tag == "TutorialLeft") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition += new Vector3(0f, 0f, -offset);
+			transform.localRotation = Quaternion.AngleAxis(180f, transform.up);
+		} 
 
 		originalParentTransform = transform.parent;
 		originalPos = transform.localPosition;
 		originalRot = transform.localRotation;
-
+			
 		// set up the select sound
 		if (selectSound != null) {
 			selectSoundSource = gameObject.AddComponent<AudioSource> ();

@@ -18,11 +18,7 @@ public class TriggerAudioFX : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		/*
-		//test nextstate
-		LogicArg logicArg = new LogicArg (this);
-		M_Event.FireLogicEvent (LogicEvents.Main, logicArg);
-		*/
+
 		if (enterClips != null) {
 			sourceEnter = gameObject.AddComponent<AudioSource> ();
 			sourceEnter.playOnAwake = sourceEnter.loop = false;
@@ -44,7 +40,7 @@ public class TriggerAudioFX : MonoBehaviour {
 	{
 
 	}
-
+	/*
 	void OnTriggerEnter(Collider other)
 	{
 		if (!onceEnter && other.gameObject.tag == "Player" && enterClips.Count > 0) { //col.gameObject.tag == "Player"
@@ -61,16 +57,47 @@ public class TriggerAudioFX : MonoBehaviour {
 			onceExit = true;
 		} 
 	}
+	*/
+	protected override void OnEnable(){
+
+		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+	}
+
+	protected override void OnDisable(){
+
+		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+	}
+
+	void OnCharacters( LogicArg arg ){
+		if (!onceEnter && enterClips.Count > 0) { //col.gameObject.tag == "Player"
+
+			StartCoroutine(PlayNextEnter ());
+			onceEnter = true;
+		} 
+	}
+
+	void OnEnd( LogicArg arg ){
+		if (!onceEnter && enterClips.Count > 0) { //col.gameObject.tag == "Player"
+
+			StartCoroutine(PlayNextEnter ());
+			onceEnter = true;
+		} 
+	}
 
 	IEnumerator PlayNextEnter(){
 			
 		sourceEnter.clip = enterClips [i];
 		sourceEnter.Play ();
-		print ("playing clips " + sourceEnter.clip.name);
+		//print ("playing clips " + sourceEnter.clip.name);
 		yield return new WaitForSeconds (sourceEnter.clip.length);
 		i++;
 		if (i < enterClips.Count) {
-			StartCoroutine(PlayNextEnter ());
+			StartCoroutine (PlayNextEnter ());
+		} else if (gameObject.tag == "End") {
+			LogicArg logicArg = new LogicArg (this);
+			M_Event.FireLogicEvent (LogicEvents.Credits, logicArg);
 		}
 	}
 
@@ -78,7 +105,7 @@ public class TriggerAudioFX : MonoBehaviour {
 
 		sourceExit.clip = exitClips [j];
 		sourceExit.Play ();
-		print ("playing clips at " + j); // + sourceEnter.clip.name);
+		//print ("playing clips at " + j); // + sourceEnter.clip.name);
 		yield return new WaitForSeconds (sourceExit.clip.length);
 		j++;
 		if (j < exitClips.Count) {

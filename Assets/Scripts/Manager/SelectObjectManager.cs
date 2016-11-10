@@ -17,7 +17,6 @@ public class SelectObjectManager : MBehavior {
 
 	protected override void MOnEnable ()
 	{
-		
 		base.MOnEnable ();
 		M_Event.inputEvents [(int)MInputType.SelectObject] += OnSelectObject;
 		M_Event.logicEvents [(int)LogicEvents.UnselectObject] += OnUnselectObject; 
@@ -70,7 +69,6 @@ public class SelectObjectManager : MBehavior {
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
-
 		}
 
 

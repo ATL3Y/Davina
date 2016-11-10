@@ -45,8 +45,6 @@ public class InputManager : MBehavior {
 		Ray[] centers = new Ray[2];
 		centers = GetCenterRayCast ();
 
-
-
 		/*
 		/// this evaluates the controller that is most horizontal first
 		int[] pointingOrder = new int[2];
@@ -58,9 +56,10 @@ public class InputManager : MBehavior {
 		}
 		*/
 
-		if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+		// this prefers the right controller first
+		if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
-		} else if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+		} else if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		}
 			
@@ -73,7 +72,7 @@ public class InputManager : MBehavior {
 			m_focusObj = lookObj;
 			if (m_focusObj != null) {
 				m_focusObj.OnFocus ();
-				//Debug.Log ("name of focus obj = " + m_focusObj.name);
+				Debug.Log ("name of focus obj = " + m_focusObj.gameObject.name);
 				FireFocusNewObject (m_focusObj.gameObject);
 			}
 		}

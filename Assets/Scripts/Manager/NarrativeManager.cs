@@ -27,7 +27,6 @@ public class NarrativeManager : MBehavior {
 		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] += OnLogicEvent;
 		}
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
 	}
 
 	protected override void MOnDisable ()
@@ -36,7 +35,7 @@ public class NarrativeManager : MBehavior {
 		for (int i = 0; i < M_Event.logicEvents.Length; ++i) {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+
 	}
 
 	void OnLogicEvent( LogicArg arg )
@@ -74,18 +73,5 @@ public class NarrativeManager : MBehavior {
 		}
 		loadedScene.Clear ();
 		loadedScene.Add (addScene);
-	}
-
-	void OnEnd( LogicArg arg ){
-		StartCoroutine (ToCreditsDelay (20f));
-	}
-
-	IEnumerator ToCreditsDelay( float delay )
-	{
-		yield return new WaitForSeconds (delay);
-
-		LogicArg logicArg = new LogicArg (this);
-		//logicArg.AddMessage (Global.EVENT_LOGIC_ENTERSTORYOBJ);
-		M_Event.FireLogicEvent (LogicEvents.Credits, logicArg);
 	}
 }

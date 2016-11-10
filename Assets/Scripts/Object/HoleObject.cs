@@ -15,9 +15,23 @@ public class HoleObject : MObject {
 	[SerializeField] protected AudioClip storySound;
 	[SerializeField] protected AudioSource storySoundSource;
 
+	[SerializeField] float outlineWidth;
+
+	private Material material;
+	private Color color;
+
 	protected override void MAwake ()
 	{
 		base.MAwake ();
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material = material;
+			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			r.material.SetFloat ("_Outline", outlineWidth);
+			r.material.SetVector ("_OutlineColor", color);
+		}
+
 		col = GetComponent<Collider> ();
 		col.isTrigger = true;
 
@@ -31,6 +45,8 @@ public class HoleObject : MObject {
 			storySoundSource.clip = storySound;
 
 		}
+		GetComponent<Renderer> ().enabled = false;
+		SetOutline (true);
 	}
 
 	public override void OnFocus ()
@@ -42,7 +58,7 @@ public class HoleObject : MObject {
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
-		SetOutline (false);
+		//SetOutline (false);
 	}
 
 	/// <summary>
@@ -81,7 +97,7 @@ public class HoleObject : MObject {
 	/// TODO: find a better way to handle the match object algorithm
 	/// </summary>
 	public GameObject matchObject;
-	protected virtual void OnTriggerEnter(Collider col)
+	protected virtual void OnTriggerStay(Collider col) //changed from OnTriggerEnter
 	{
 		string tag = col.gameObject.tag;
 		if (matchTagList.Contains (tag) && SelectObjectManager.Instance.IsSelectObject (col.gameObject)) {
@@ -92,11 +108,11 @@ public class HoleObject : MObject {
 				// make it so the next click will not trigger Unselect's transform change in CollectableObject
 				cobj.matched = true;
 				//print ("in hole set matched = " + cobj.matched);
-				SetOutline(true);
+				//SetOutline(true);
 			}
 			// play story
-			if ( storySoundSource != null )
-				storySoundSource.Play ();
+			//if ( storySoundSource != null )
+				//storySoundSource.Play ();
 		} else if (tag == "GameController" && matchObject == null) {
 			bool shake = true;
 			foreach (Transform child in col.gameObject.transform) {
@@ -105,11 +121,11 @@ public class HoleObject : MObject {
 				}
 			}
 			if (shake) {
-				Shake ();
+				//Shake ();
 			}
 			// play story
-			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
-				storySoundSource.Play ();
+			//if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
+				//storySoundSource.Play ();
 		}
 	}
 
@@ -117,7 +133,7 @@ public class HoleObject : MObject {
 	{
 		if (matchObject == col.gameObject) {
 			//matchObject = null;
-			SetOutline(false);
+			//SetOutline(false);
 		}
 	}
 

@@ -43,9 +43,12 @@ public enum LogicEvents
 	EnterStory=15,
 	ExitStory=16,
 
-	Main=17,
+	Characters=17,
 	End=18, // maybe these should be separate scenes and scene enter functions
 	Credits=19,
+
+	EnterStoryTutorial=20,
+	ExitStoryTutorial=21,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
