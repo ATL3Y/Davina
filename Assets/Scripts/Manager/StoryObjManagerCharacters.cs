@@ -41,7 +41,7 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] -= OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
         M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
-        M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
+        M_Event.logicEvents[ ( int )LogicEvents.Credits ] -= OnCredits;
     }
 
 	void OnEnterStory(LogicArg arg){

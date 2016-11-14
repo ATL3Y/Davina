@@ -70,18 +70,24 @@ public class FinalHoleObject : MObject
 	protected override void MOnEnable ()
 	{
 		base.MOnEnable ();
+		transform.SetParent (toMatchObject.transform);
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
+			storySoundSource.Play ();
 	}
 
 	protected override void MOnDisable ()
 	{
 		base.MOnDisable ();
+		if ( storySoundSource != null && !storySoundSource.isPlaying)
+			storySoundSource.Play ();
 	}
 
 	protected override void MUpdate(){
 		base.MUpdate ();
 
 		//rotate the parent so the pivot is in the hand
-		transform.parent.localRotation = Quaternion.Inverse(toMatchObject.transform.localRotation);
+		//transform.parent.localRotation = Quaternion.Inverse(toMatchObject.transform.localRotation);
+		//transform.parent.localRotation = toMatchObject.transform.localRotation;
 	}
 
 	/// <summary>
@@ -89,17 +95,12 @@ public class FinalHoleObject : MObject
 	/// </summary>
 	protected void OnTriggerEnter(Collider col)
 	{
-		if (col.gameObject.tag == "GameController") {
 
-		} 
 	}
 
 	protected void OnTriggerExit(Collider col)
 	{
-		if ( col.gameObject.tag == "GameController" ) {
-			if ( storySoundSource != null && !storySoundSource.isPlaying)
-				storySoundSource.Play ();
-		}
+
 	}
 
 }

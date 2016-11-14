@@ -94,10 +94,14 @@ public class TextInstructions : MonoBehaviour
 			selected = true;
 		}
 		if (cobj != null && cobj.matched) {
+			// prefer controller instructions
+			timeLeft = 0f;
 			MakeLines (instructions [4]); // PULL TRIGGER TO PLACE ITEM
 		} else if (cobj != null ) {
+			timeLeft = 0f;
 			MakeLines (instructions [2]); // PULL TRIGGER TO GRAB ITEM
 		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { 
+			timeLeft = 0f;
 			focusPasserby = p;
 			MakeLines (instructions [6]); // PRESS PAD TO MOVE THERE
 		} 
@@ -144,7 +148,7 @@ public class TextInstructions : MonoBehaviour
 		}
 
 		Clear ();
-		InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
+		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
 		List<string> lines = new List<string>();
 

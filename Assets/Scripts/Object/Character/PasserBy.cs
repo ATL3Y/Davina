@@ -14,16 +14,27 @@ public class PasserBy : MObject {
 	// for the inner world
 	[SerializeField] AudioClip innerWorldClip;
 
+	private Material material;
+	[SerializeField] float outlineWidth;
+	private Color color;
+
 //	[Range(0,0.0001f)]
 //	[SerializeField] float outLineWidth = 0.00005f;
 
 	protected override void MAwake ()
 	{
 		base.MAwake ();
-
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
 		rotation = transform.rotation;
 
-		SetOutline (false);
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material = material;
+			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			r.material.SetFloat ("_Outline", outlineWidth);
+			r.material.SetVector ("_OutlineColor", color);
+		}
+
+		SetOutline (true);
 		if (observeLocation == null)
 			observeLocation = transform;
 	}
@@ -97,15 +108,21 @@ public class PasserBy : MObject {
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
-	
-		SetOutline (true);
+		//SetOutline (true);
+		foreach ( MeshRenderer r in outlineRenders )
+		{
+			r.material.SetFloat( "_Outline", outlineWidth * 2f );
+		}
 	}
 
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
-
-		SetOutline (false);
+		//SetOutline (false);
+		foreach ( MeshRenderer r in outlineRenders )
+		{
+			r.material.SetFloat( "_Outline", outlineWidth / 2f );
+		}
 	}
 
 	public Vector3 GetObservePosition()

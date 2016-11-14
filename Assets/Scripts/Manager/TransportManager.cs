@@ -193,7 +193,8 @@ public class TransportManager : MBehavior {
         {
             height += .001f;
             transform.position = new Vector3( transform.position.x, height, transform.position.z );
-        } else if (height >= posEnd.position.y && callOnce )
+        } 
+		else if (height >= posEnd.position.y / 2.5f && callOnce )
         {
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.End, logicArg );
