@@ -55,6 +55,9 @@ public class MCharacter : MObject {
 	protected override void MOnEnable(){
 		base.MOnEnable ();
 		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+		//test
+		//changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 6f));
+
 	}
 
 	protected override void MOnDisable(){
@@ -148,7 +151,6 @@ public class MCharacter : MObject {
 		}
 	}
 
-
 	public void EnterCharacterRange()
 	{
 		innerWorld.gameObject.SetActive (true);
@@ -158,7 +160,6 @@ public class MCharacter : MObject {
 	{
 		innerWorld.gameObject.SetActive (false);
 	}
-
 
 	/// <summary>
 	/// Fire the enter inner world event
@@ -205,7 +206,6 @@ public class MCharacter : MObject {
 			arg.AddMessage (Global.EVENT_LOGIC_EXITINNERWORLD_MCHARACTER, this);
 			M_Event.FireLogicEvent (LogicEvents.ExitInnerWorld, arg);
 
-
 			m_isInInnerWorld = false;
 
 			// scale down the model
@@ -235,11 +235,11 @@ public class MCharacter : MObject {
 		//Debug.Log ("pivot pos " + pivot.transform.position);
 
 		float timer = 0;
-		Vector3 fromSclae = transform.localScale;
+		Vector3 fromScale = transform.localScale;
 		Vector3 toScale = _toScale;
 		while (timer < time ) {
 			timer += Time.deltaTime;
-			transform.localScale = Vector3.Lerp (fromSclae, toScale, timer / time);
+			transform.localScale = Vector3.Lerp (fromScale, toScale, timer / time);
 			Vector3 offset = pivot.transform.position - originPosition;
 			transform.position -= offset;
 			yield return null;

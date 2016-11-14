@@ -21,8 +21,6 @@ public class TextInstructions : MonoBehaviour
 
 	private List<string> instructions = new List<string>();
 
-	private bool selected = false;
-
 	private float lineLengthLimit = 15f;
 	private float lineHeightLimit = .05f;
 	private int numberOfLines = 1;
@@ -69,7 +67,15 @@ public class TextInstructions : MonoBehaviour
 	public void Update () {
 		if (timeLeft > 0f) {
 			timeLeft -= Time.deltaTime;
-		} 
+		} else {
+			if (SelectObjectManager.Instance.SelectObj != null) {
+				MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE
+			} else if ((transform.position.y > 5f || transform.position.z > 5f) && SelectObjectManager.Instance.SelectObj == null) { // not at Davina falling
+				MakeLines (instructions [1]); // CHOOSE AN ITEM BY POINTING WITH YOUR LINE
+			} else {
+				MakeLines (instructions [8]); // " "
+			}
+		}
 	}
 
 	public void OnEnable(){
@@ -90,9 +96,6 @@ public class TextInstructions : MonoBehaviour
 
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		CollectableObj cobj = arg.focusObject.GetComponent<CollectableObj> ();
-		if (SelectObjectManager.Instance.SelectObj != null) {
-			selected = true;
-		}
 		if (cobj != null && cobj.matched) {
 			// prefer controller instructions
 			timeLeft = 0f;
@@ -115,29 +118,20 @@ public class TextInstructions : MonoBehaviour
 			MakeLines (instructions [0]);
 			focusPasserby = null;
 		} 
-		*/
-		if (!selected) {
+		if (SelectObjectManager.Instance.SelectObj != null) {
+			MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE
+		} else if (transform.position.y > 5f || transform.position.z > 5f){ // not at Davina falling
 			MakeLines (instructions [1]); // CHOOSE AN ITEM BY POINTING WITH YOUR LINE
-		}else if (selected) {
-			MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE WHICH IS INSIDE A PERSON
 		}
+		*/
+
 	}
 
 	public void OnTransport(InputArg arg){
-		/*
-		if (transform.position.y < 10f) {
-			//have gone to lower level
-			Clear();
-			transform.parent.GetComponent<Disable> ().DisableClidren ();
-		}
-		if (InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is PasserBy) {
-			MakeLines (instructions [2]); // reach in chest 
-		}
-		*/	
+		
 	}
 
 	public void OnMatchObject(LogicArg arg ){
-		selected = false;
 		MakeLines (instructions[7]); //KEEP GOING
 	}
 

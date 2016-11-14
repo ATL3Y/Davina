@@ -15,11 +15,8 @@ public class PasserBy : MObject {
 	[SerializeField] AudioClip innerWorldClip;
 
 	private Material material;
-	[SerializeField] float outlineWidth;
+	private float outlineWidth = .0001f;
 	private Color color;
-
-//	[Range(0,0.0001f)]
-//	[SerializeField] float outLineWidth = 0.00005f;
 
 	protected override void MAwake ()
 	{
@@ -111,7 +108,7 @@ public class PasserBy : MObject {
 		//SetOutline (true);
 		foreach ( MeshRenderer r in outlineRenders )
 		{
-			r.material.SetFloat( "_Outline", outlineWidth * 2f );
+			r.material.SetFloat( "_Outline", outlineWidth * 2.5f );
 		}
 	}
 
@@ -121,7 +118,7 @@ public class PasserBy : MObject {
 		//SetOutline (false);
 		foreach ( MeshRenderer r in outlineRenders )
 		{
-			r.material.SetFloat( "_Outline", outlineWidth / 2f );
+			r.material.SetFloat( "_Outline", outlineWidth / 2.5f );
 		}
 	}
 

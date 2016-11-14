@@ -19,7 +19,7 @@ public class MObject : MBehavior {
 			focusSoundSource = gameObject.AddComponent<AudioSource> ();
 			focusSoundSource.playOnAwake = false;
 			focusSoundSource.loop = false;
-			focusSoundSource.volume = 0.5f;
+			focusSoundSource.volume = 1f;
 			focusSoundSource.spatialBlend = 1f;
 			focusSoundSource.clip = focusSound;
 		}

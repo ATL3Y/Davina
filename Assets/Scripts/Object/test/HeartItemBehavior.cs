@@ -55,7 +55,7 @@ public class HeartItemBehavior : MonoBehaviour
 			if (!m_AudioSource.isPlaying) 
 			{
 				m_AudioSource.clip = pop;
-				m_AudioSource.volume = 0.7f;
+				m_AudioSource.volume = 1f;
 				m_AudioSource.Play ();
 			}
 		}
@@ -70,7 +70,7 @@ public class HeartItemBehavior : MonoBehaviour
 			if (!m_AudioSource.isPlaying) 
 			{
 				m_AudioSource.clip = click;
-				m_AudioSource.volume = 0.7f;
+				m_AudioSource.volume = 1f;
 				m_AudioSource.Play ();
 			}
 		}

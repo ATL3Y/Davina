@@ -63,7 +63,7 @@ public class CollectableObj : MObject {
 			selectSoundSource = gameObject.AddComponent<AudioSource> ();
 			selectSoundSource.playOnAwake = false;
 			selectSoundSource.loop = false;
-			selectSoundSource.volume = 0.5f;
+			selectSoundSource.volume = 1f;
 			selectSoundSource.spatialBlend = 1f;
 			selectSoundSource.clip = selectSound;
 		}
@@ -72,7 +72,7 @@ public class CollectableObj : MObject {
 			unselectSoundSource = gameObject.AddComponent<AudioSource> ();
 			unselectSoundSource.playOnAwake = false;
 			unselectSoundSource.loop = false;
-			unselectSoundSource.volume = 0.5f;
+			unselectSoundSource.volume = 1f;
 			unselectSoundSource.spatialBlend = 1f;
 			unselectSoundSource.clip = unselectSound;
 		}

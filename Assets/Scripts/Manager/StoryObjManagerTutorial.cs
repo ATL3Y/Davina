@@ -124,5 +124,4 @@ public class StoryObjManagerTutorial : MBehavior {
         M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
 
     }
-		
 }

@@ -22,6 +22,9 @@ public class TransportManager : MBehavior {
     private float height = -1f;
     private bool callOnce = true;
 
+	[SerializeField] FinaleTrailEnable TrailLeft;
+	[SerializeField] FinaleTrailEnable TrailRight;
+
 	/// <summary>
 	/// For the transport animation
 	/// </summary>
@@ -189,18 +192,21 @@ public class TransportManager : MBehavior {
     {
         base.MUpdate( );
 
-        if ( height > 0f && height < posEnd.position.y )
+        if ( height > 0f && height < posEnd.position.y / 3f )
         {
-            height += .001f;
-            transform.position = new Vector3( transform.position.x, height, transform.position.z );
+			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 300f;
+			print (distance + " = distance in transport");
+			Vector3 target = new Vector3 (transform.position.x, transform.position.y + distance, transform.position.z);
+		
+			transform.position = Vector3.Lerp (transform.position, target, 1f);
+			height = transform.position.y;
         } 
-		else if (height >= posEnd.position.y / 2.5f && callOnce )
+		else if (height >= posEnd.position.y / 3f && callOnce )
         {
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.End, logicArg );
             callOnce = false;
         }
-
     }
 
     void OnFinale( LogicArg arg )

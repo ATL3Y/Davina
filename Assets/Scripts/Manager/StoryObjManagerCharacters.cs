@@ -9,6 +9,7 @@ public class StoryObjManagerCharacters : MBehavior {
 	[SerializeField] List<GameObject> storyObjB;
 	[SerializeField] List<GameObject> storyObjC;
 	[SerializeField] List<GameObject> levelSpecificObjects;
+	[SerializeField] List<GameObject> disableOnFinaleObjects;
 
 	private List<GameObject> currentStory = new List<GameObject>();
 
@@ -30,6 +31,7 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] += OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
         M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
         M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
     }
@@ -40,6 +42,7 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] -= OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
         M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
         M_Event.logicEvents[ ( int )LogicEvents.Credits ] -= OnCredits;
     }
@@ -60,8 +63,9 @@ public class StoryObjManagerCharacters : MBehavior {
 		//disable remaining objects in mother
 		//Debug.Log("length of current story obj = " + currentStory.Count);
 		for (int i=currentStory.Count-1; i>=0; i--) {
-			if (currentStory [i].layer == 16) { // Focus is layer 16
-                Debug.Log( "in StoryManCharacters exit story deactivating " + currentStory[ i ].name );
+			CollectableObj cobj = currentStory[i].GetComponent<CollectableObj>();
+			if (cobj != null && !cobj.matched ) { 
+				Debug.Log( "in StoryManCharacters deactivating " + currentStory[ i ].name );
 				currentStory [i].SetActive (false);
 			}
 		}
@@ -91,11 +95,11 @@ public class StoryObjManagerCharacters : MBehavior {
 				return null;
 			}
 		case 2:
-			if (storyObjC.Count > 0) {
-                LogicArg logicArg = new LogicArg( this );
-                M_Event.FireLogicEvent( LogicEvents.Finale, logicArg );
+			if (storyObjC.Count >0) {
                 return storyObjC;
 			} else {
+				LogicArg logicArg = new LogicArg( this );
+				M_Event.FireLogicEvent( LogicEvents.Finale, logicArg );
 				return null;
 			}
 		default:
@@ -106,6 +110,12 @@ public class StoryObjManagerCharacters : MBehavior {
 	void OnCharacters( LogicArg arg ){
 		for (int i = 0; i < levelSpecificObjects.Count; i++) {
 			levelSpecificObjects [i].SetActive (true);
+		}
+	}
+
+	void OnFinale( LogicArg arg ){
+		for (int i = disableOnFinaleObjects.Count - 1; i >=0; i--) {
+			levelSpecificObjects [i].SetActive (false);
 		}
 	}
 		

@@ -182,7 +182,13 @@ public class LogicManager : MBehavior {
 	}
 
 	void OnEnd( LogicArg arg ){
+		//StartCoroutine (DelayToCredits (12f));
+	}
 
+	IEnumerator DelayToCredits(float delay){
+		yield return new WaitForSeconds (delay);
+		LogicArg logicArg = new LogicArg (this);
+		M_Event.FireLogicEvent (LogicEvents.Credits, logicArg);
 	}
 
 	void OnCredits(LogicArg arg){

@@ -37,13 +37,15 @@ public class AudioManager : MBehavior {
 	};
 	[SerializeField] LogicClipPair[] LogicClipPairs;
 
-	[SerializeField] AudioClip defaultBGM;
+	[SerializeField] AudioClip mainBGM;
+	[SerializeField] AudioClip sadBGM;
+	[SerializeField] AudioClip happyBGM;
 	private AudioSource bgmSource;
 
 	protected override void MAwake ()
 	{
 		base.MAwake ();
-		SwitchBGM (defaultBGM);
+		SwitchBGM (mainBGM);
 	}
 
 	protected override void MOnEnable ()
@@ -57,6 +59,8 @@ public class AudioManager : MBehavior {
 		}
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
+		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
 	}
 
 	protected override void MOnDisable ()
@@ -70,6 +74,8 @@ public class AudioManager : MBehavior {
 		}
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
+		M_Event.logicEvents [(int)LogicEvents.Finale] -= OnFinale;
+		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
 
 	}
 
@@ -118,7 +124,14 @@ public class AudioManager : MBehavior {
 
 	void OnExitInnerWorld( LogicArg arg )
 	{
-		SwitchBGM (defaultBGM);
+		SwitchBGM (mainBGM);
+	}
+
+	void OnFinale(LogicArg arg){
+		SwitchBGM (sadBGM);
+	}
+	void OnEnd(LogicArg arg){
+		SwitchBGM (happyBGM);
 	}
 
 	void SwitchBGM( AudioClip to )
@@ -126,7 +139,7 @@ public class AudioManager : MBehavior {
 		if (bgmSource == null) {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
-			bgmSource.volume = .2f;
+			bgmSource.volume = 1f;
 			bgmSource.spatialBlend = 1f;
 		}
 		if (bgmSource != null) {
@@ -134,7 +147,7 @@ public class AudioManager : MBehavior {
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
 				bgmSource.Play();
-				bgmSource.DOFade( .2f , 1f );
+				bgmSource.DOFade( 1f , 1f );
 			});
 		}
 
