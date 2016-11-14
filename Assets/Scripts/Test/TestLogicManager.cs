@@ -42,7 +42,7 @@ public class TestLogicManager : MonoBehaviour {
 
 	public void Upgrade(int level)
 	{
-		Debug.Log ("Upgrad" + level);
+		//Debug.Log ("Upgrad" + level);
 		int gotMoney = Random.Range ( level * 5, (level + 1) * 5);
 		temMoney += gotMoney;
 		temMoney = Mathf.Max (0, temMoney);

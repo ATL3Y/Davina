@@ -23,25 +23,61 @@ public class MatchObj : CollectableObj {
 		return true;
 	}
 
-	public override void OnFill ()
+	public override void OnFill ( float delay )
 	{
-		base.OnFill ();
-		gameObject.layer = 18; //change layer from Hold (17) to Done (18)
+		base.OnFill ( delay );
 
-		//print ("in match on fill");
-		// other option: one "on fill" event, bool on arg for up or down, check bool in MCharacter
-		if (gameObject.tag == "Raise") {
-			M_Event.FireLogicEvent (onFillRaiseEvent, new LogicArg (this));
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.ExitStory, logicArg);
-		} else if (gameObject.tag == "Lower") {
-			M_Event.FireLogicEvent (onFillLowerEvent, new LogicArg (this));
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.ExitStory, logicArg);
-		} else if (gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft"){
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.ExitStoryTutorial, logicArg);
-		}
+        Debug.Log( "in on Fill in Match Obj " + gameObject.name );
+
+        if ( storySoundSource != null && !storySoundSource.isPlaying && GetStoryTimer( ) == 0f )
+        {
+            Debug.Log( " call coroutine in Match Obj " );
+            //wait until the "hole" prompt has played
+            StartCoroutine( DelaySoundClipPlay( storySoundSource, delay ) );
+        } else
+        {
+            Debug.Log( " call next event in Match Obj " );
+            CallNextEvent( );
+        }
+
+
 	}
+
+    IEnumerator DelaySoundClipPlay( AudioSource audiosource, float delay )
+    {
+        Debug.Log( Time.timeSinceLevelLoad + " before first delay in delay soundclipplay " );
+        yield return new WaitForSeconds( delay );
+        Debug.Log( Time.timeSinceLevelLoad + " before second delay in delay soundclipplay " );
+        audiosource.Play( );
+        yield return new WaitForSeconds( audiosource.clip.length );
+        Debug.Log( Time.timeSinceLevelLoad + " before callnextevent in delay soundclipplay " );
+        CallNextEvent( );
+    }
+
+    void CallNextEvent( )
+    {
+        //print ("in match on fill");
+        // other option: one "on fill" event, bool on arg for up or down, check bool in MCharacter
+        if ( gameObject.tag == "Raise" )
+        {
+            M_Event.FireLogicEvent( onFillRaiseEvent, new LogicArg( this ) );
+            LogicArg logicArg = new LogicArg( this );
+            M_Event.FireLogicEvent( LogicEvents.ExitStory, logicArg );
+        }
+        else if ( gameObject.tag == "Lower" )
+        {
+            M_Event.FireLogicEvent( onFillLowerEvent, new LogicArg( this ) );
+            LogicArg logicArg = new LogicArg( this );
+            M_Event.FireLogicEvent( LogicEvents.ExitStory, logicArg );
+        }
+        else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" )
+        {
+            Debug.Log( Time.timeSinceLevelLoad + " in call exitstorytutorial " );
+            LogicArg logicArg = new LogicArg( this );
+            M_Event.FireLogicEvent( LogicEvents.ExitStoryTutorial, logicArg );
+        }
+
+    }
+
 
 }

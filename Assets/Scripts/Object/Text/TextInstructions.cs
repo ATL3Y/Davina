@@ -34,7 +34,7 @@ public class TextInstructions : MonoBehaviour
 	public void Start () 
 	{
 		instructions.Add ("LOOK AROUND AND STAND UP"); //0
-		instructions.Add ("CHOOSE AN ITEM BY POINTING WITH YOUR LINE"); //1
+		instructions.Add ("CHOOSE AN ITEM BY TOUCHING IT WITH YOUR LINE"); //1
 		instructions.Add ("PULL TRIGGER TO GRAB ITEM"); //2
 		instructions.Add ("CARRY ITEM TO ITS OUTLINE"); //3
 		instructions.Add ("PULL TRIGGER TO PLACE ITEM"); //4

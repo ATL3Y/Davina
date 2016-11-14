@@ -50,6 +50,8 @@ public enum LogicEvents
 	EnterStoryTutorial=20,
 	ExitStoryTutorial=21,
 
+    Finale=22,
+
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,
 	OpenShotThreeEnter = 103,

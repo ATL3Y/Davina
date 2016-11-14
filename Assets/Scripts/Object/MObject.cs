@@ -8,8 +8,11 @@ public class MObject : MBehavior {
 	private AudioSource focusSoundSource;
 	[SerializeField] bool lockScale = false;
 	private Vector3 origianScale;
+    private float focusTimer = 0f;
+    private float storyTimer = 0f;
+    protected int focusCount = 0;
 
-	protected override void MAwake ()
+    protected override void MAwake ()
 	{
 		base.MAwake ();
 		if (focusSound != null) {
@@ -39,8 +42,12 @@ public class MObject : MBehavior {
 	virtual public void OnFocus()
 	{
 		m_isFocus = true;
-		if (focusSoundSource != null)
-			focusSoundSource.Play ();
+		if (focusSoundSource != null && focusTimer == 0f )
+        {
+            focusSoundSource.Play( );
+            focusCount++;
+        }
+			
 	}
 
 	/// <summary>
@@ -65,5 +72,49 @@ public class MObject : MBehavior {
 				transform.localScale = localScale;
 			}
 		}
-	}
+        if(focusCount >= 3 )
+        {
+            focusTimer = 5f;
+            focusCount = 0;
+        }
+
+        if(focusTimer > 0f )
+        {
+            focusTimer -= Time.deltaTime;
+        }
+        else
+        {
+            focusTimer = 0f;
+        }
+
+        if ( storyTimer > 0f )
+        {
+            storyTimer -= Time.deltaTime;
+        }
+        else
+        {
+            storyTimer = 0f;
+        }
+
+    }
+
+    protected float GetFocusTimer( )
+    {
+        return focusTimer;
+    }
+
+    protected void SetFocusTimer( float time )
+    {
+       focusTimer = time;
+    }
+
+    protected float GetStoryTimer( )
+    {
+        return storyTimer;
+    }
+
+    protected void SetStoryTimer( float time )
+    {
+        storyTimer = time;
+    }
 }

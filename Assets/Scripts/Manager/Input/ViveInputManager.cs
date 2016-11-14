@@ -18,8 +18,6 @@ public class ViveInputManager : InputManager {
 		} else if(ViveInputController.Instance.ReceivedRightPadDownSignal()){
 			FireTransport ();
 		}
-
-
 	}
 
 	public override Ray[] GetCenterRayCast ()

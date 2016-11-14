@@ -12,8 +12,6 @@ public class StoryObjManagerCharacters : MBehavior {
 
 	private List<GameObject> currentStory = new List<GameObject>();
 
-	private bool callOnce = true;
-
 	protected override void MAwake ()
 	{
 		base.MAwake ();
@@ -32,8 +30,9 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] += OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-	}
+        M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+        M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
+    }
 
 	protected override void MOnDisable(){
 
@@ -41,8 +40,9 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] -= OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
-	}
+        M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+        M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
+    }
 
 	void OnEnterStory(LogicArg arg){
 		
@@ -61,6 +61,7 @@ public class StoryObjManagerCharacters : MBehavior {
 		//Debug.Log("length of current story obj = " + currentStory.Count);
 		for (int i=currentStory.Count-1; i>=0; i--) {
 			if (currentStory [i].layer == 16) { // Focus is layer 16
+                Debug.Log( "in StoryManCharacters exit story deactivating " + currentStory[ i ].name );
 				currentStory [i].SetActive (false);
 			}
 		}
@@ -68,12 +69,10 @@ public class StoryObjManagerCharacters : MBehavior {
 		//iterate count and enter next story upon exiting last one 
 		count++;
 		if (GetStory () != null) {
-			LogicArg logicArg = new LogicArg (this);
+            Debug.Log( "in StoryManCharacters enter next story " );
+            LogicArg logicArg = new LogicArg (this);
 			M_Event.FireLogicEvent (LogicEvents.EnterStory, logicArg);
-		} else if (GetStory () == null && callOnce) {
-			StartCoroutine (ToEndDelay (5f));
-			callOnce = false;
-		}
+		} 
 	}
 
 	//returns the next batch of story obj
@@ -85,27 +84,23 @@ public class StoryObjManagerCharacters : MBehavior {
 			} else {
 				return null;
 			}
-			break;
 		case 1:
 			if (storyObjB.Count > 0) {
 				return storyObjB;
 			} else {
 				return null;
 			}
-			break;
 		case 2:
 			if (storyObjC.Count > 0) {
-				return storyObjC;
+                LogicArg logicArg = new LogicArg( this );
+                M_Event.FireLogicEvent( LogicEvents.Finale, logicArg );
+                return storyObjC;
 			} else {
 				return null;
 			}
-			break;
 		default:
-			print ("default");
 			return null;
-			break;
 		}
-		return null;
 	}
 
 	void OnCharacters( LogicArg arg ){
@@ -115,14 +110,19 @@ public class StoryObjManagerCharacters : MBehavior {
 	}
 		
 	void OnEnd( LogicArg arg ){
-		for (int i = 0; i < levelSpecificObjects.Count; i++) {
-			levelSpecificObjects [i].SetActive (false);
+		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
+            levelSpecificObjects [i].SetActive (false);
 		}
 	}
 
-	IEnumerator ToEndDelay( float delay ){
-		yield return new WaitForSeconds (delay);
-		LogicArg logicArg = new LogicArg (this);
-		M_Event.FireLogicEvent (LogicEvents.End, logicArg);
-	}
+    void OnCredits( LogicArg arg )
+    {
+        //disable the trails
+        for ( int i = currentStory.Count - 1; i >= 0; i-- )
+        {
+            currentStory[ i ].SetActive( false );
+        }
+    }
+
+    		
 }

@@ -19,6 +19,8 @@ public class TransportManager : MBehavior {
 
 	[SerializeField] Transform posEnd;
 	[SerializeField] Transform posCredits;
+    private float height = -1f;
+    private bool callOnce = true;
 
 	/// <summary>
 	/// For the transport animation
@@ -50,7 +52,8 @@ public class TransportManager : MBehavior {
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] += OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] += OnOutofFocus;
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+        M_Event.logicEvents[ ( int )LogicEvents.Finale ] += OnFinale;
+        M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
 		M_Event.logicEvents [(int)LogicEvents.Credits] += OnCredits;
 	}
 
@@ -60,7 +63,8 @@ public class TransportManager : MBehavior {
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] -= OnOutofFocus;
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+        M_Event.logicEvents[ ( int )LogicEvents.Finale ] -= OnFinale;
+        M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
 		M_Event.logicEvents [(int)LogicEvents.Credits] -= OnCredits;
 	}
 
@@ -148,14 +152,13 @@ public class TransportManager : MBehavior {
 			Vector3 target = p.GetObservePosition();
 			//print ("my target.y is = " + target.y); //make sure world coord
 			// if on bridge, set higher
-			if (target.y > 10f) {
-				target.y = 12.286f;
+			if (target.y > posEnd.position.y - 2f) {
+				target.y = posEnd.position.y + .132f;
 			} else {
-				Disable.Instance.DisableClidren ();
 				target.y = .246f;
 			}
 
-			Debug.Log (Time.timeSinceLevelLoad + "; TransportStart to: " + target);
+			//Debug.Log (Time.timeSinceLevelLoad + "; TransportStart to: " + target);
 
 			//target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
@@ -176,13 +179,35 @@ public class TransportManager : MBehavior {
 		if (transportToObject != null) {
 			LogicArg arg = new LogicArg (this);
 			arg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
-
 			M_Event.FireLogicEvent ( LogicEvents.TransportEnd, arg);
 		}
-
 		transportSequence = null;
 		transportToObject = null;
 	}
+
+    protected override void MUpdate( )
+    {
+        base.MUpdate( );
+
+        if ( height > 0f && height < posEnd.position.y )
+        {
+            height += .001f;
+            transform.position = new Vector3( transform.position.x, height, transform.position.z );
+        } else if (height >= posEnd.position.y && callOnce )
+        {
+            LogicArg logicArg = new LogicArg( this );
+            M_Event.FireLogicEvent( LogicEvents.End, logicArg );
+            callOnce = false;
+        }
+
+    }
+
+    void OnFinale( LogicArg arg )
+    {
+        Disable.Instance.DisableClidren( ); // Disable text instructions
+        height = LogicManager.Instance.GetPlayerTransform( ).position.y;
+        
+    }
 
 	void OnEnd( LogicArg arg ){
 

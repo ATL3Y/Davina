@@ -106,9 +106,8 @@ public class MCharacter : MObject {
 	{
 		if ( (col.gameObject.tag == "GameController" &&
 			LogicManager.Instance.VREnable) || 
-			(col.gameObject.tag == "Player" &&
-			!LogicManager.Instance.VREnable) )
-		{
+			(col.gameObject.tag == "Player") ) //!LogicManager.Instance.VREnable
+        {
 			triggeredCharacter.Add (this);
 
 			if (focusedCharacter == null) {

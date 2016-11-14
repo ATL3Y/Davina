@@ -43,9 +43,10 @@ public class StoryObjManagerEnd : MBehavior {
 	}
 
 	void OnCredits(LogicArg arg){
-		for (int i = 0; i < levelSpecificObjects.Count; i++) {
-			levelSpecificObjects [i].SetActive (false);
-		}
-	}
+        for ( int i = levelSpecificObjects.Count - 1; i >= 0; i-- )
+        {
+            levelSpecificObjects[ i ].SetActive( false );
+        }
+    }
 		
 }

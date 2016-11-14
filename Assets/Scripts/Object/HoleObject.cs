@@ -8,8 +8,6 @@ public class HoleObject : MObject {
 	Collider col;
 	[SerializeField] List<string> matchTagList = new List<string>();
 	[SerializeField] float fixInTime = 1f;
-
-	// i want the holes to have an outline too
 	[SerializeField] MeshRenderer[] outlineRenders;
 
 	[SerializeField] protected AudioClip storySound;
@@ -52,14 +50,22 @@ public class HoleObject : MObject {
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
-		//SetOutline (true);
-	}
+        //SetOutline (true);
+        foreach ( MeshRenderer r in outlineRenders )
+        {
+            r.material.SetFloat( "_Outline", outlineWidth * 2f );
+        }
+    }
 
 	public override void OnOutofFocus ()
 	{
 		base.OnOutofFocus ();
-		//SetOutline (false);
-	}
+        //SetOutline (false);
+        foreach ( MeshRenderer r in outlineRenders )
+        {
+            r.material.SetFloat( "_Outline", outlineWidth / 2f );
+        }
+    }
 
 	/// <summary>
 	/// Set the outline render on or off(enable)
@@ -77,7 +83,7 @@ public class HoleObject : MObject {
 	/// </summary>
 	protected void Shake( )
 	{
-		Vector3 strength = new Vector3 (50f, 50f, 0f); // scale of 0-1
+		Vector3 strength = new Vector3 (50f, 50f, 0f);
 		transform.DOShakeRotation(1f, strength, 10, 40f, true);
 	}
 
@@ -97,7 +103,7 @@ public class HoleObject : MObject {
 	/// TODO: find a better way to handle the match object algorithm
 	/// </summary>
 	public GameObject matchObject;
-	protected virtual void OnTriggerStay(Collider col) //changed from OnTriggerEnter
+	protected virtual void OnTriggerEnter(Collider col) 
 	{
 		string tag = col.gameObject.tag;
 		if (matchTagList.Contains (tag) && SelectObjectManager.Instance.IsSelectObject (col.gameObject)) {
@@ -105,35 +111,23 @@ public class HoleObject : MObject {
 			//print ("hole match obj name = " + matchObject.name);
 			CollectableObj cobj = matchObject.GetComponent<CollectableObj> ();
 			if (cobj != null) {
-				// make it so the next click will not trigger Unselect's transform change in CollectableObject
 				cobj.matched = true;
-				//print ("in hole set matched = " + cobj.matched);
-				//SetOutline(true);
 			}
-			// play story
-			//if ( storySoundSource != null )
-				//storySoundSource.Play ();
+
 		} else if (tag == "GameController" && matchObject == null) {
-			bool shake = true;
-			foreach (Transform child in col.gameObject.transform) {
-				if (child.gameObject.layer.ToString() == "17") { // 17 is "Hold"
-					shake = false;
-				}
-			}
-			if (shake) {
-				//Shake ();
-			}
 			// play story
-			//if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
-				//storySoundSource.Play ();
+			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18 && GetStoryTimer() == 0f )
+            {
+                storySoundSource.Play( );
+                SetStoryTimer( 5f );
+            }
 		}
 	}
 
 	protected virtual void OnTriggerExit(Collider col)
 	{
 		if (matchObject == col.gameObject) {
-			//matchObject = null;
-			//SetOutline(false);
+
 		}
 	}
 
@@ -148,30 +142,33 @@ public class HoleObject : MObject {
 		//print ("in hole on match obj");
 		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
-			//print ("in hole on match obj condition");
-			// vibrate the controller holding the matchObject
-			if (cobj.transform.gameObject.name == "Controller (left)") {
-				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
-			} else {
+            gameObject.layer = LayerMask.NameToLayer( "Done" ); 
+            Debug.Log( "change hole obj " + gameObject.name + " to layer " + gameObject.layer + " in Hole Object" );
+            cobj.gameObject.layer = LayerMask.NameToLayer( "Done" ); 
+            Debug.Log( "change match obj " + cobj.gameObject.name + " to layer " + cobj.gameObject.layer + " in Hole Object" );
+
+            //print ("in hole on match obj condition");
+            // vibrate the controller holding the matchObject
+            if (cobj.transform.gameObject.name == "Controller (right)") {
 				InputManager.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
+			} else {
+				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 			}
 
 			// change the transform parent and position, scale, rotation of the object
-			cobj.transform.parent = transform; //.parent;
+			cobj.transform.parent = transform; 
 			cobj.transform.DOLocalMove (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
-			cobj.transform.DOLocalRotate (Vector3.zero, fixInTime).SetEase (Ease.InCirc);
+			cobj.transform.DOLocalRotate ( cobj.GSetOrinalRot(), fixInTime).SetEase (Ease.InCirc);
 			cobj.transform.DOScale (1.02f, fixInTime).SetEase (Ease.InCirc);
 
-			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18) // object is not Done
-				storySoundSource.Play ();
+            float delay = 3f;
+            if ( storySoundSource != null && !storySoundSource.isPlaying)
+            {
+                storySoundSource.Play( );
+                delay = storySoundSource.clip.length;
+            }
 
-			//would be nice to then repeat match sound here 
-
-			gameObject.layer = 18; //change layer from Focus (16) to Done (18)
-
-			// tell the object it is filled in the hole
-			cobj.OnFill ();
-			//this.gameObject.SetActive (false);
+            cobj.OnFill ( delay );
 		}
 	}
 }

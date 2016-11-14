@@ -9,6 +9,8 @@ public class InputManager : MBehavior {
 
 	public LayerMask senseLayer;
 	public static float DETECT_DISTANCE = 9999f;
+    private MObject[ ] collectableObjects = new MObject[ 200 ];
+    private int collectableObjectsCount = 0;
 
 	protected override void MAwake ()
 	{
@@ -18,6 +20,36 @@ public class InputManager : MBehavior {
 
 		senseLayer = LayerMask.GetMask ("PasserBy","Focus","Collectable");
 	}
+
+    // recheched each level from the logic manager
+    protected void loadCollectableObjects( )
+    {
+        //clear
+        for( int i=0; i< collectableObjects.Length; i++ )
+        {
+            collectableObjects[ i ] = null;
+        }
+
+        int j = 0;
+        foreach ( MatchObj g in GameObject.FindObjectsOfType<MatchObj>( ) )
+        {
+            collectableObjects[ j ] = g;
+            j++;
+        }
+        foreach ( HoleObject g in GameObject.FindObjectsOfType<HoleObject>( ) )
+        {
+            collectableObjects[ j ] = g;
+            j++;
+        }
+        foreach ( FinalHoleObject g in GameObject.FindObjectsOfType<FinalHoleObject>( ) )
+        {
+            collectableObjects[ j ] = g;
+            j++;
+        }
+        collectableObjectsCount = j;
+
+
+    }
 
 	/// <summary>
 	/// Save the focused object 
@@ -45,7 +77,7 @@ public class InputManager : MBehavior {
 		Ray[] centers = new Ray[2];
 		centers = GetCenterRayCast ();
 
-		/*
+        /*
 		/// this evaluates the controller that is most horizontal first
 		int[] pointingOrder = new int[2];
 		pointingOrder = GetPointing ();
@@ -56,8 +88,17 @@ public class InputManager : MBehavior {
 		}
 		*/
 
-		// this prefers the right controller first
-		if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
+        // this prefers the right controller first, proximity first, and the collectible objects first
+        for ( int i=0; i<collectableObjectsCount; i++ )
+        {
+           if(collectableObjects[i].GetComponent<Collider>().bounds.Intersects(ViveInputController.Instance.boundsRightController ) )
+            {
+                lookObj = collectableObjects[ i ];
+            } else if( collectableObjects[ i ].GetComponent<Collider>( ).bounds.Intersects( ViveInputController.Instance.boundsLeftController ) )
+            {
+                lookObj = collectableObjects[ i ];
+            }
+        } if (Physics.Raycast (centers[1], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
 		} else if (Physics.Raycast (centers[0], out hitInfo , DETECT_DISTANCE , senseLayer)) {
 			lookObj = hitInfo.collider.gameObject.GetComponent<MObject> ();
@@ -72,7 +113,7 @@ public class InputManager : MBehavior {
 			m_focusObj = lookObj;
 			if (m_focusObj != null) {
 				m_focusObj.OnFocus ();
-				Debug.Log ("name of focus obj = " + m_focusObj.gameObject.name);
+				//Debug.Log ("name of focus obj = " + m_focusObj.gameObject.name);
 				FireFocusNewObject (m_focusObj.gameObject);
 			}
 		}

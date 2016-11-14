@@ -54,7 +54,7 @@ public class TestPasserBy : MonoBehaviour {
 		Vector3 diff = transform.position - agent.destination;
 		diff.y = 0;
 		if ( diff.magnitude < 1f) {
-			Debug.Log ("Turn Back");
+			//Debug.Log ("Turn Back");
 			agent.SetDestination (-agent.destination);
 			value = Random.Range (0, 1f);
 			isTraded = false;

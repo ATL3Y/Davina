@@ -19,7 +19,7 @@ public class CollectableObj : MObject {
 
 	[SerializeField] protected Transform originalParentTransform;
 	private Vector3 originalPos;
-	private Quaternion originalRot;
+    private Vector3 originalRot;
 	public bool matched = false;
 	[SerializeField] float offset;
 	private Material material;
@@ -56,10 +56,10 @@ public class CollectableObj : MObject {
 
 		originalParentTransform = transform.parent;
 		originalPos = transform.localPosition;
-		originalRot = transform.localRotation;
-			
-		// set up the select sound
-		if (selectSound != null) {
+        originalRot = transform.localEulerAngles;
+
+        // set up the select sound
+        if (selectSound != null) {
 			selectSoundSource = gameObject.AddComponent<AudioSource> ();
 			selectSoundSource.playOnAwake = false;
 			selectSoundSource.loop = false;
@@ -87,13 +87,20 @@ public class CollectableObj : MObject {
 		}
 	}
 
+    public Vector3 GSetOrinalRot( )
+    {
+        return originalRot;
+    }
+
 	public override void OnFocus ()
 	{
 		base.OnFocus ();
 		SetOutline (true);
-		if ( storySoundSource != null && !storySoundSource.isPlaying)
-			storySoundSource.Play ();
-
+		if ( storySoundSource != null && !storySoundSource.isPlaying && GetStoryTimer()==0f && gameObject.layer != 18 )
+        {
+            storySoundSource.Play( );
+            SetStoryTimer( 5f );
+        }
 	}
 
 	public override void OnOutofFocus ()
@@ -155,17 +162,15 @@ public class CollectableObj : MObject {
 				t.gameObject.layer = LayerMask.NameToLayer ("Focus");
 
 			transform.SetParent (originalParentTransform);
-			//how do at the same time? how do rotate?
 			transform.DOLocalMove (originalPos, 1f).SetEase (Ease.InCirc);
-			//transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
-			transform.localRotation = Quaternion.identity;
+			transform.DOLocalRotate (originalRot, 1f).SetEase (Ease.InCirc);
 			return true;
 		} else if (matched) {
-			//fires match object event on pressing trigger instead of unselect
-			LogicArg logicArg = new LogicArg (this);
+            //fires match object event on pressing trigger instead of unselect
+            LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_MATCH_COBJECT, this);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
-			Debug.Log (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
+			//Debug.Log (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
 			//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name);
 		}
 		return false;
@@ -175,11 +180,9 @@ public class CollectableObj : MObject {
 	/// <summary>
 	/// Called when the object fills in the hole
 	/// </summary>
-	virtual public void OnFill()
+	virtual public void OnFill( float delay )
 	{
-		// repeat story once filled (could play both stories at this point)
-		if ( storySoundSource != null && !storySoundSource.isPlaying)
-			storySoundSource.Play ();
+
 	}
 
 }

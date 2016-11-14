@@ -58,21 +58,28 @@ public class StoryObjManagerTutorial : MBehavior {
 		//disable remaining objects in mother
 		//Debug.Log("length of current story obj = " + currentStory.Count);
 		for (int i=currentStory.Count-1; i>=0; i--) {
-			if (currentStory [i].layer == 16) { // Focus is layer 16
-				currentStory [i].SetActive (false);
+            //if (currentStory [i].layer == LayerMask.NameToLayer( "Focus" )) { 
+            CollectableObj cobj = currentStory[i].GetComponent<CollectableObj>();
+            if (cobj != null && !cobj.matched ) { 
+                Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
+                currentStory [i].SetActive (false);
 			}
 		}
 
 		//iterate count and enter next story upon exiting last one 
 		count++;
 		if (GetStory () != null) {
-			LogicArg logicArg = new LogicArg (this);
+            Debug.Log( "in StoryManCharacters enter next story " );
+            LogicArg logicArg = new LogicArg (this);
 			M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, logicArg);
 		} else if (GetStory () == null && callOnce) {
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.Characters, logicArg);
-			callOnce = false;
-		}
+            //delay is in the objects based on clip length 
+            //print( "Coroutine called" );
+            //StartCoroutine( CharacterEventDelay( 2f ) );
+            LogicArg logicArg = new LogicArg( this );
+            M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
+            callOnce = false;
+        }
 	}
 
 	//returns the next batch of story obj
@@ -84,33 +91,38 @@ public class StoryObjManagerTutorial : MBehavior {
 			} else {
 				return null;
 			}
-			break;
 		case 1:
 			if (storyObjB.Count > 0) {
 				return storyObjB;
 			} else {
 				return null;
 			}
-			break;
 		case 2:
 			if (storyObjC.Count > 0) {
 				return storyObjC;
 			} else {
 				return null;
 			}
-			break;
 		default:
-			print ("default");
 			return null;
-			break;
 		}
-		return null;
 	}
 
 	public void OnCharacters (LogicArg arg ){
-		for (int i = 0; i < levelSpecificObjects.Count; i++) {
-			levelSpecificObjects [i].SetActive (false);
-		}
-	}
+        for ( int i = levelSpecificObjects.Count - 1; i >= 0; i-- )
+        {
+            levelSpecificObjects[ i ].SetActive( false );
+        }
+    }
+
+    IEnumerator CharacterEventDelay( float delay )
+    {
+        print(Time.timeSinceLevelLoad +  " before" );
+        yield return new WaitForSeconds( delay );
+        print( Time.timeSinceLevelLoad + "after" );
+        LogicArg logicArg = new LogicArg( this );
+        M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
+
+    }
 		
 }
