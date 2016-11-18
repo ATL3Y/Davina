@@ -13,7 +13,7 @@ public class TextInstructions : MonoBehaviour
 	private List < GameObject > _letters = new List<GameObject> (); //letters in the given phrase
 
 	private int size;
-	private float oldLength = 0f;
+	//private float oldLength = 0f;
 	private Vector3 origPos;
 	private Quaternion origRot;
 	private Vector3 origScale;
@@ -27,15 +27,17 @@ public class TextInstructions : MonoBehaviour
 
 	private float timeLeft=0f;
 	private int currentInstruction = 0;
-	private bool callOnce = false;
+	//private bool callOnce = false;
+
+	private bool characters = false;
 
 	public void Start () 
 	{
 		instructions.Add ("LOOK AROUND AND STAND UP"); //0
-		instructions.Add ("CHOOSE AN ITEM BY TOUCHING IT WITH YOUR LINE"); //1
+		instructions.Add ("CHOOSE AN ITEM BY POINTING"); //1
 		instructions.Add ("PULL TRIGGER TO GRAB ITEM"); //2
 		instructions.Add ("CARRY ITEM TO ITS OUTLINE"); //3
-		instructions.Add ("PULL TRIGGER TO PLACE ITEM"); //4
+		instructions.Add ("TOUCH OUTLINE AND PULL TRIGGER TO PLACE ITEM"); //4
 		instructions.Add ("POINT AT AN UMBRELLA"); //5
 		instructions.Add ("PRESS PAD TO MOVE THERE"); //6
 		instructions.Add ("KEEP GOING"); //7
@@ -61,7 +63,7 @@ public class TextInstructions : MonoBehaviour
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
 		MakeLines (instructions [0]); // LOOK AROUND AND STAND UP
-		Pause(3f);
+		Pause(4f);
 	}
 
 	public void Update () {
@@ -70,10 +72,12 @@ public class TextInstructions : MonoBehaviour
 		} else {
 			if (SelectObjectManager.Instance.SelectObj != null) {
 				MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE
-			} else if ((transform.position.y > 5f || transform.position.z > 5f) && SelectObjectManager.Instance.SelectObj == null) { // not at Davina falling
+			} else if (((transform.position.y > 5f || transform.position.z > 5f) && SelectObjectManager.Instance.SelectObj == null && !characters) // not at Davina falling
+				|| (transform.position.z > 5f && SelectObjectManager.Instance.SelectObj == null && characters) ) // not at tutorial once objs matched
+			{ 
 				MakeLines (instructions [1]); // CHOOSE AN ITEM BY POINTING WITH YOUR LINE
 			} else {
-				MakeLines (instructions [8]); // " "
+				MakeLines (instructions [5]); // " "
 			}
 		}
 	}
@@ -83,21 +87,26 @@ public class TextInstructions : MonoBehaviour
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] += OnOutofFocus;
 		M_Event.logicEvents [(int)LogicEvents.MatchObject] += OnMatchObject;
+		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
 	}
 
 	public void OnDisable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
 		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] -= OnOutofFocus;
-		M_Event.logicEvents [(int)LogicEvents.MatchObject] -= OnMatchObject;
+		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
 	}
 	PasserBy focusPasserby;	
 	public void OnFocusNew( InputArg arg ){
 
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		CollectableObj cobj = arg.focusObject.GetComponent<CollectableObj> ();
+		HoleObject hobj = arg.focusObject.GetComponent<HoleObject> ();
 		if (cobj != null && cobj.matched) {
 			// prefer controller instructions
+			timeLeft = 0f;
+			MakeLines (instructions [4]); // PULL TRIGGER TO PLACE ITEM
+		} else if (hobj != null) {
 			timeLeft = 0f;
 			MakeLines (instructions [4]); // PULL TRIGGER TO PLACE ITEM
 		} else if (cobj != null ) {
@@ -108,6 +117,10 @@ public class TextInstructions : MonoBehaviour
 			focusPasserby = p;
 			MakeLines (instructions [6]); // PRESS PAD TO MOVE THERE
 		} 
+	}
+
+	public void OnCharacters(LogicArg arg){
+		characters = true;
 	}
 
 	public void OnOutofFocus( InputArg arg )
@@ -202,8 +215,8 @@ public class TextInstructions : MonoBehaviour
 				} 
 			}
 		}
-		//leave instruction for at least 1 second
-		Pause (1.8f);
+		//leave instruction for a time
+		Pause (3f);
 	}
 
 	public void Clear ()

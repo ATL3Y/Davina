@@ -15,7 +15,7 @@ public class PasserBy : MObject {
 	[SerializeField] AudioClip innerWorldClip;
 
 	private Material material;
-	private float outlineWidth = .0001f;
+	private float outlineWidth = 5e-05f;
 	private Color color;
 
 	protected override void MAwake ()

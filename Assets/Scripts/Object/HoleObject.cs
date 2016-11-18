@@ -55,6 +55,16 @@ public class HoleObject : MObject {
         {
             r.material.SetFloat( "_Outline", outlineWidth * 2f );
         }
+
+		if (matchObject == null) {
+			// play story
+			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18 && GetStoryTimer() == 0f )
+			{
+				storySoundSource.Play( );
+				SetStoryTimer( 3f );
+			}
+		}
+
     }
 
 	public override void OnOutofFocus ()
@@ -114,7 +124,9 @@ public class HoleObject : MObject {
 				cobj.matched = true;
 			}
 
-		} else if (tag == "GameController" && matchObject == null) {
+		} 
+		/*
+		else if (tag == "GameController" && matchObject == null) {
 			// play story
 			if ( storySoundSource != null && !storySoundSource.isPlaying && gameObject.layer != 18 && GetStoryTimer() == 0f )
             {
@@ -122,6 +134,8 @@ public class HoleObject : MObject {
                 SetStoryTimer( 5f );
             }
 		}
+		*/
+
 	}
 
 	protected virtual void OnTriggerExit(Collider col)
@@ -143,9 +157,9 @@ public class HoleObject : MObject {
 		// if the match succeeds
 		if (cobj != null && cobj.gameObject == matchObject) {
             gameObject.layer = LayerMask.NameToLayer( "Done" ); 
-            Debug.Log( "change hole obj " + gameObject.name + " to layer " + gameObject.layer + " in Hole Object" );
+            //Debug.Log( "change hole obj " + gameObject.name + " to layer " + gameObject.layer + " in Hole Object" );
             cobj.gameObject.layer = LayerMask.NameToLayer( "Done" ); 
-            Debug.Log( "change match obj " + cobj.gameObject.name + " to layer " + cobj.gameObject.layer + " in Hole Object" );
+            //Debug.Log( "change match obj " + cobj.gameObject.name + " to layer " + cobj.gameObject.layer + " in Hole Object" );
 
             //print ("in hole on match obj condition");
             // vibrate the controller holding the matchObject

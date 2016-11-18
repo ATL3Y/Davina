@@ -13,7 +13,7 @@ public class TextCredits : MonoBehaviour
 	private List < GameObject > _letters = new List<GameObject> (); //letters in the given phrase
 
 	private int size;
-	private float oldLength = 0f;
+	//private float oldLength = 0f;
 	private Vector3 origPos;
 	private Quaternion origRot;
 	private Vector3 origScale;
@@ -21,7 +21,7 @@ public class TextCredits : MonoBehaviour
 
 	private List<string> instructions = new List<string>();
 
-	private bool selected = false;
+	//private bool selected = false;
 
 	private float lineLengthLimit = 20f;
 	private float lineHeightLimit = 1.2f;
@@ -29,19 +29,23 @@ public class TextCredits : MonoBehaviour
 
 	private float timeLeft=0f;
 	private int currentInstruction = 0;
-	private bool callOnce = false;
+	//private bool callOnce = false;
 
 	public void Awake(){
-		instructions.Add ("                     CREDITS"); 
-		instructions.Add ("YIWEN DAI            TWO D ART"); 
-		instructions.Add ("KATIE PUSTOLSKI      THREE D ART"); 
+		instructions.Add ("                          CREDITS"); 
+		instructions.Add ("                          DAVINA");
 		instructions.Add ("STREET SCENE MODEL   BY GALLIE MICHARL    SPOOKY SUCKING AIR   BY HYKENFREAK        GALE WIND BY LANDUB"); 
-		instructions.Add ("RICKIE LEE KROELL    MUSIC                SOUND DESIGN"); 
-		instructions.Add ("ISABEL SHASHA        STORY"); 
-		instructions.Add ("ATWOOD DENG          PROGRAMMER"); 
-		instructions.Add ("ATLEY LOUGHRIDGE     GAME DESIGN          PROGRAMMER"); 
+		instructions.Add ("TWO D ART            YIWEN DAI"); 
+		instructions.Add ("THREE D ART          KATIE PUSTOLSKI"); 
+		instructions.Add ("VOICE ACTOR MOTHER   YIWEN DAI"); 
+		instructions.Add ("VOICE ACTOR DAVINA   JUNG-HO SOHN");
+		instructions.Add ("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
+		instructions.Add ("STORY                ISABEL SHASHA"); 
+		instructions.Add ("PROGRAMMER           ATWOOD DENG"); 
+		instructions.Add ("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
 		instructions.Add ("SPECIAL THANKS       RICHARD LEMARCHAND"); 
-		instructions.Add ("USC                  INTERACTIVE MEDIA AND GAMES");
+		instructions.Add ("USC                  INTERACTIVE MEDIA    AND GAMES");
+		instructions.Add ("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
 	}
 
 	public void Start () 
@@ -157,7 +161,7 @@ public class TextCredits : MonoBehaviour
 			}
 		}
 		//leave instruction for at least 1 second
-		Pause (3f);
+		Pause (4f);
 	}
 
 	public void Clear ()

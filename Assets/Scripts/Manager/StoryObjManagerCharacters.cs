@@ -23,6 +23,11 @@ public class StoryObjManagerCharacters : MBehavior {
 				levelSpecificObjects [i].SetActive (false);
 			}
 		}
+		if (disableOnFinaleObjects.Count > 0) {
+			for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
+				disableOnFinaleObjects [i].SetActive (false);
+			}
+		}
 	}
 
 	protected override void MOnEnable(){
@@ -111,22 +116,26 @@ public class StoryObjManagerCharacters : MBehavior {
 		for (int i = 0; i < levelSpecificObjects.Count; i++) {
 			levelSpecificObjects [i].SetActive (true);
 		}
+		for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
+			disableOnFinaleObjects [i].SetActive (true);
+		}
 	}
 
 	void OnFinale( LogicArg arg ){
 		for (int i = disableOnFinaleObjects.Count - 1; i >=0; i--) {
-			levelSpecificObjects [i].SetActive (false);
+			disableOnFinaleObjects [i].SetActive (false);
 		}
 	}
 		
 	void OnEnd( LogicArg arg ){
-		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
-            levelSpecificObjects [i].SetActive (false);
-		}
+
 	}
 
     void OnCredits( LogicArg arg )
     {
+		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
+			levelSpecificObjects [i].SetActive (false);
+		}
         //disable the trails
         for ( int i = currentStory.Count - 1; i >= 0; i-- )
         {

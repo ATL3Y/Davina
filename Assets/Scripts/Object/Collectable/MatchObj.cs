@@ -27,20 +27,22 @@ public class MatchObj : CollectableObj {
 	{
 		base.OnFill ( delay );
 
-        Debug.Log( "in on Fill in Match Obj " + gameObject.name );
+        //Debug.Log( "in on Fill in Match Obj " + gameObject.name );
+		if (storySoundSource != null && storySoundSource.isPlaying) {
+			storySoundSource.Stop ();
+		}
 
-        if ( storySoundSource != null && !storySoundSource.isPlaying && GetStoryTimer( ) == 0f )
+		if (storySoundSource != null )// && GetStoryTimer( ) == 0f )
         {
             Debug.Log( " call coroutine in Match Obj " );
             //wait until the "hole" prompt has played
             StartCoroutine( DelaySoundClipPlay( storySoundSource, delay ) );
-        } else
+        } 
+		else
         {
             Debug.Log( " call next event in Match Obj " );
             CallNextEvent( );
         }
-
-
 	}
 
     IEnumerator DelaySoundClipPlay( AudioSource audiosource, float delay )
@@ -72,7 +74,7 @@ public class MatchObj : CollectableObj {
         }
         else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" )
         {
-            Debug.Log( Time.timeSinceLevelLoad + " in call exitstorytutorial " );
+            //Debug.Log( Time.timeSinceLevelLoad + " in call exitstorytutorial " );
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.ExitStoryTutorial, logicArg );
         }

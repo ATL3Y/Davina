@@ -132,7 +132,7 @@ public class LogicManager : MBehavior {
 		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
 		if (point != null) {
 			transform.position = point.transform.position;
-			Quaternion cameraTurn = Quaternion.FromToRotation (Camera.main.transform.forward, point.transform.forward);
+			//Quaternion cameraTurn = Quaternion.FromToRotation (Camera.main.transform.forward, point.transform.forward);
 			transform.rotation = point.transform.rotation;
 		}
 	}
@@ -182,13 +182,7 @@ public class LogicManager : MBehavior {
 	}
 
 	void OnEnd( LogicArg arg ){
-		//StartCoroutine (DelayToCredits (12f));
-	}
 
-	IEnumerator DelayToCredits(float delay){
-		yield return new WaitForSeconds (delay);
-		LogicArg logicArg = new LogicArg (this);
-		M_Event.FireLogicEvent (LogicEvents.Credits, logicArg);
 	}
 
 	void OnCredits(LogicArg arg){

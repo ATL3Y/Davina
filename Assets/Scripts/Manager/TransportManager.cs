@@ -75,7 +75,7 @@ public class TransportManager : MBehavior {
 	public void OnFocusNew( InputArg arg )
 	{
 		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
-		if (p != null && p != LogicManager.Instance.StayPasserBy) { //TODO: why can't i stop from focusing on current focus object?
+		if (p != null && p != LogicManager.Instance.StayPasserBy) { 
 			focusPasserby = p;
 			if (transportLine != null) {
 				Vector3 transportStart = Camera.main.transform.position;
@@ -145,13 +145,8 @@ public class TransportManager : MBehavior {
 				transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
 			}
 				
-			// calculate the transport varible
-			Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
-//			Vector3 target = InputManager.Instance.FocusedObject.transform.position;
-//			Vector3 offset = (myTrans.position - target);
-//			offset.y = 0;
-//			offset.Normalize (); 
-//			offset *= transportOffset;
+			// set up the transport varible
+			//Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
 			Vector3 target = p.GetObservePosition();
 			//print ("my target.y is = " + target.y); //make sure world coord
 			// if on bridge, set higher
@@ -162,7 +157,6 @@ public class TransportManager : MBehavior {
 			}
 
 			//Debug.Log (Time.timeSinceLevelLoad + "; TransportStart to: " + target);
-
 			//target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
 			transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));
@@ -232,7 +226,7 @@ public class TransportManager : MBehavior {
 			transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
 		}
 
-		Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
+		//Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
 		Vector3 target = posEnd.position;
 
 		transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));
@@ -261,7 +255,7 @@ public class TransportManager : MBehavior {
 			transportSequence.Join (DOTween.To (() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
 		}
 
-		Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
+		//Transform myTrans = LogicManager.Instance.GetPlayerTransform ();
 		Vector3 target = posCredits.position;
 
 		transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));

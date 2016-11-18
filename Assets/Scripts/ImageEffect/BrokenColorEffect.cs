@@ -11,8 +11,8 @@ public class BrokenColorEffect : ImageEffectBase {
 	[Range(0,10)]
 	[SerializeField] float overflowRate = 0;
 
-	[Range(0,1)]
-	[SerializeField] float RecordThred = 0.5f;
+	//[Range(0,1)]
+	//[SerializeField] float RecordThred = 0.5f;
 
 	[Range(0,1)]
 	[SerializeField] float RecordColorRate = 0;

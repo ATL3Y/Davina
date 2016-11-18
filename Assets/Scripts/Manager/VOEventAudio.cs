@@ -56,7 +56,7 @@ public class VOEventAudio : MonoBehaviour {
 
 	IEnumerator PlayNext( List<AudioClip> clips )
     {
-        yield return new WaitForSeconds( 2f ); //wait unitl match VO is over
+        //yield return new WaitForSeconds( 2f ); //wait unitl match VO is over
 		source.clip = clips[i];
 		source.Play ();
 		yield return new WaitForSeconds (source.clip.length);

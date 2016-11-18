@@ -25,7 +25,7 @@ public class TestLogicManager : MonoBehaviour {
 	public void Trade(float value )
 	{
 		//Debug.Log ("Trade");
-		float rand = Random.Range (0, 1f);
+		//float rand = Random.Range (0, 1f);
 
 		if (value < 0.125f)
 			Upgrade (2);
@@ -69,7 +69,7 @@ public class TestLogicManager : MonoBehaviour {
 		int count = 0;
 		while (count < maxPasserby) {
 
-			GameObject obj = Instantiate (passerByPrefab) as GameObject;
+			//GameObject obj = Instantiate (passerByPrefab) as GameObject;
 //			obj.GetComponent<PasserBy> ().Init ();
 			count ++ ;
 			yield return new WaitForSeconds (1f / CreateRate);

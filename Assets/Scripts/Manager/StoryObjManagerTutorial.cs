@@ -31,7 +31,8 @@ public class StoryObjManagerTutorial : MBehavior {
 		base.MOnEnable ();
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.ExitStoryTutorial] += OnExitStoryTutorial;
-		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
+		//M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.Credits] += OnCredits;
 	}
 
 	protected override void MOnDisable(){
@@ -39,7 +40,8 @@ public class StoryObjManagerTutorial : MBehavior {
 		base.MOnDisable ();
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.ExitStoryTutorial] -= OnExitStoryTutorial;
-		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
+		//M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.Credits] -= OnCredits;
 	}
 
 	void OnEnterStoryTutorial(LogicArg arg){
@@ -61,7 +63,7 @@ public class StoryObjManagerTutorial : MBehavior {
             //if (currentStory [i].layer == LayerMask.NameToLayer( "Focus" )) { 
             CollectableObj cobj = currentStory[i].GetComponent<CollectableObj>();
             if (cobj != null && !cobj.matched ) { 
-                Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
+                //Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
                 currentStory [i].SetActive (false);
 			}
 		}
@@ -69,13 +71,10 @@ public class StoryObjManagerTutorial : MBehavior {
 		//iterate count and enter next story upon exiting last one 
 		count++;
 		if (GetStory () != null) {
-            Debug.Log( "in StoryManCharacters enter next story " );
+            //Debug.Log( "in StoryManCharacters enter next story " );
             LogicArg logicArg = new LogicArg (this);
 			M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, logicArg);
 		} else if (GetStory () == null && callOnce) {
-            //delay is in the objects based on clip length 
-            //print( "Coroutine called" );
-            //StartCoroutine( CharacterEventDelay( 2f ) );
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
             callOnce = false;
@@ -108,20 +107,31 @@ public class StoryObjManagerTutorial : MBehavior {
 		}
 	}
 
-	public void OnCharacters (LogicArg arg ){
-        for ( int i = levelSpecificObjects.Count - 1; i >= 0; i-- )
-        {
-            levelSpecificObjects[ i ].SetActive( false );
-        }
-    }
+	public void OnCredits(LogicArg arg){
+		//disable all so the space is clear for credits
+		for ( int i = levelSpecificObjects.Count - 1; i >= 0; i-- )
+		{
+			levelSpecificObjects[ i ].SetActive( false );
+		}
 
-    IEnumerator CharacterEventDelay( float delay )
-    {
-        print(Time.timeSinceLevelLoad +  " before" );
-        yield return new WaitForSeconds( delay );
-        print( Time.timeSinceLevelLoad + "after" );
-        LogicArg logicArg = new LogicArg( this );
-        M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
+		if (storyObjA != null) {
+			for (int i = storyObjA.Count - 1; i >= 0; i--) {
+				storyObjA [i].SetActive (false);
+			}
+		}
+		if (storyObjB != null) {
+			for (int i = storyObjB.Count - 1; i >= 0; i--) {
+				storyObjB [i].SetActive (false);
+			}
+		}
+		if (storyObjC != null) {
+			for (int i = storyObjC.Count - 1; i >= 0; i--) {
+				storyObjC [i].SetActive (false);
+			}
+		}
+	}
+
+	public void OnCharacters (LogicArg arg ){
 
     }
 }

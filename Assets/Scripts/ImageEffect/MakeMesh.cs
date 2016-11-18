@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class MakeMesh : MonoBehaviour 
 {
-	private Color m_color;
-	bool once = true;
+	//private Color m_color;
 	private List <GameObject> m_childrenWithMeshes;
 	private List <Mesh> m_childMeshes;
 	private List <Mesh> m_childOriginalMeshes;
@@ -16,8 +15,8 @@ public class MakeMesh : MonoBehaviour
 	// Use this for initialization
 	public void Start () 
 	{
-		m_color = new Color ();
-		ColorUtility.TryParseHtmlString ("#FFBDF7FF", out m_color);
+		//m_color = new Color ();
+		//ColorUtility.TryParseHtmlString ("#FFBDF7FF", out m_color);
 
 		m_childrenWithMeshes = new List<GameObject>();
 		m_childMeshes = new List<Mesh> ();
@@ -75,52 +74,29 @@ public class MakeMesh : MonoBehaviour
 
 	}
 
-	/// <summary>
-	/// A list to record the MakeMesh with the trigger in
-	/// </summary>
-//	private static List<MakeMesh> MakeMeshWithTriggerIn = new List<MakeMesh>();
-
-//	void OnTriggerEnter( Collider col )
-//	{
-//		if ( col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") 
-//		{
-//			foreach (MakeMesh mesh in MakeMeshWithTriggerIn) {
-//				mesh.ToOriginal ();
-//			}
-//
-//			ToLines ();
-//			MakeMeshWithTriggerIn.Add (this);
-//		}
-//	}
-
-//	void OnTriggerExit( Collider col )
-//	{
-//		if (col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") {
-//			if (MakeMeshWithTriggerIn.Contains (this)) {
-//				MakeMeshWithTriggerIn.Remove (this);
-//			}
-//			if (m_isLine) {
-//				ToOriginal ();
-//				if (MakeMeshWithTriggerIn.Count > 0)
-//					MakeMeshWithTriggerIn [0].ToLines ();
-//			}
-//		}
-//
-//	}
-
 	void ToLines()
 	{
-		//print ("in to lines, child count = " + m_childrenWithMeshes.Count + "and child mesh count = " + m_childMeshes.Count);
+		//print (gameObject.name + "in to lines, child count = " + m_childrenWithMeshes.Count + "and child mesh count = " + m_childMeshes.Count);
 		for (int i = 0; i < m_childrenWithMeshes.Count; i++) 
 		{
 			if (m_childMeshes[i].GetTopology (0) != MeshTopology.Lines)
 				m_childMeshes[i].SetIndices (m_childMeshes[i].triangles, MeshTopology.Lines, 0);
 		}
 		m_isLine = true;
+
+		foreach (Transform child in GetComponentsInChildren<Transform>()) 
+		{
+			if (child.tag == "NonMesh") 
+			{
+				child.gameObject.GetComponent<Renderer> ().enabled = false;
+			}
+		}
+
 	}
 
 	void ToOriginal()
 	{
+		//print (gameObject.name + "in to original");
 		for (int i = 0; i < m_childMeshes.Count; i++) 
 		{
 			m_childMeshes[i].vertices = m_childOriginalMeshes[i].vertices;
@@ -135,6 +111,15 @@ public class MakeMesh : MonoBehaviour
 
 		}
 		m_isLine = false;
+
+		foreach (Transform child in GetComponentsInChildren<Transform>()) 
+		{
+			if (child.tag == "NonMesh") 
+			{
+				child.gameObject.GetComponent<Renderer> ().enabled = true;
+			}
+		}
+
 	}
 
 	void OnEnterCharacterRange( LogicArg arg )
@@ -173,3 +158,36 @@ public class MakeMesh : MonoBehaviour
 	}
 	*/
 }
+
+/// <summary>
+/// A list to record the MakeMesh with the trigger in
+/// </summary>
+//	private static List<MakeMesh> MakeMeshWithTriggerIn = new List<MakeMesh>();
+
+//	void OnTriggerEnter( Collider col )
+//	{
+//		if ( col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") 
+//		{
+//			foreach (MakeMesh mesh in MakeMeshWithTriggerIn) {
+//				mesh.ToOriginal ();
+//			}
+//
+//			ToLines ();
+//			MakeMeshWithTriggerIn.Add (this);
+//		}
+//	}
+
+//	void OnTriggerExit( Collider col )
+//	{
+//		if (col.gameObject.tag == "GameController" || col.gameObject.tag == "Player") {
+//			if (MakeMeshWithTriggerIn.Contains (this)) {
+//				MakeMeshWithTriggerIn.Remove (this);
+//			}
+//			if (m_isLine) {
+//				ToOriginal ();
+//				if (MakeMeshWithTriggerIn.Count > 0)
+//					MakeMeshWithTriggerIn [0].ToLines ();
+//			}
+//		}
+//
+//	}

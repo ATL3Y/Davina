@@ -30,7 +30,7 @@ public class TestInputMapping : MonoBehaviour {
 	void Update()
 	{
 		/// for VR, this only takes the left controller
-		Ray ray = InputManager.Instance.GetCenterRayCast ()[0];
+		//Ray ray = InputManager.Instance.GetCenterRayCast ()[0];
 		//Debug.DrawRay (ray.origin , ray.direction , Color.red);
 	}
 }

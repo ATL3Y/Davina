@@ -72,7 +72,7 @@ public class MObject : MBehavior {
 				transform.localScale = localScale;
 			}
 		}
-        if(focusCount >= 3 )
+        if(focusCount >= 2 )
         {
             focusTimer = 5f;
             focusCount = 0;

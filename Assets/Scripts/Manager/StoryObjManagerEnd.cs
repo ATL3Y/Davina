@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class StoryObjManagerEnd : MBehavior {
 
-	private int count = 0;
+	//private int count = 0;
 	[SerializeField] List<GameObject> levelSpecificObjects;
 
-	private bool callOnce = true;
+	//private bool callOnce = true;
 
 	protected override void MAwake ()
 	{

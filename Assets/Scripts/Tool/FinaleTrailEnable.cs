@@ -15,14 +15,14 @@ public class FinaleTrailEnable : MBehavior {
 
 		base.MOnEnable ();
 		M_Event.logicEvents[ ( int )LogicEvents.Finale ] += OnFinale;
-		M_Event.logicEvents[ ( int )LogicEvents.End ] += OnEnd;
+		M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
 
 	}
 
 	protected override void MOnDisable(){
 
 		base.MOnDisable ();
-		M_Event.logicEvents[ ( int )LogicEvents.End ] -= OnEnd;
+		M_Event.logicEvents[ ( int )LogicEvents.Credits ] -= OnCredits;
 
 	}
 
@@ -40,7 +40,7 @@ public class FinaleTrailEnable : MBehavior {
 		GetComponent<TrailRenderer> ().enabled = true;
 	}
 
-	void OnEnd(LogicArg arg){
+	void OnCredits(LogicArg arg){
 		GetComponent<TrailRenderer> ().enabled = false;
 	}
 }
