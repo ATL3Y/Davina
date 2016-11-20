@@ -63,21 +63,35 @@ public class LogicManager : MBehavior {
 	}
 
 	void InitStateMachine(){
+		//m_stateMachine.AddUpdate (State.Init, OnUpdateInit );
+		/*
 		m_stateMachine.AddUpdate (State.Init, delegate() {
 			m_stateMachine.State = State.Tutorial;
 		});
 		m_stateMachine.AddEnter (State.Tutorial, delegate() {
 			M_Event.FireLogicEvent(LogicEvents.TutorialSceneEnter, new LogicArg(this));	
 		});
+
+
 		m_stateMachine.AddUpdate (State.Init, delegate() {
 			m_stateMachine.State = State.CharacterScene;
 		});
 		m_stateMachine.AddEnter (State.CharacterScene, delegate() {
 			M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this));	
 		});
+		*/
 		//m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
 		m_stateMachine.State = State.Init;
 	}
+
+	/*
+	void OnUpdateInit()
+	{
+		if ( Input.GetKeyDown(KeyCode.Space) )
+			m_stateMachine.State = State.Tutorial;
+		m_stateMachine.State = State.Tutorial;
+	}
+	*/
 		
 	public Transform GetPlayerTransform(){
 		return VREnable ? VR.transform : PC.transform;

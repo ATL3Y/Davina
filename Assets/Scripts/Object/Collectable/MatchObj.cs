@@ -34,25 +34,25 @@ public class MatchObj : CollectableObj {
 
 		if (storySoundSource != null )// && GetStoryTimer( ) == 0f )
         {
-            Debug.Log( " call coroutine in Match Obj " );
+            //Debug.Log( " call coroutine in Match Obj " );
             //wait until the "hole" prompt has played
             StartCoroutine( DelaySoundClipPlay( storySoundSource, delay ) );
         } 
 		else
         {
-            Debug.Log( " call next event in Match Obj " );
+            //Debug.Log( " call next event in Match Obj " );
             CallNextEvent( );
         }
 	}
 
     IEnumerator DelaySoundClipPlay( AudioSource audiosource, float delay )
     {
-        Debug.Log( Time.timeSinceLevelLoad + " before first delay in delay soundclipplay " );
+        //Debug.Log( Time.timeSinceLevelLoad + " before first delay in delay soundclipplay " );
         yield return new WaitForSeconds( delay );
-        Debug.Log( Time.timeSinceLevelLoad + " before second delay in delay soundclipplay " );
+        //Debug.Log( Time.timeSinceLevelLoad + " before second delay in delay soundclipplay " );
         audiosource.Play( );
         yield return new WaitForSeconds( audiosource.clip.length );
-        Debug.Log( Time.timeSinceLevelLoad + " before callnextevent in delay soundclipplay " );
+        //Debug.Log( Time.timeSinceLevelLoad + " before callnextevent in delay soundclipplay " );
         CallNextEvent( );
     }
 
@@ -74,7 +74,7 @@ public class MatchObj : CollectableObj {
         }
         else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" )
         {
-            //Debug.Log( Time.timeSinceLevelLoad + " in call exitstorytutorial " );
+			MetricManagerScript.instance.AddToMatchList( Time.timeSinceLevelLoad + " in call exitstorytutorial "  + "/n");
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.ExitStoryTutorial, logicArg );
         }

@@ -70,11 +70,11 @@ public class TransportManager : MBehavior {
         M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
 		M_Event.logicEvents [(int)LogicEvents.Credits] -= OnCredits;
 	}
-
+	PasserBy p;
 	PasserBy focusPasserby;
 	public void OnFocusNew( InputArg arg )
 	{
-		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
+		//PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		if (p != null && p != LogicManager.Instance.StayPasserBy) { 
 			focusPasserby = p;
 			if (transportLine != null) {
@@ -100,7 +100,7 @@ public class TransportManager : MBehavior {
 
 	public void OnOutofFocus( InputArg arg )
 	{
-		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
+		//PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
 		if ( focusPasserby == p) {
 			if (transportLine != null) {
 				transportLine.enabled = false;
@@ -128,7 +128,7 @@ public class TransportManager : MBehavior {
 			if ( transportToObject == LogicManager.Instance.StayPasserBy)
 				return;
 
-			PasserBy p = transportToObject.GetComponent<PasserBy> ();
+			//PasserBy p = transportToObject.GetComponent<PasserBy> ();
 			if (p == null)
 				return;
 			
@@ -156,7 +156,7 @@ public class TransportManager : MBehavior {
 				target.y = .246f;
 			}
 
-			//Debug.Log (Time.timeSinceLevelLoad + "; TransportStart to: " + target);
+			MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
 			//target.y = transform.position.y; /// + 0.68f; /// TODO: fix where pc y is set after transport
 
 			transportSequence.Append (LogicManager.Instance.GetPlayerTransform ().DOMove (target , transportTime));
@@ -180,6 +180,11 @@ public class TransportManager : MBehavior {
 		}
 		transportSequence = null;
 		transportToObject = null;
+	}
+
+	public void SetPasserBy( PasserBy passerBy )
+	{
+		p = passerBy;
 	}
 
     protected override void MUpdate( )

@@ -48,55 +48,32 @@ public class SelectObjectManager : MBehavior {
 	{
 		// if player holds no object
 		if (m_SelectObj == null) {
-			MObject focus = InputManager.Instance.FocusedObject;
-			if (focus != null && focus is CollectableObj) {
-				CollectableObj cobj = (CollectableObj)focus;
-				//Debug.Log ("Try Select");
-				if (cobj.Select (arg.clickType)) {
-					//Debug.Log ("Select success");
-					m_SelectObj = cobj;
-					//Debug.Log (Time.timeSinceLevelLoad + "; SelectObject ");
-					LogicArg logicArg = new LogicArg (this);
-					logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
-					M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
+			MObject[] focus = new MObject[1 ]{  InputManager.Instance.FocusedObject};
+			for ( int i = 0; i < focus.Length; i++ )
+			{
+				if ( focus[ i ] is CollectableObj) {
+					CollectableObj cobj = (CollectableObj)focus[ i ];
+					//Debug.Log ("Try Select");
+					if (cobj.Select (arg.clickType)) {
+						//Debug.Log ("Select success");
+						m_SelectObj = cobj;
+						MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; SelectObject " + "/n");
+						LogicArg logicArg = new LogicArg (this);
+						logicArg.AddMessage (Global.EVENT_LOGIC_SELECT_COBJECT, m_SelectObj);
+						M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
 
+					}
 				}
 			}
 		} // unselect option available once object is held
 		else if (m_SelectObj != null) {
 			//print (" in on select obj and m_SelectObj = " + m_SelectObj.name);
-			//Debug.Log (Time.timeSinceLevelLoad + "; UnSelectObject ");
+			//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; UnSelectObject " + "/n");
 			LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_UNSELECT_COBJECT, m_SelectObj);
 			M_Event.FireLogicEvent (LogicEvents.UnselectObject, logicArg);
 		}
-
-
-//		// throw away old object
-//		if (m_SelectObj != null) {
-//			m_SelectObj.UnSelect ();
-//
-//			LogicArg logicArg = new LogicArg(this);
-//			logicArg.AddMessage(Global.EVENT_LOGIC_THROW_COBJECT,m_SelectObj);
-//			M_Event.FireLogicEvent (LogicEvents.ThrowAway, logicArg);
-//
-//			m_SelectObj = null;
-//		}
-//		// select new object
-//		MObject focus = InputManager.Instance.FocusedObject;
-//		if (focus != null && focus is CollectableObj) {
-//			CollectableObj cobj = (CollectableObj)focus;
-//
-//			if (m_SelectObj != null)
-//				m_SelectObj.UnSelect ();
-//			m_SelectObj = cobj;
-//
-//			m_SelectObj.Select ();
-//
-//			LogicArg logicArg = new LogicArg(this);
-//			logicArg.AddMessage(Global.EVENT_LOGIC_SELECT_COBJECT,m_SelectObj);
-//			M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
-//		}
+			
 	}
 
 	static public void AttachToCamera( Transform trans, ClickType clickType )

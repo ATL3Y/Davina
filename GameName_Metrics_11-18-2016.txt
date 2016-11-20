@@ -1,0 +1,190 @@
+0.3777315; name of new focus obj = DavinaSitting_v3/n
+13.65894; name of new focus obj = DavinaSitting_v3/n
+15.13318; name of new focus obj = HeartObjFill_Flower/n
+18.45076; name of new focus obj = HeartObjFill_Flower/n
+19.71308; SelectObject /n
+26.31481; name of new focus obj = HeartObjFill_Flower/n
+27.4989; MatchObject name: HeartObjFill_Flower/n
+28.81687; name of new focus obj = HeartObjFill_Flower/n
+31.8997 in call exitstorytutorial /n
+31.91205; name of new focus obj = HeartObjFill_Handcuffs/n
+33.78764; name of new focus obj = HeartObjFill_Handcuffs/n
+34.72625; name of new focus obj = HeartObjFill_Handcuffs/n
+35.51912; name of new focus obj = HeartObjFill_Handcuffs/n
+35.6647; name of new focus obj = HeartObjFill_Handcuffs/n
+36.65888; name of new focus obj = HeartObjFill_Handcuffs/n
+36.88239; name of new focus obj = HeartObjFill_Handcuffs/n
+37.19561; name of new focus obj = HeartObjFill_Handcuffs/n
+37.40696; name of new focus obj = HeartObjFill_Handcuffs/n
+37.75336; name of new focus obj = HeartObjFill_Handcuffs/n
+37.96552; name of new focus obj = HeartObjFill_Handcuffs/n
+37.99867; name of new focus obj = HeartObjFill_Handcuffs/n
+38.52413; name of new focus obj = HeartObjFill_Handcuffs/n
+38.90385; name of new focus obj = HeartObjFill_Handcuffs/n
+39.00491; name of new focus obj = HeartObjFill_Handcuffs/n
+39.26132; name of new focus obj = HeartObjFill_Handcuffs/n
+40.03242; SelectObject /n
+46.27594; MatchObject name: HeartObjFill_Handcuffs/n
+54.36377; name of new focus obj = HeartObjFill_Handcuffs/n
+54.93343; SelectObject /n
+61.31171; name of new focus obj = DavinaSitting_v3/n
+61.32302 in call exitstorytutorial /n
+71.7591; name of new focus obj = PasserBy (Davina) (1)/n
+71.84882; name of new focus obj = DavinaSitting_v3/n
+72.38528; name of new focus obj = PasserBy (Davina) (1)/n
+72.65282; name of new focus obj = PasserBy (Davina) (1)/n
+72.78693; name of new focus obj = DavinaSitting_v3/n
+73.37879; name of new focus obj = PasserBy (Davina) (1)/n
+73.54663; name of new focus obj = DavinaSitting_v3/n
+74.13754; name of new focus obj = DavinaSitting_v3/n
+76.63022; name of new focus obj = DavinaSitting_v3/n
+77.53391; name of new focus obj = PasserBy (Davina) (1)/n
+78.45009; name of new focus obj = DavinaSitting_v3/n
+78.55; name of new focus obj = DavinaSitting_v3/n
+80.22549; name of new focus obj = DavinaSitting_v3/n
+80.94017; name of new focus obj = DavinaSitting_v3/n
+82.27047; name of new focus obj = DavinaSitting_v3/n
+82.67241; name of new focus obj = DavinaSitting_v3/n
+89.59843; name of new focus obj = DavinaSitting_v3/n
+90.14553; name of new focus obj = PasserBy (Davina) (1)/n
+99.65134; name of new focus obj = PasserBy (Davina) (1)/n
+101.26; name of new focus obj = PasserBy (Davina) (1)/n
+102.3437; name of new focus obj = PasserBy (Davina) (1)/n
+103.1926; name of new focus obj = PasserBy (Davina) (1)/n
+103.6397; name of new focus obj = DavinaSitting_v3/n
+103.963; name of new focus obj = PasserBy (Davina) (1)/n
+105.4268; TransportStart to: (-0.1, 0.2, 3.0)/n
+107.715; name of new focus obj = PasserBy (Mom)/n
+107.9498; name of new focus obj = FloatingDavina_v3/n
+111.1784; name of new focus obj = FloatingDavina_v3/n
+112.1515; name of new focus obj = HeartObjHole_Snowflake/n
+113.648; name of new focus obj = PasserBy (Mom)/n
+113.7378; name of new focus obj = HeartObjHole_Snowflake/n
+114.4085; name of new focus obj = FloatingDavina_v3/n
+116.1049; name of new focus obj = FloatingDavina_v3/n
+116.1827; name of new focus obj = PasserBy (Mom)/n
+116.4512; name of new focus obj = FloatingDavina_v3/n
+117.1556; name of new focus obj = PasserBy (Mom)/n
+117.368; name of new focus obj = FloatingDavina_v3/n
+118.3169; name of new focus obj = PasserBy (Mom)/n
+124.0925; TransportStart to: (-0.7, 0.2, 15.6)/n
+126.359; name of new focus obj = MotherMecanim/n
+130.0448; name of new focus obj = HeartObjFill_Snowflake/n
+130.5363; SelectObject /n
+131.1062; name of new focus obj = MotherMecanim/n
+136.045; name of new focus obj = PasserBy (Davina) (1)/n
+138.234; TransportStart to: (-0.1, 0.2, 3.6)/n
+140.8572; name of new focus obj = FloatingDavina_v3/n
+140.9916; name of new focus obj = FloatingDavina_v3/n
+145.6383; name of new focus obj = HeartObjHole_Snowflake/n
+145.9291; name of new focus obj = HeartObjHole_Snowflake/n
+153.873; name of new focus obj = PasserBy (Mom)/n
+154.0062; name of new focus obj = PasserBy (Mom)/n
+154.1404; name of new focus obj = PasserBy (Mom)/n
+154.5204; TransportStart to: (-0.6, 0.2, 15.3)/n
+155.7602; name of new focus obj = PasserBy (Mom)/n
+156.7092; name of new focus obj = MotherMecanim/n
+158.1496; name of new focus obj = HeartObjFill_Snowflake (1)/n
+158.9552; SelectObject /n
+159.4677; name of new focus obj = MotherMecanim/n
+163.5564; name of new focus obj = MotherMecanim/n
+166.9856; name of new focus obj = MotherMecanim/n
+168.4824; name of new focus obj = MotherMecanim/n
+169.5003; name of new focus obj = PasserBy (Davina) (1)/n
+169.7798; name of new focus obj = PasserBy (Davina) (1)/n
+170.6061; name of new focus obj = PasserBy (Davina) (1)/n
+172.381; name of new focus obj = MotherMecanim/n
+173.8778; name of new focus obj = MotherMecanim/n
+174.995; name of new focus obj = MotherMecanim/n
+176.9835; name of new focus obj = MotherMecanim/n
+179.4746; name of new focus obj = MotherMecanim/n
+179.754; name of new focus obj = MotherMecanim/n
+180.6136; name of new focus obj = MotherMecanim/n
+181.753; name of new focus obj = PasserBy (Davina) (1)/n
+182.682; name of new focus obj = PasserBy (Davina) (1)/n
+183.207; name of new focus obj = MotherMecanim/n
+185.7756; name of new focus obj = PasserBy (Davina) (1)/n
+186.2797; name of new focus obj = PasserBy (Davina) (1)/n
+188.0432; name of new focus obj = PasserBy (Davina) (1)/n
+188.4906; name of new focus obj = PasserBy (Davina) (1)/n
+188.5365; name of new focus obj = MotherMecanim/n
+188.5469; name of new focus obj = PasserBy (Davina) (1)/n
+188.6365; name of new focus obj = HeartObjFill_Snowflake (1)/n
+189.0937; SelectObject /n
+189.1279; name of new focus obj = PasserBy (Davina) (1)/n
+189.2622; name of new focus obj = MotherMecanim/n
+189.3517; name of new focus obj = PasserBy (Davina) (1)/n
+189.5305; name of new focus obj = PasserBy (Davina) (1)/n
+189.6644; name of new focus obj = MotherMecanim/n
+191.4847; name of new focus obj = PasserBy (Davina) (1)/n
+191.7083; name of new focus obj = PasserBy (Davina) (1)/n
+192.4559; TransportStart to: (-0.1, 0.2, 3.6)/n
+195.0016; name of new focus obj = FloatingDavina_v3/n
+198.7771; MatchObject name: HeartObjFill_Snowflake (1)/n
+202.6864; name of new focus obj = FloatingDavina_v3/n
+202.9876; name of new focus obj = FloatingDavina_v3/n
+207.58; name of new focus obj = HeartObjHole_Lips/n
+211.522; name of new focus obj = HeartObjHole_Lips/n
+212.1924; name of new focus obj = HeartObjHole_Lips/n
+212.7625; name of new focus obj = HeartObjHole_Lips/n
+212.8069; name of new focus obj = FloatingDavina_v3/n
+213.3436; name of new focus obj = HeartObjHole_Lips/n
+213.4336; name of new focus obj = FloatingDavina_v3/n
+213.4893; name of new focus obj = HeartObjHole_Lips/n
+213.7788; name of new focus obj = HeartObjHole_Lips/n
+214.7621; name of new focus obj = HeartObjHole_Lips/n
+215.1197; name of new focus obj = HeartObjHole_Lips/n
+217.0866; name of new focus obj = PasserBy (Mom)/n
+217.9242; TransportStart to: (-0.7, 0.2, 14.5)/n
+218.7954; name of new focus obj = PasserBy (Mom)/n
+220.0345; name of new focus obj = PasserBy (Mom)/n
+220.336; name of new focus obj = MotherMecanim/n
+220.9849; name of new focus obj = MotherMecanim/n
+221.4644; name of new focus obj = HeartObjFill_Lips/n
+222.3133; name of new focus obj = HeartObjFill_Lips/n
+222.8608; name of new focus obj = HeartObjFill_Lips/n
+222.9953; name of new focus obj = HeartObjFill_Lips (1)/n
+223.0728; name of new focus obj = HeartObjFill_Lips (1)/n
+223.263; name of new focus obj = MotherMecanim/n
+224.7494; name of new focus obj = HeartObjFill_Lips (1)/n
+225.0388; SelectObject /n
+225.6977; name of new focus obj = MotherMecanim/n
+226.2787; name of new focus obj = MotherMecanim/n
+226.5243; name of new focus obj = MotherMecanim/n
+227.5301; name of new focus obj = MotherMecanim/n
+227.7989; name of new focus obj = MotherMecanim/n
+228.8252; name of new focus obj = MotherMecanim/n
+229.63; name of new focus obj = MotherMecanim/n
+230.0548; name of new focus obj = MotherMecanim/n
+231.9429; name of new focus obj = MotherMecanim/n
+233.6761; name of new focus obj = PasserBy (Davina) (1)/n
+234.0552; name of new focus obj = PasserBy (Davina) (1)/n
+234.2337; name of new focus obj = PasserBy (Davina) (1)/n
+235.8867; TransportStart to: (-0.1, 0.2, 3.6)/n
+239.6385; name of new focus obj = HeartObjHole_Lips/n
+241.1805; MatchObject name: HeartObjFill_Lips (1)/n
+246.7366; name of new focus obj = FloatingDavina_v3/n
+254.2652; name of new focus obj = FloatingDavina_v3/n
+257.437; name of new focus obj = FloatingDavina_v3/n
+257.5706; name of new focus obj = FloatingDavina_v3/n
+290.6565; name of new focus obj = FloatingDavina_v3/n
+290.9592; name of new focus obj = FloatingDavina_v3/n
+296.6785; name of new focus obj = FloatingDavina_v3/n
+298.3752; name of new focus obj = FloatingDavina_v3/n
+299.4815; name of new focus obj = FloatingDavina_v3/n
+300.3755; name of new focus obj = FloatingDavina_v3/n
+300.4312; name of new focus obj = FloatingDavina_v3/n
+300.6116; name of new focus obj = FloatingDavina_v3/n
+301.0893; name of new focus obj = FloatingDavina_v3/n
+302.4318; name of new focus obj = FloatingDavina_v3/n
+304.2181; name of new focus obj = DavinaSitting_v3/n
+304.6639; name of new focus obj = DavinaSitting_v3/n
+305.3238; name of new focus obj = DavinaSitting_v3/n
+306.1065; name of new focus obj = DavinaSitting_v3/n
+310.129; name of new focus obj = DavinaSitting_v3/n
+311.9958; name of new focus obj = DavinaSitting_v3/n
+313.5699; name of new focus obj = DavinaSitting_v3/n
+314.0383; name of new focus obj = DavinaSitting_v3/n
+321.255; name of new focus obj = DavinaSitting_v3/n
+323.1985; name of new focus obj = DavinaSitting_v3/n
+323.6008; name of new focus obj = DavinaSitting_v3/n
