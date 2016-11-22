@@ -48,12 +48,13 @@ public class SelectObjectManager : MBehavior {
 	{
 		// if player holds no object
 		if (m_SelectObj == null) {
-			MObject[] focus = new MObject[1 ]{  InputManager.Instance.FocusedObject};
+			Interactable[] focus = new Interactable[1]{  InputManager.Instance.FocusedObject};
 			for ( int i = 0; i < focus.Length; i++ )
 			{
-				if ( focus[ i ] is CollectableObj) {
-					CollectableObj cobj = (CollectableObj)focus[ i ];
+				if ( focus[ i ] is Interactable) {
+					Interactable cobj = (Interactable)focus[ i ];
 					//Debug.Log ("Try Select");
+					/*
 					if (cobj.Select (arg.clickType)) {
 						//Debug.Log ("Select success");
 						m_SelectObj = cobj;
@@ -63,6 +64,7 @@ public class SelectObjectManager : MBehavior {
 						M_Event.FireLogicEvent (LogicEvents.SelectObject, logicArg);
 
 					}
+				*/
 				}
 			}
 		} // unselect option available once object is held
@@ -90,9 +92,9 @@ public class SelectObjectManager : MBehavior {
 
 	static public void AttachToStayPasserBy( Transform trans )
 	{
-		if (LogicManager.Instance.StayPasserBy != null) {
+		if (LogicManager.Instance.StayTeleporter != null) {
 
-			trans.SetParent (LogicManager.Instance.StayPasserBy.transform, true);
+			trans.SetParent (LogicManager.Instance.StayTeleporter.transform, true);
 		}
 	}
 

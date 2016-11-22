@@ -17,14 +17,16 @@ public class LogicManager : MBehavior {
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
+	[SerializeField] Transform playerHead;
 	//[SerializeField] Transform VRHandLeft; // need to get this from ViveInputController
 	//[SerializeField] Transform VRHandRight; // need to get this from ViveInputController
 	[SerializeField] GameObject Rain;
 	[SerializeField] TextStatic text;
 
-	private PasserBy m_stayPasserBy;
-	public PasserBy StayPasserBy{
-		get { return m_stayPasserBy; }
+	private NiceTeleporter m_stayTeleporter;
+	public NiceTeleporter StayTeleporter
+	{
+		get { return m_stayTeleporter; }
 	}
 
 	private MCharacter m_stayCharacter;
@@ -97,6 +99,10 @@ public class LogicManager : MBehavior {
 		return VREnable ? VR.transform : PC.transform;
 	}
 
+	public Transform GetPlayerHeadTransform(){
+		return VREnable ? playerHead : PC.transform;
+	}
+
 	public Transform GetHandTransform( ClickType clickType ){
 		switch (clickType) 
 		{
@@ -157,8 +163,8 @@ public class LogicManager : MBehavior {
 
 	void OnTransportToNewObject( LogicArg arg ){
 		var obj = arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
-		if (obj is PasserBy) {
-			m_stayPasserBy = (PasserBy)obj;
+		if (obj is NiceTeleporter) {
+			m_stayTeleporter = (NiceTeleporter)obj;
 		}
 	}
 

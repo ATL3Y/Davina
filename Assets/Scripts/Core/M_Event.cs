@@ -51,6 +51,7 @@ public enum LogicEvents
 	ExitStoryTutorial=21,
 
     Finale=22,
+	Heard=23,
 
 	OpenShotOneEnter = 101,
 	OpenShotTwoEnter = 102,

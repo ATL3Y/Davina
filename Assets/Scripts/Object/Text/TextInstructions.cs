@@ -33,15 +33,15 @@ public class TextInstructions : MonoBehaviour
 
 	public void Start () 
 	{
-		instructions.Add ("LOOK AROUND AND STAND UP"); //0
-		instructions.Add ("CHOOSE AN ITEM BY POINTING"); //1
-		instructions.Add ("PULL TRIGGER TO GRAB ITEM"); //2
-		instructions.Add ("CARRY ITEM TO ITS OUTLINE"); //3
-		instructions.Add ("TOUCH OUTLINE AND PULL TRIGGER TO PLACE ITEM"); //4
-		instructions.Add ("POINT AT AN UMBRELLA"); //5
-		instructions.Add ("PRESS PAD TO MOVE THERE"); //6
-		instructions.Add ("KEEP GOING"); //7
-		instructions.Add (" "); //8
+		instructions.Add (" "); //0
+		//instructions.Add ("MAKE A CHOICE"); //1
+		instructions.Add ("POINT AND HOLD TRIGGER"); //2
+		//instructions.Add ("CARRY ITEM TO OUTLINE"); //3
+		//instructions.Add ("RELEASE TRIGGER"); //4
+		instructions.Add ("POINT AT GLOW"); //5
+		instructions.Add ("PULL TRIGGER"); //6
+		//instructions.Add ("CHOOSE"); //7
+		instructions.Add ("POINT DOWN"); //8
 
 		origPos = transform.localPosition;
 		origRot = transform.localRotation;
@@ -62,97 +62,89 @@ public class TextInstructions : MonoBehaviour
 			l.layer = 20; //add to Bridge layer so it's visible by near camera
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
-		MakeLines (instructions [0]); // LOOK AROUND AND STAND UP
-		Pause(4f);
+		//MakeLines (instructions [0]); // LOOK AROUND AND STAND UP
+		Pause(3f);
 	}
 
-	public void Update () {
-		if (timeLeft > 0f) {
-			timeLeft -= Time.deltaTime;
-		} else {
-			if (SelectObjectManager.Instance.SelectObj != null) {
-				MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE
-			} else if (((transform.position.y > 5f || transform.position.z > 5f) && SelectObjectManager.Instance.SelectObj == null && !characters) // not at Davina falling
-				|| (transform.position.z > 5f && SelectObjectManager.Instance.SelectObj == null && characters) ) // not at tutorial once objs matched
-			{ 
-				MakeLines (instructions [1]); // CHOOSE AN ITEM BY POINTING WITH YOUR LINE
-			} else {
-				MakeLines (instructions [5]); // " "
-			}
+	public void Update () 
+	{
+		timeLeft -= Time.deltaTime;
+
+		if (timeLeft < 0.0f) {
+			MakeLines (instructions [0]);
 		}
 	}
 
 	public void OnEnable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] += OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
-		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] += OnOutofFocus;
-		M_Event.logicEvents [(int)LogicEvents.MatchObject] += OnMatchObject;
+		M_Event.logicEvents [(int)LogicEvents.Heard] += OnHeard;
+		M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
+		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
 	}
 
 	public void OnDisable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
-		M_Event.inputEvents [(int)MInputType.OutOfFocusObject] -= OnOutofFocus;
+		M_Event.logicEvents [(int)LogicEvents.Heard] -= OnHeard;
+		M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
+		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
 	}
-	PasserBy focusPasserby;	
-	public void OnFocusNew( InputArg arg ){
 
-		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
-		CollectableObj cobj = arg.focusObject.GetComponent<CollectableObj> ();
-		HoleObject hobj = arg.focusObject.GetComponent<HoleObject> ();
-		if (cobj != null && cobj.matched) {
-			// prefer controller instructions
-			timeLeft = 0f;
-			MakeLines (instructions [4]); // PULL TRIGGER TO PLACE ITEM
-		} else if (hobj != null) {
-			timeLeft = 0f;
-			MakeLines (instructions [4]); // PULL TRIGGER TO PLACE ITEM
-		} else if (cobj != null ) {
-			timeLeft = 0f;
-			MakeLines (instructions [2]); // PULL TRIGGER TO GRAB ITEM
-		} else if (p != null && p != LogicManager.Instance.StayPasserBy) { 
-			timeLeft = 0f;
-			focusPasserby = p;
-			MakeLines (instructions [6]); // PRESS PAD TO MOVE THERE
-		} 
+	void OnHeard(LogicArg arg)
+	{
+		MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
 	}
 
-	public void OnCharacters(LogicArg arg){
-		characters = true;
+	void OnEnterStory(LogicArg arg)
+	{
+		MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
+	}
+
+	void OnEnterStoryTutorial(LogicArg arg)
+	{
+		MakeLines (instructions [5]); //POINT AT GLOW
+	}
+
+	void OnCharacters(LogicArg arg)
+	{
+		MakeLines (instructions [8]); //POINT DOWN
+	}
+		
+	NiceTeleporter teleportTo;	
+	public void OnFocusNew( InputArg arg )
+	{
+		NiceTeleporter t = arg.focusObject.GetComponent<NiceTeleporter> ();
+
+		if (t != null && t != LogicManager.Instance.StayTeleporter) { 
+			teleportTo = t;
+			MakeLines (instructions [6]); // PULL TRIGGER
+		} 
 	}
 
 	public void OnOutofFocus( InputArg arg )
 	{
+
+	}
+
+	public void OnTransport(InputArg arg)
+	{
 		/*
-		PasserBy p = arg.focusObject.GetComponent<PasserBy> ();
-		if ( focusPasserby == p) {
-			MakeLines (instructions [0]);
-			focusPasserby = null;
+		if (teleportTo.transform.root.gameObject.name == "MotherMecanim") 
+		{
+			MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
 		} 
-		if (SelectObjectManager.Instance.SelectObj != null) {
-			MakeLines (instructions [3]); // CARRY ITEM TO ITS OUTLINE
-		} else if (transform.position.y > 5f || transform.position.z > 5f){ // not at Davina falling
-			MakeLines (instructions [1]); // CHOOSE AN ITEM BY POINTING WITH YOUR LINE
+		else if (teleportTo.transform.root.gameObject.name == "FloatingDavina_v3") 
+		{
+			MakeLines (instructions [5]); //POINT AT GLOW
 		}
 		*/
-
 	}
 
-	public void OnTransport(InputArg arg){
-		
-	}
-
-	public void OnMatchObject(LogicArg arg ){
-		MakeLines (instructions[7]); //KEEP GOING
-	}
 
 	public void MakeLines (string text){
-
-		if (timeLeft > 0f) {
-			return;
-		}
 
 		Clear ();
 		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
@@ -216,7 +208,7 @@ public class TextInstructions : MonoBehaviour
 			}
 		}
 		//leave instruction for a time
-		Pause (3f);
+		Pause (4f);
 	}
 
 	public void Clear ()

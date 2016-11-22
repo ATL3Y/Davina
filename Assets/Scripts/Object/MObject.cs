@@ -6,7 +6,7 @@ public class MObject : MBehavior {
 
 	[SerializeField] protected AudioClip focusSound;
 	private AudioSource focusSoundSource;
-	[SerializeField] bool lockScale = false;
+[SerializeField] bool lockScale = false;
 	private Vector3 origianScale;
     private float focusTimer = 0f;
     private float storyTimer = 0f;

@@ -10,14 +10,14 @@ public class InputManager : MBehavior {
 
 	public LayerMask senseLayer;
 	public static float DETECT_DISTANCE = 9999f;
-    private MObject[ ] collectableObjects = new MObject[ 200 ];
+	private Interactable[ ] collectableObjects = new Interactable[ 200 ];
     private int collectableObjectsCount = 0;
 
 	public class Hand
 	{
-		public MObject lastFocusedObject;
-		public MObject focusedObject;
-		public MObject heldObject;
+		public Interactable lastFocusedObject;
+		public Interactable focusedObject;
+		public Interactable heldObject;
 		public Ray ray;
 		public Bounds bounds;
 	}
@@ -46,7 +46,7 @@ public class InputManager : MBehavior {
 		if (s_Instance == null)
 			s_Instance = this;
 
-		senseLayer = LayerMask.GetMask ("PasserBy","Focus","Collectable");
+		senseLayer = LayerMask.GetMask ("Teleporter","Focus","Collectable");
 	}
 
     // recheched each level from the logic manager
@@ -59,12 +59,7 @@ public class InputManager : MBehavior {
         }
 
         int j = 0;
-        foreach ( MatchObj g in GameObject.FindObjectsOfType<MatchObj>( ) )
-        {
-            collectableObjects[ j ] = g;
-            j++;
-        }
-        foreach ( HoleObject g in GameObject.FindObjectsOfType<HoleObject>( ) )
+		foreach ( Interactable g in GameObject.FindObjectsOfType<Interactable>( ) )
         {
             collectableObjects[ j ] = g;
             j++;
@@ -74,19 +69,9 @@ public class InputManager : MBehavior {
     }
 
 	/// <summary>
-	/// Save the focused object 
-	/// only one focused object at a time
+	/// Save the focused object - only one at a time
 	/// </summary>
-	public MObject FocusedObject;
-	//{
-		//get { 
-			//List< MObject > returnValues = new List< MObject >();
-		//	if ( rightHand.focusedObject != null ) returnValues.Add( rightHand.focusedObject );
-			//if ( leftHand.focusedObject != null ) returnValues.Add( leftHand.focusedObject );
-			//return returnValues;
-		//}
-
-	//}
+	public Interactable FocusedObject;
 
 	protected override void MUpdate ()
 	{
@@ -123,65 +108,24 @@ public class InputManager : MBehavior {
 				if (Physics.Raycast (m_hands[ i ].ray, out hitInfo, DETECT_DISTANCE , senseLayer)) 
 				{
 					//lookObj.Add(hitInfo.collider.gameObject.GetComponent<MObject> ());
-					m_hands[ i ].focusedObject = hitInfo.collider.gameObject.GetComponent<MObject> ();
+					m_hands[ i ].focusedObject = hitInfo.collider.gameObject.GetComponent<Interactable> ();
 					break;
 				} 
 			}
 
 			if (m_hands[ i ].focusedObject != m_hands[ i ].lastFocusedObject) {
 				if (m_hands[ i ].lastFocusedObject != null) {
-					m_hands[ i ].lastFocusedObject.OnOutofFocus ();
+					//m_hands[ i ].lastFocusedObject.OnOutofFocus ();
 					FireOutofFocusObject (m_hands[ i ].lastFocusedObject.gameObject);
 				}
 				if (m_hands [i].focusedObject != null) {
-					m_hands [i].focusedObject.OnFocus ();
-					MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; name of new focus obj = " + m_hands [i].focusedObject.gameObject.name + "/n");
+					//m_hands [i].focusedObject.OnFocus ();
+					//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; name of new focus obj = " + m_hands [i].focusedObject.gameObject.name + "/n");
 					FireFocusNewObject (m_hands [i].focusedObject.gameObject);
 				}
 				m_hands [i].lastFocusedObject = m_hands [i].focusedObject;
 			}
-			//ray
 		}
-		/*
-        // left controller: check bounds
-        for ( int i=0; i<collectableObjectsCount; i++ )
-        {
-			if( collectableObjects[ i ].GetComponent<Collider>( ).bounds.Intersects( ViveInputController.Instance.boundsLeftController ) )
-            {
-				lookObj.Add(collectableObjects[ i ]);
-            }
-        } 
-
-		// left controller didn't intersect bounds, so check raycast
-		if (lookObj [0] = null) 
-		{
-			RaycastHit hitInfo = new RaycastHit();
-			if (Physics.Raycast (centers[0], out hitInfo, DETECT_DISTANCE , senseLayer)) 
-			{
-				lookObj.Add(hitInfo.collider.gameObject.GetComponent<MObject> ());
-			} 
-		}
-
-		/// call the focus function of the focus object
-
-
-
-		/// call the focus function of the focus object
-		if (lookObj != m_focusObj) {
-			if (m_focusObj != null) {
-				m_focusObj.OnOutofFocus ();
-				FireOutofFocusObject (m_focusObj.gameObject);
-			}
-			m_focusObj = lookObj;
-			if (m_focusObj != null) {
-				m_focusObj.OnFocus ();
-				MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; name of new focus obj = " + m_focusObj.gameObject.name + "/n");
-				FireFocusNewObject (m_focusObj.gameObject);
-			}
-		}
-			*/
-
-
 	}
 
 	void OnGUI()
@@ -204,7 +148,6 @@ public class InputManager : MBehavior {
 
 	public virtual void VibrateController( int index )
 	{
-
 	}
 
 	/// <summary>
@@ -212,7 +155,6 @@ public class InputManager : MBehavior {
 	/// </summary>
 	protected void FireSelectObject( ClickType clickType ) 
 	{
-		
 		InputArg arg = new InputArg (this);
 		arg.clickType = clickType;
 		M_Event.FireInput (MInputType.SelectObject, arg);
@@ -224,7 +166,7 @@ public class InputManager : MBehavior {
 	public void FireTransport()
 	{
 		InputArg arg = new InputArg (this);
-		M_Event.FireInput (MInputType.Transport , arg);
+		M_Event.FireInput (MInputType.Transport, arg);
 	}
 
 	/// <summary>
@@ -235,7 +177,7 @@ public class InputManager : MBehavior {
 	{
 		InputArg arg = new InputArg (this);
 		arg.focusObject = newObj;
-		M_Event.FireInput (MInputType.FocusNewObject , arg);
+		M_Event.FireInput (MInputType.FocusNewObject, arg);
 	}
 
 	/// <summary>
@@ -246,7 +188,7 @@ public class InputManager : MBehavior {
 	{
 		InputArg arg = new InputArg (this);
 		arg.focusObject = obj;
-		M_Event.FireInput (MInputType.OutOfFocusObject , arg);
+		M_Event.FireInput (MInputType.OutOfFocusObject, arg);
 	}
 		
 }

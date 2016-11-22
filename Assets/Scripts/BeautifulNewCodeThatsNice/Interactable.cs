@@ -11,7 +11,14 @@ public class Interactable: MonoBehaviour
     public Vector3 boundsMult = Vector3.one;
     private Bounds m_bounds;
 
+	public Hands GetOwner( ) {
+		return owner;
+	}
+
+	protected float m_hoverTime = 0.0f;
+
     private bool m_insideBoundsLastFrame;
+	private Vector3 originalRot;
 
     float GetRadius( Bounds bounds )
     {
@@ -48,11 +55,6 @@ public class Interactable: MonoBehaviour
             //if ( displayMessage != "" ) RM.AH.SetActionText( displayMessage );
             InUseRange( );
         }
-        else
-        {
-            NotInUseRange( );
-        }
-
         m_insideBoundsLastFrame = returnValue;
         return returnValue;
     }
@@ -63,7 +65,6 @@ public class Interactable: MonoBehaviour
 
         OnHover( );
     }
-
 
 	void CheckOBB( ref bool flag, Transform t, OBB handsObb )
 	{
@@ -91,8 +92,6 @@ public class Interactable: MonoBehaviour
 			flag = OBB.TestOBBOBB( obb, handsObb );
 		}
 	}
-
-
 
     void Check( ref bool flag, Transform t, Vector3 inputPosition, Ray inputLookDirection )
     {
@@ -123,7 +122,7 @@ public class Interactable: MonoBehaviour
             {
                 Vector3 centroid = ( points[ ( int )tris[ i ].x ] + points[ ( int )tris[ i ].y ] + points[ ( int )tris[ i ].z ] ) / 3.0f;
 
-                float range = 222.25f;
+                float range = 1000.25f;
                 if ( Vector3.SqrMagnitude( centroid - inputLookDirection.origin ) > range && 
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].x ] - inputLookDirection.origin ) > range &&
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].y ] - inputLookDirection.origin ) > range &&
@@ -136,9 +135,9 @@ public class Interactable: MonoBehaviour
                 }
                 if ( debug )
                 {
-                //    AxKDebugLines.AddLine( points[ ( int )tris[ i ].x ], points[ ( int )tris[ i ].y ], d ? Color.blue : Color.green );
-                 //   AxKDebugLines.AddLine( points[ ( int )tris[ i ].y ], points[ ( int )tris[ i ].z ], d ? Color.blue : Color.green );
-                 //   AxKDebugLines.AddLine( points[ ( int )tris[ i ].x ], points[ ( int )tris[ i ].z ], d ? Color.blue : Color.green );
+                    AxKDebugLines.AddLine( points[ ( int )tris[ i ].x ], points[ ( int )tris[ i ].y ], d ? Color.blue : Color.green );
+                    AxKDebugLines.AddLine( points[ ( int )tris[ i ].y ], points[ ( int )tris[ i ].z ], d ? Color.blue : Color.green );
+                    AxKDebugLines.AddLine( points[ ( int )tris[ i ].x ], points[ ( int )tris[ i ].z ], d ? Color.blue : Color.green );
                 }
             }
         }
@@ -196,6 +195,7 @@ public class Interactable: MonoBehaviour
     }
 
 	protected Hands owner;
+
 	public bool HasOwner() {
 		return owner != null;
 	}
@@ -206,16 +206,71 @@ public class Interactable: MonoBehaviour
 
     public virtual void InUseRange( )
     {
-
-    }
-
-    public virtual void NotInUseRange( )
-    {
-
+		m_hoverTime = Mathf.Clamp01 (m_hoverTime + Time.deltaTime * 4.0f);
     }
 
     public virtual void OnHover()
     {
 
     }
+
+	public virtual void Update()
+	{
+
+		m_hoverTime = Mathf.Clamp01( m_hoverTime - Time.deltaTime * 2.0f );
+	}
+		
+	[SerializeField] protected MeshRenderer[] outlineRenders;
+	[SerializeField] float offsetZ;
+	private Material material;
+	private Color color;
+	[SerializeField] protected float outlineWidth;
+
+	protected void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
+		}
+	}
+
+	public virtual void Start()
+	{
+		SetOutline( false );
+
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
+		if (gameObject.tag == "Raise" || gameObject.tag == "TutorialRight") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition -= new Vector3 (0f, 0f, offsetZ);
+		} else if (gameObject.tag == "Lower" || gameObject.tag == "TutorialLeft") {
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+			transform.localPosition += new Vector3 (0f, 0f, offsetZ);
+			transform.localRotation = Quaternion.AngleAxis (180f, transform.up);
+		} else if (gameObject.tag == "TutorialHoleA" || gameObject.tag == "TutorialHoleB"
+		           || gameObject.tag == "HoleA" || gameObject.tag == "HoleB" || gameObject.tag == "Teleporter") 
+		{
+			foreach (MeshRenderer r in outlineRenders) {
+				r.material = material;
+				ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+				r.material.SetFloat ("_Outline", outlineWidth);
+				r.material.SetVector ("_OutlineColor", color);
+			}
+		}
+		originalRot = transform.localEulerAngles;
+	}
+
+	public Vector3 GetOriginalRot( )
+	{
+		return originalRot;
+	}
 }

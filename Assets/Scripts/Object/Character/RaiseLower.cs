@@ -55,7 +55,7 @@ public class RaiseLower : MonoBehaviour {
             //transform.position = new Vector3( transform.position.x, height, transform.position.z );
 			//could acc height based on controller distance squared
 			//Vector3 target = new Vector3 (newParent.transform.position.x, LogicManager.Instance.GetPlayerTransform ().position.y + .7f, newParent.transform.position.z); //+ Mathf.Sin(Time.timeSinceLevelLoad / 1000f)
-			Vector3 target = new Vector3 (transform.position.x, LogicManager.Instance.GetPlayerTransform ().position.y + 1f, transform.position.z);
+			Vector3 target = new Vector3 (transform.position.x, LogicManager.Instance.GetPlayerHeadTransform ().position.y + .8f, transform.position.z);
 
 			if (t < 1f) {
 				t += Time.deltaTime / 500f;

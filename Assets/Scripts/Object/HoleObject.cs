@@ -34,7 +34,7 @@ public class HoleObject : MObject {
 		col.isTrigger = true;
 
 		// set up the story sound
-		if (storySound != null) {
+		if (storySound == null) {
 			storySoundSource = gameObject.AddComponent<AudioSource> ();
 			storySoundSource.playOnAwake = false;
 			storySoundSource.loop = false;
