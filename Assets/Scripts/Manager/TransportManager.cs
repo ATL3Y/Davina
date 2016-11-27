@@ -17,7 +17,7 @@ public class TransportManager : MBehavior {
 	[SerializeField] ParticleSystem transportCircle;
 
 	[SerializeField] Vector3 posEnd;
-    private float height = -1f;
+	private bool finale = false;
     private bool callOnce = true;
 
 	[SerializeField] FinaleTrailEnable TrailLeft;
@@ -193,16 +193,15 @@ public class TransportManager : MBehavior {
     {
         base.MUpdate( );
 
-        if ( height > 0f && height < posEnd.y / 3f )
+		if ( finale && transform.position.y < posEnd.y / 3f )
         {
 			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 300f;
 			//print (distance + " = distance in transport");
 			Vector3 target = new Vector3 (transform.position.x, transform.position.y + distance, transform.position.z);
 		
 			transform.position = Vector3.Lerp (transform.position, target, 1f);
-			height = transform.position.y;
         } 
-		else if (height >= posEnd.y / 3f && callOnce )
+		else if (transform.position.y >= posEnd.y / 3f && callOnce )
         {
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.End, logicArg );
@@ -213,7 +212,7 @@ public class TransportManager : MBehavior {
     void OnFinale( LogicArg arg )
     {
         Disable.Instance.DisableClidren( ); // Disable text instructions
-        height = LogicManager.Instance.GetPlayerTransform( ).position.y;
+		finale = true;
     }
 
 	void OnEnd( LogicArg arg ){

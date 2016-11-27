@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ViveInputManager : InputManager {
-
+public class ViveInputManager : InputManager 
+{
+	/*
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
@@ -38,5 +39,5 @@ public class ViveInputManager : InputManager {
 		//Debug.Log ("Vibrate vive input manager called index = " + index);
 		ViveInputController.Instance.VibrateController (index);
 	}
-		
+	*/	
 }

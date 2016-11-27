@@ -11,7 +11,7 @@ public class Interactable: MonoBehaviour
     public Vector3 boundsMult = Vector3.one;
     private Bounds m_bounds;
 
-	public Hands GetOwner( ) {
+	public Hand GetOwner( ) {
 		return owner;
 	}
 
@@ -25,7 +25,7 @@ public class Interactable: MonoBehaviour
         return ( bounds.extents.x + bounds.extents.y + bounds.extents.z ) / 3.0f;
     }
 
-	public bool IsInInteractionRange( Vector3 inputPosition, Ray inputLookDirection, OBB handsObb )
+	public bool IsInInteractionRange( Vector3 inputPosition, Ray inputLookDirection, OBB handObb )
     {
        
         bool returnValue = false;
@@ -33,7 +33,7 @@ public class Interactable: MonoBehaviour
         if ( insideBounds )
         {
 			bool flag = false;
-			CheckOBB( ref flag, transform, handsObb );
+			CheckOBB( ref flag, transform, handObb );
 			returnValue = flag;
         }
         else
@@ -66,11 +66,11 @@ public class Interactable: MonoBehaviour
         OnHover( );
     }
 
-	void CheckOBB( ref bool flag, Transform t, OBB handsObb )
+	void CheckOBB( ref bool flag, Transform t, OBB handObb )
 	{
 		for ( int i = 0; i < t.childCount; i++ )
 		{
-			CheckOBB( ref flag, t.GetChild( i ), handsObb );
+			CheckOBB( ref flag, t.GetChild( i ), handObb );
 		}
 
 		if ( t.GetComponent<MeshFilter>( ) != null )
@@ -89,7 +89,7 @@ public class Interactable: MonoBehaviour
 			OBB obb = new OBB( t.localToWorldMatrix * mat );
 			//if ( debug ) AxKDebugLines.AddOBB( obb, Color.white );
 
-			flag = OBB.TestOBBOBB( obb, handsObb );
+			flag = OBB.TestOBBOBB( obb, handObb );
 		}
 	}
 
@@ -194,13 +194,13 @@ public class Interactable: MonoBehaviour
         return false;
     }
 
-	protected Hands owner;
+	protected Hand owner;
 
 	public bool HasOwner() {
 		return owner != null;
 	}
 
-    public virtual void Use( Hands hand )
+    public virtual void Use( Hand hand )
     {
     }
 
@@ -219,58 +219,10 @@ public class Interactable: MonoBehaviour
 
 		m_hoverTime = Mathf.Clamp01( m_hoverTime - Time.deltaTime * 2.0f );
 	}
-		
-	[SerializeField] protected MeshRenderer[] outlineRenders;
-	[SerializeField] float offsetZ;
-	private Material material;
-	private Color color;
-	[SerializeField] protected float outlineWidth;
-
-	protected void SetOutline( bool isOn )
-	{
-		foreach (MeshRenderer r in outlineRenders) {
-			r.enabled = isOn;
-		}
-	}
 
 	public virtual void Start()
 	{
-		SetOutline( false );
 
-		material = new Material(Shader.Find("Outlined/Silhouette Only"));
-
-		if (gameObject.tag == "Raise" || gameObject.tag == "TutorialRight") {
-			foreach (MeshRenderer r in outlineRenders) {
-				r.material = material;
-				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
-				r.material.SetFloat ("_Outline", outlineWidth);
-				r.material.SetVector ("_OutlineColor", color);
-			}
-			transform.localPosition -= new Vector3 (0f, 0f, offsetZ);
-		} else if (gameObject.tag == "Lower" || gameObject.tag == "TutorialLeft") {
-			foreach (MeshRenderer r in outlineRenders) {
-				r.material = material;
-				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
-				r.material.SetFloat ("_Outline", outlineWidth);
-				r.material.SetVector ("_OutlineColor", color);
-			}
-			transform.localPosition += new Vector3 (0f, 0f, offsetZ);
-			transform.localRotation = Quaternion.AngleAxis (180f, transform.up);
-		} else if (gameObject.tag == "TutorialHoleA" || gameObject.tag == "TutorialHoleB"
-		           || gameObject.tag == "HoleA" || gameObject.tag == "HoleB" || gameObject.tag == "Teleporter") 
-		{
-			foreach (MeshRenderer r in outlineRenders) {
-				r.material = material;
-				ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
-				r.material.SetFloat ("_Outline", outlineWidth);
-				r.material.SetVector ("_OutlineColor", color);
-			}
-		}
-		originalRot = transform.localEulerAngles;
 	}
 
-	public Vector3 GetOriginalRot( )
-	{
-		return originalRot;
-	}
 }

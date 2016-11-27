@@ -69,9 +69,8 @@ public class StoryObjManagerTutorial : MBehavior {
 	void OnExitStoryTutorial(LogicArg arg)
 	{
 		for (int i=currentStory.Count-1; i>=0; i--) {
-			//if (currentStory [i].layer != LayerMask.NameToLayer ("Done")) {
 			NiceCollectable niceCollectable = currentStory [i].GetComponent<NiceCollectable>();
-			if (niceCollectable != null && niceCollectable.useable) {
+			if (niceCollectable != null && niceCollectable != (NiceCollectable)arg.sender) {
 				//Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
 				currentStory [i].SetActive (false);
 			}

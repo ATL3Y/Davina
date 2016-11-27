@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class VOEventAudio : MonoBehaviour {
 
+	[SerializeField] List<AudioClip> clips0;
 	[SerializeField] List<AudioClip> clips1;
 	[SerializeField] List<AudioClip> clips2;
 
@@ -12,6 +13,7 @@ public class VOEventAudio : MonoBehaviour {
 
     protected AudioSource source;
 	private bool end = false;
+	private bool callOnce = true;
 	// Use this for initialization
 	void Start () 
 	{
@@ -30,19 +32,26 @@ public class VOEventAudio : MonoBehaviour {
 	}
 
 	protected void OnEnable(){
-
-		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
+		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportEnd;
 		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
 	}
 
 	protected void OnDisable(){
-
-		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
+		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
+		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportEnd;
 		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
 	}
 
-	void OnCharacters( LogicArg arg ){
-		if ( clips1.Count > 0) { 
+	void OnEnterStoryTutorial( LogicArg arg ){
+		if ( clips0.Count > 0) { 
+			StartCoroutine(PlayNext ( clips0 ) );
+		} 
+	}
+
+	void OnTransportEnd( LogicArg arg ){
+		Interactable transportToObj = (Interactable)arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
+		if (transportToObj != null && transportToObj.transform.root.gameObject.name.Contains("Mother") && callOnce && clips1.Count > 0) { 
 			StartCoroutine(PlayNext ( clips1 ) );
 		} 
 	}

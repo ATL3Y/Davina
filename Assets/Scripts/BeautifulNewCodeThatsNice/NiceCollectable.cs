@@ -22,19 +22,40 @@ public class NiceCollectable : Interactable
 	protected AudioSource pickUpSoundSource;
 	[SerializeField] protected AudioClip putDownSound;
 	protected AudioSource putDownSoundSource;
-	[SerializeField] protected AudioClip storySound;
-	protected AudioSource storySoundSource;
-	private float storySoundCooldown = 0f;
+	[SerializeField] protected AudioClip storySoundR;
+	protected AudioSource storySoundSourceR;
+	private float storySoundCooldownR = 0f;
+	[SerializeField] protected AudioClip storySoundL;
+	protected AudioSource storySoundSourceL;
+	private float storySoundCooldownL = 0f;
 
 	Vector3 m_baseScale;
 
+	bool pinkSideOut = false;
+
+	[SerializeField] protected MeshRenderer[] outlineRenders;
+	private Material material;
+	private Color color;
+	[SerializeField] protected float outlineWidth;
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start () {
 		base.Start ();
 
-		m_baseScale = transform.localScale;
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material = material;
+			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			r.material.SetFloat ("_Outline", outlineWidth);
+			r.material.SetVector ("_OutlineColor", color);
+		}
+
+		SetOutline (false);
+
+		m_baseScale = transform.localScale; //local
+		//print ("base scale " + m_baseScale);
+		//print ("lossy scale " + transform.lossyScale);
 
 		if (hoverSound != null) {
 			hoverSoundSource = gameObject.AddComponent<AudioSource> ();
@@ -62,14 +83,23 @@ public class NiceCollectable : Interactable
 			putDownSoundSource.spatialBlend = 1f;
 			putDownSoundSource.clip = putDownSound;
 		}
-		// set up the story sound
-		if (storySound != null) {
-			storySoundSource = gameObject.AddComponent<AudioSource> ();
-			storySoundSource.playOnAwake = false;
-			storySoundSource.loop = false;
-			storySoundSource.volume = 1f;
-			storySoundSource.spatialBlend = 1f;
-			storySoundSource.clip = storySound;
+		// set up the story sound R
+		if (storySoundR != null) {
+			storySoundSourceR = gameObject.AddComponent<AudioSource> ();
+			storySoundSourceR.playOnAwake = false;
+			storySoundSourceR.loop = false;
+			storySoundSourceR.volume = 1f;
+			storySoundSourceR.spatialBlend = 1f;
+			storySoundSourceR.clip = storySoundR;
+		}
+		// set up the story sound L
+		if (storySoundL != null) {
+			storySoundSourceL = gameObject.AddComponent<AudioSource> ();
+			storySoundSourceL.playOnAwake = false;
+			storySoundSourceL.loop = false;
+			storySoundSourceL.volume = 1f;
+			storySoundSourceL.spatialBlend = 1f;
+			storySoundSourceL.clip = storySoundL;
 		}
 	}
 
@@ -88,20 +118,21 @@ public class NiceCollectable : Interactable
 		float tc = ts * t;
 		return b + c * ( 0.95f * tc * ts + -5.1425f * ts * ts + 10.29f * tc + -10.395f * ts + 5.297f * t);
 	}
-	bool m_hasDroppedDuringTransportation = false;
+
 	// Update is called once per frame
 	public override void Update () {
 		base.Update ();
 
-		if (m_hoverTime > .5f) {
+		if (m_hoverTime > .3f) {
 			SetOutline (true);
 		} else {
 			SetOutline (false);
 		}
 
-		storySoundCooldown -= Time.deltaTime;
+		storySoundCooldownR -= Time.deltaTime;
+		storySoundCooldownL -= Time.deltaTime;
 		hoverSoundCooldown -= Time.deltaTime;
-		transform.localScale = m_baseScale + m_baseScale.normalized * EaseOutCubic (m_hoverTime);
+		transform.localScale = m_baseScale + m_baseScale.normalized * EaseOutCubic (m_hoverTime); 
 
 		if (m_finished) {
 			owner = null;
@@ -113,40 +144,71 @@ public class NiceCollectable : Interactable
 			if ( TransportManager.Instance.IsTransporting ) print( "transporting" );
 			if (TransportManager.Instance.IsTransporting) {	
 				dropable = false;
-				AxKDebugLines.AddSphere (owner.transform.position, 0.1f, Color.yellow);
-				/*
-				if ((owner.left && ViveInputController.Instance.ReceivedLeftButtonUpSignal ())
-				    || (!owner.left && ViveInputController.Instance.ReceivedRightButtonUpSignal ())) {
-					m_hasDroppedDuringTransportation = true;
-				}
-
-				if ((owner.left && ViveInputController.Instance.ReceivedLeftButtonDownSignal ())
-				    || (!owner.left && ViveInputController.Instance.ReceivedRightButtonDownSignal ())) {
-					m_hasDroppedDuringTransportation = false;
-				}
-			} else if (m_hasDroppedDuringTransportation) {
-				m_hasDroppedDuringTransportation = false;
-				owner = null;
-
-				if (putDownSound) {
-					putDownSoundSource.Play ();
-				}
-
-				return;*/
+				transform.SetParent (null);
 			}
 
 			Vector3 newPosition =  owner.transform.position + owner.transform.TransformDirection (offset);
 			float distanceToTarget = Vector3.Magnitude (newPosition - niceHole.transform.position);
 			Quaternion newRotation = owner.transform.rotation * rotationOffset;
-			Debug.DrawLine (newPosition - Vector3.up * 0.05f, newPosition + Vector3.up * 0.05f, Color.red);
+			//Debug.DrawLine (newPosition - Vector3.up * 0.05f, newPosition + Vector3.up * 0.05f, Color.red);
+
+			// Play story sound based on which side is facing player
+			if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.7) {
+				//pink side out
+				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
+				SetOutline (true);
+
+				if (storySoundSourceL != null && storySoundSourceL.isPlaying) {
+					storySoundSourceL.Stop ();
+				}
+
+				if (storySoundSourceR != null && storySoundCooldownR < 0.0f) {
+					storySoundSourceR.Play ();
+					storySoundCooldownR = storySoundR.length + 3f;
+				} 
+			} else if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.7) {
+				//blue side out 
+				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
+				SetOutline (true);
+
+				if (storySoundSourceR != null && storySoundSourceR.isPlaying) {
+					storySoundSourceR.Stop ();
+				}
+
+				if (storySoundSourceL != null && storySoundCooldownL < 0.0f) {
+					storySoundSourceL.Play ();
+					storySoundCooldownL = storySoundL.length + 3f;
+				} 
+			} else {
+				SetOutline (false);
+			}
 
 			if (distanceToTarget < 0.11f) {
+				AxKDebugLines.AddLine (transform.position, transform.position + transform.right * .1f, Color.red, 0);
+				AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.right * .1f, Color.blue, 0);
+				// orient collectable in hole based on relation to hole
+				if (Vector3.Dot (transform.right, niceHole.transform.right) > 0f) {
+					pinkSideOut = true;
+				} else if (Vector3.Dot (transform.right, niceHole.transform.right) <= 0f) {
+					pinkSideOut = false;
+					AxKDebugLines.AddSphere (transform.position, .1f, Color.cyan, 0);
+				}
 				float t = Mathf.Clamp01( 1.0f - ( distanceToTarget * ( 1.0f / 0.1f ) ) );
 				t = Ease (t, 0.0f, 1.0f, 1.0f );
 				//print (t);
 				//t = Mathf.Clamp01 (t + 0.2f);
+
+				Quaternion rot = new Quaternion();
+				if (pinkSideOut) { 
+					rot = niceHole.transform.rotation; 
+				} else {
+					rot = Quaternion.AngleAxis (180f, niceHole.transform.up) * niceHole.transform.rotation;
+					AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .1f, Color.green, 0);
+				}
+
 				newPosition = Vector3.Lerp (newPosition, niceHole.transform.position, t);
-				newRotation = Quaternion.Slerp (newRotation, niceHole.transform.rotation, t);
+				newRotation = Quaternion.Slerp (newRotation, rot, t);
+				//AxKDebugLines.AddLine (newPosition, newPosition + transform.right * .1f, Color.yellow, 0);
 			}
 
 			transform.position = newPosition;
@@ -163,48 +225,51 @@ public class NiceCollectable : Interactable
 		} else {
 			float distanceToHole = Vector3.Magnitude (transform.position - niceHole.transform.position);
 			if (distanceToHole < 0.03f) {
-				//gameObject.layer = LayerMask.NameToLayer( "Done" ); 
-				//niceHole.gameObject.layer = LayerMask.NameToLayer( "Done" ); 
 				useable = false;
 				niceHole.useable = false;
 				transform.parent = niceHole.gameObject.transform; 
-				transform.DOLocalMove (Vector3.zero, 1f).SetEase (DG.Tweening.Ease.InCirc);
-				transform.DOLocalRotate ( GetOriginalRot( ), 1f).SetEase (DG.Tweening.Ease.InCirc);
-				transform.DOScale (1.04f, 1f).SetEase (DG.Tweening.Ease.InCirc);
-
 				m_finished = true;
 
-				// disable non-matched collectables
-				if ( gameObject.tag == "Raise" || gameObject.tag == "Lower"){
+				// disable non-matched collectables //don't need
+				if ( gameObject.tag == "Untagged"){
 					M_Event.FireLogicEvent( LogicEvents.ExitStory, new LogicArg( this ) );
-				} else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" ){
+				} else if ( gameObject.tag == "Tutorial" ){
 					M_Event.FireLogicEvent( LogicEvents.ExitStoryTutorial, new LogicArg( this ) );
 				}
 
 				/*
 				// speed through
-				if ( gameObject.tag == "Raise" ) {
-					M_Event.FireLogicEvent( onFillRaiseEvent, new LogicArg( this ) );
-					M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
-				} else if ( gameObject.tag == "Lower" ) {
-					M_Event.FireLogicEvent( onFillLowerEvent, new LogicArg( this ) );
-					M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
-				} else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" ) {
-					MetricManagerScript.instance.AddToMatchList( Time.timeSinceLevelLoad + " in call exitstorytutorial "  + "/n");
-					M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg( this ) );
-				}
-				*/
 
-				//play matched audio 
-				if (storySoundSource != null && storySoundSource.isPlaying) {
-					storySoundSource.Stop ();
-				}
+				*/ 
+				Vector3 rot;
 
-				if (storySoundSource != null ) {
-					StartCoroutine( DelaySoundClipPlay( niceHole.GetStorySoundSource(), storySoundSource ) );
+				if (pinkSideOut) { 
+					rot = new Vector3(0f, 0f, 0f);
+					if (storySoundSourceR != null && storySoundSourceR.isPlaying) {
+						storySoundSourceR.Stop ();
+					}
+
+					if (storySoundSourceR != null) {
+						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource (), storySoundSourceR));
+					} else {
+						CallNextEvent ();
+					}
 				} else {
-					CallNextEvent( );
+					rot = new Vector3 (0f, 180f, 0f);
+					if (storySoundSourceL != null && storySoundSourceL.isPlaying) {
+						storySoundSourceL.Stop ();
+					}
+
+					if (storySoundSourceL != null) {
+						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource (), storySoundSourceL));
+					} else {
+						CallNextEvent ();
+					}
 				}
+
+				transform.DOLocalMove (Vector3.zero, 1f).SetEase (DG.Tweening.Ease.InCirc);
+				transform.DOLocalRotate ( rot, 1f).SetEase (DG.Tweening.Ease.InCirc); 
+				transform.DOScale (1.06f, 1f).SetEase (DG.Tweening.Ease.InCirc);
 			}
 		}
 	}
@@ -218,7 +283,7 @@ public class NiceCollectable : Interactable
 		CallNextEvent( );
 	}
 
-	public override void Use( Hands hand )
+	public override void Use( Hand hand )
 	{
 		rotationOffset = Quaternion.Inverse (hand.transform.rotation) *  transform.rotation;
 		offset = hand.transform.InverseTransformDirection (transform.position - hand.transform.position);
@@ -229,15 +294,6 @@ public class NiceCollectable : Interactable
 
 		if (pickUpSound) {
 			pickUpSoundSource.Play ();
-		}
-
-		if (storySoundCooldown > 0.0f) {
-			return;
-		}
-
-		if (storySound && !storySoundSource.isPlaying) {
-			storySoundSource.Play ();
-			storySoundCooldown = storySound.length + 3f;
 		}
 	}
 		
@@ -259,21 +315,26 @@ public class NiceCollectable : Interactable
 		}
 	}
 
-	void CallNextEvent( )
+	void CallNextEvent()
 	{
-		
 		//advance the story
-		if ( gameObject.tag == "Raise" ) {
+		if ( gameObject.tag == "Untagged" && !pinkSideOut ) {
 			M_Event.FireLogicEvent( onFillRaiseEvent, new LogicArg( this ) );
 			M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
-		} else if ( gameObject.tag == "Lower" ) {
+		} else if ( gameObject.tag == "Untagged" && pinkSideOut ) {
 			M_Event.FireLogicEvent( onFillLowerEvent, new LogicArg( this ) );
 			M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
-		} else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" ) {
+		} else if ( gameObject.tag == "Tutorial" ) {
 			MetricManagerScript.instance.AddToMatchList( Time.timeSinceLevelLoad + " in call exitstorytutorial "  + "/n");
 			M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg( this ) );
 		}
+	}
 
-
+	void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material.SetVector ("_OutlineColor", color);
+			r.enabled = isOn;
+		}
 	}
 }

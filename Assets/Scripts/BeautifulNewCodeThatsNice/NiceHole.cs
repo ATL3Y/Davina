@@ -16,9 +16,24 @@ public class NiceHole : Interactable {
 
 	private Vector3 originalScale;
 
+	[SerializeField] protected MeshRenderer[] outlineRenders;
+	private Material material;
+	private Color color;
+	[SerializeField] protected float outlineWidth;
+
 	// Use this for initialization
 	void Start () {
 		base.Start ();
+
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material = material;
+			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			r.material.SetFloat ("_Outline", outlineWidth);
+			r.material.SetVector ("_OutlineColor", color);
+		}
+
 		SetOutline (true);
 
 		if (hoverSound != null) {
@@ -41,11 +56,6 @@ public class NiceHole : Interactable {
 
 		originalScale = transform.lossyScale;
 
-		//play on awake
-		if (storySound && !storySoundSource.isPlaying) {
-			storySoundSource.Play ();
-			storySoundCooldown = storySound.length + .1f;
-		}
 	}
 	
 	// Update is called once per frame
@@ -71,7 +81,8 @@ public class NiceHole : Interactable {
 		}
 
 		//tell Story Object Manager Tutorial that story was heard 
-		if (hoverSoundCooldown > 0.0f && hoverSoundCooldown < 0.1f && callOnce) {
+		if (hoverSoundCooldown > 0.0f && hoverSoundCooldown < 0.1f 
+			&& callOnce && tag == "Tutorial") {
 			M_Event.FireLogicEvent (LogicEvents.Heard, new LogicArg (this));
 			callOnce = false;
 		}
@@ -105,6 +116,13 @@ public class NiceHole : Interactable {
 		if (storySound && !storySoundSource.isPlaying) {
 			storySoundSource.Play ();
 			storySoundCooldown = storySound.length + 3f;
+		}
+	}
+
+	void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
 		}
 	}
 }

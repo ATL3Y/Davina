@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class StoryObjManagerCharacters : MBehavior {
 
-	private int count = 0;
+	private int count = -1;
 	[SerializeField] List<GameObject> storyObjA;
 	[SerializeField] List<GameObject> storyObjB;
 	[SerializeField] List<GameObject> storyObjC;
@@ -16,7 +16,12 @@ public class StoryObjManagerCharacters : MBehavior {
 	protected override void MAwake ()
 	{
 		base.MAwake ();
+		/*
 		currentStory = storyObjA;
+		for (int i = 0; i < currentStory.Count; i++) {
+			currentStory [i].SetActive (true);
+		}
+		*/
 
 		if (levelSpecificObjects.Count > 0) {
 			for (int i = 0; i < levelSpecificObjects.Count; i++) {
@@ -70,15 +75,9 @@ public class StoryObjManagerCharacters : MBehavior {
 	void OnExitStory(LogicArg arg)
 	{
 		for (int i=currentStory.Count-1; i>=0; i--) {
-			/*
-			if (currentStory [i].layer != LayerMask.NameToLayer ("Done")) { 
-				//Debug.Log( "in StoryManCharacters deactivating " + currentStory[ i ].name );
-				currentStory [i].SetActive (false);
-			}
-			*/
 
 			NiceCollectable niceCollectable = currentStory [i].GetComponent<NiceCollectable>();
-			if (niceCollectable != null && niceCollectable.useable) {
+			if (niceCollectable != null && niceCollectable != (NiceCollectable)arg.sender) {
 				//Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
 				currentStory [i].SetActive (false);
 			}
@@ -122,6 +121,7 @@ public class StoryObjManagerCharacters : MBehavior {
 		for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
 			disableOnFinaleObjects [i].SetActive (true);
 		}
+		M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
 	}
 
 	void OnFinale( LogicArg arg ){
@@ -130,19 +130,20 @@ public class StoryObjManagerCharacters : MBehavior {
 		}
 	}
 		
-	void OnEnd( LogicArg arg ){
-
+	void OnEnd( LogicArg arg )
+	{
+		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
+			levelSpecificObjects [i].SetActive (false);
+		}
+		//disable the trails
+		for ( int i = currentStory.Count - 1; i >= 0; i-- )
+		{
+			currentStory[ i ].SetActive( false );
+		}
 	}
 
     void OnCredits( LogicArg arg )
     {
-		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
-			levelSpecificObjects [i].SetActive (false);
-		}
-        //disable the trails
-        for ( int i = currentStory.Count - 1; i >= 0; i-- )
-        {
-            currentStory[ i ].SetActive( false );
-        }
+
     }		
 }

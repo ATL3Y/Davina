@@ -72,7 +72,7 @@ public class MatchObj : CollectableObj {
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.ExitStory, logicArg );
         }
-        else if ( gameObject.tag == "TutorialRight" || gameObject.tag == "TutorialLeft" )
+        else if ( gameObject.tag == "Tutorial" )
         {
 			MetricManagerScript.instance.AddToMatchList( Time.timeSinceLevelLoad + " in call exitstorytutorial "  + "/n");
             LogicArg logicArg = new LogicArg( this );

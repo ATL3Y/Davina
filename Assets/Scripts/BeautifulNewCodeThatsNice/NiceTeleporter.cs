@@ -6,9 +6,24 @@ public class NiceTeleporter : Interactable
 	[SerializeField] Transform observeLocation;
 	private GameObject player;
 
+	[SerializeField] protected MeshRenderer[] outlineRenders;
+	private Material material;
+	private Color color;
+	[SerializeField] protected float outlineWidth;
+
 	// Use this for initialization
 	void Start () {
 		base.Start ();
+
+		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+
+		foreach (MeshRenderer r in outlineRenders) {
+			r.material = material;
+			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			r.material.SetFloat ("_Outline", outlineWidth);
+			r.material.SetVector ("_OutlineColor", color);
+		}
+
 		player = GameObject.FindGameObjectWithTag ("Player");
 		SetOutline (true);
 
@@ -37,7 +52,7 @@ public class NiceTeleporter : Interactable
 
 	}
 
-	public override void Use (Hands hand)
+	public override void Use (Hand hand)
 	{
 		print ("trying to transport to " + gameObject.name + "by hand " + hand.gameObject.name);
 		TransportManager.Instance.SetTeleporter (this);
@@ -65,5 +80,12 @@ public class NiceTeleporter : Interactable
 	{
 		base.InUseRange ();
 		m_hoverTime = Mathf.Clamp01 (m_hoverTime + Time.deltaTime * 400.0f);
+	}
+
+	void SetOutline( bool isOn )
+	{
+		foreach (MeshRenderer r in outlineRenders) {
+			r.enabled = isOn;
+		}
 	}
 }

@@ -23,7 +23,7 @@ public class InputManager : MBehavior {
 	}
 	public Hand rightHand;
 	public Hand leftHand;
-	private List< Hand > m_hands;
+	private List< Hand > m_hand;
 
 	/// <summary>
 	/// Save the focused object 
@@ -39,9 +39,9 @@ public class InputManager : MBehavior {
 		leftHand = new Hand();
 		rightHand = new Hand ();
 
-		m_hands = new List< Hand > ();
-		m_hands.Add (leftHand);
-		m_hands.Add (rightHand);
+		m_hand = new List< Hand > ();
+		m_hand.Add (leftHand);
+		m_hand.Add (rightHand);
 
 		if (s_Instance == null)
 			s_Instance = this;
@@ -89,41 +89,41 @@ public class InputManager : MBehavior {
 		leftHand.bounds = ViveInputController.Instance.boundsLeftController;
 		rightHand.bounds = ViveInputController.Instance.boundsRightController;
 
-		for (int i = 0; i < m_hands.Count; i++)
+		for (int i = 0; i < m_hand.Count; i++)
 		{
 			//bounds check
 			for ( int j=0; j<collectableObjectsCount; j++ )
 			{
-				if( collectableObjects[ j ].GetComponent<Collider>( ).bounds.Intersects( m_hands[ i ].bounds ) )
+				if( collectableObjects[ j ].GetComponent<Collider>( ).bounds.Intersects( m_hand[ i ].bounds ) )
 				{
 					//lookObj.Add(collectableObjects[ j ]);
-					m_hands[ i ].focusedObject = collectableObjects[ j ];
+					m_hand[ i ].focusedObject = collectableObjects[ j ];
 					break;
 				}
 			}
 
-			if (m_hands[ i ].focusedObject == null) 
+			if (m_hand[ i ].focusedObject == null) 
 			{
 				RaycastHit hitInfo = new RaycastHit();
-				if (Physics.Raycast (m_hands[ i ].ray, out hitInfo, DETECT_DISTANCE , senseLayer)) 
+				if (Physics.Raycast (m_hand[ i ].ray, out hitInfo, DETECT_DISTANCE , senseLayer)) 
 				{
 					//lookObj.Add(hitInfo.collider.gameObject.GetComponent<MObject> ());
-					m_hands[ i ].focusedObject = hitInfo.collider.gameObject.GetComponent<Interactable> ();
+					m_hand[ i ].focusedObject = hitInfo.collider.gameObject.GetComponent<Interactable> ();
 					break;
 				} 
 			}
 
-			if (m_hands[ i ].focusedObject != m_hands[ i ].lastFocusedObject) {
-				if (m_hands[ i ].lastFocusedObject != null) {
-					//m_hands[ i ].lastFocusedObject.OnOutofFocus ();
-					FireOutofFocusObject (m_hands[ i ].lastFocusedObject.gameObject);
+			if (m_hand[ i ].focusedObject != m_hand[ i ].lastFocusedObject) {
+				if (m_hand[ i ].lastFocusedObject != null) {
+					//m_hand[ i ].lastFocusedObject.OnOutofFocus ();
+					FireOutofFocusObject (m_hand[ i ].lastFocusedObject.gameObject);
 				}
-				if (m_hands [i].focusedObject != null) {
-					//m_hands [i].focusedObject.OnFocus ();
-					//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; name of new focus obj = " + m_hands [i].focusedObject.gameObject.name + "/n");
-					FireFocusNewObject (m_hands [i].focusedObject.gameObject);
+				if (m_hand [i].focusedObject != null) {
+					//m_hand [i].focusedObject.OnFocus ();
+					//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; name of new focus obj = " + m_hand [i].focusedObject.gameObject.name + "/n");
+					FireFocusNewObject (m_hand [i].focusedObject.gameObject);
 				}
-				m_hands [i].lastFocusedObject = m_hands [i].focusedObject;
+				m_hand [i].lastFocusedObject = m_hand [i].focusedObject;
 			}
 		}
 	}

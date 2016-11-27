@@ -46,8 +46,8 @@ public class ViveInputController : MonoBehaviour
     {
         if (controllerManager != null)
         {
-			leftControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost); //controllerManager.leftIndex; 
-			rightControllerIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost); //controllerManager.rightIndex; 
+			leftControllerIndex = (int) controllerManager.leftIndex; // SteamVR_Controller.GetDeviceIndex (SteamVR_Controller.DeviceRelation.Leftmost);
+			rightControllerIndex = (int) controllerManager.rightIndex; //SteamVR_Controller.GetDeviceIndex (SteamVR_Controller.DeviceRelation.Rightmost);
         }
         return leftControllerIndex != -1 || rightControllerIndex != -1; 
     }
