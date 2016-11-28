@@ -13,14 +13,14 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Geometry" "RenderType" = "Transparent" }
+		Tags { "Queue" = "Overlay" "RenderType" = "Transparent" }
 		LOD 100
 
 		Pass
 		{
 			 Tags { "LightMode" = "Always" } 
 
-			ZWrite On
+			ZWrite Off
 			ZTest LEqual
 			Cull front
 			Blend SrcAlpha OneMinusSrcAlpha  
