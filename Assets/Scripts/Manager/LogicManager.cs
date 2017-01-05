@@ -64,6 +64,10 @@ public class LogicManager : MBehavior {
 		InitStateMachine ();
 	}
 
+	protected override void MStart(){
+		M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg(this));
+	}
+
 	void InitStateMachine(){
 		//m_stateMachine.AddUpdate (State.Init, OnUpdateInit );
 		/*

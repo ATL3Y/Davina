@@ -9,7 +9,7 @@ public class NiceTeleporter : Interactable
 	[SerializeField] protected MeshRenderer[] outlineRenders;
 	private Material material;
 	private Color color;
-	[SerializeField] protected float outlineWidth;
+	protected float outlineWidth = .00014f;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +19,7 @@ public class NiceTeleporter : Interactable
 
 		foreach (MeshRenderer r in outlineRenders) {
 			r.material = material;
-			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			ColorUtility.TryParseHtmlString ("#FFA59565", out color);
 			r.material.SetFloat ("_Outline", outlineWidth);
 			r.material.SetVector ("_OutlineColor", color);
 		}

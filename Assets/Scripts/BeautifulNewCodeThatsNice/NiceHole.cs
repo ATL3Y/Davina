@@ -10,9 +10,8 @@ public class NiceHole : Interactable {
 	protected AudioSource storySoundSource;
 	private float storySoundCooldown = 0f;
 
-	bool m_finished = false;
-
-	private bool callOnce = true;
+	private bool callOnce0 = true;
+	private bool callOnce1 = true;
 
 	private Vector3 originalScale;
 
@@ -20,6 +19,8 @@ public class NiceHole : Interactable {
 	private Material material;
 	private Color color;
 	[SerializeField] protected float outlineWidth;
+
+	//m_finished is set to true and usable set to false by the collectible upon entering the hole
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +30,7 @@ public class NiceHole : Interactable {
 
 		foreach (MeshRenderer r in outlineRenders) {
 			r.material = material;
-			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			ColorUtility.TryParseHtmlString ("#FFA59565", out color);
 			r.material.SetFloat ("_Outline", outlineWidth);
 			r.material.SetVector ("_OutlineColor", color);
 		}
@@ -54,7 +55,14 @@ public class NiceHole : Interactable {
 			storySoundSource.clip = storySound;
 		}
 
-		originalScale = transform.lossyScale;
+		originalScale = new Vector3 (1f, 1f, 1f); //transform.lossyScale;
+
+		//need a greater delay for the first story
+		if (Time.timeSinceLevelLoad < 20) {
+			storySoundCooldown = 18f;
+		} else {
+			storySoundCooldown = 1f;
+		}
 
 	}
 	
@@ -67,9 +75,21 @@ public class NiceHole : Interactable {
 		//	r.material.SetFloat( "_Outline", m_hoverTime > 0.5f ? outlineWidth * 2.0f : outlineWidth / 2f );
 		}
 
+		if (callOnce0 && storySoundCooldown < 0f) {
+			float d = Vector3.Distance (LogicManager.Instance.GetPlayerHeadTransform ().position, transform.position);
+			if (d < 3f) {
+				callOnce0 = false;
+				storySoundSource.Play ();
+				storySoundCooldown = storySound.length + 3f;
+			}
+		}
+
 		storySoundCooldown -= Time.deltaTime;
 		hoverSoundCooldown -= Time.deltaTime;
 
+		transform.localScale = originalScale; 
+
+		/*
 		// lock the scale of holes
 		Vector3 temScale = transform.lossyScale;
 		if (temScale != originalScale) {
@@ -79,23 +99,26 @@ public class NiceHole : Interactable {
 			localScale.z *= originalScale.z / temScale.z;
 			transform.localScale = localScale;
 		}
+		*/
 
-		//tell Story Object Manager Tutorial that story was heard 
-		if (hoverSoundCooldown > 0.0f && hoverSoundCooldown < 0.1f 
-			&& callOnce && tag == "Tutorial") {
-			M_Event.FireLogicEvent (LogicEvents.Heard, new LogicArg (this));
-			callOnce = false;
+		//tell TextInstructions that story was heard 
+		if (storySoundCooldown > 0.0f && storySoundCooldown < 0.1f && callOnce1 && tag == "Tutorial") {
+			//TextInstructions.Instance.HeardStory ();
+			callOnce1 = false;
 		}
 	}
+
 
 	public AudioSource GetStorySoundSource(){
 		return storySoundSource;
 	}
 
+
 	public override void InUseRange()
 	{
 		base.InUseRange ();
 
+		//m_finished is set to true and usable set to false by the collectible upon entering the hole
 		if (m_finished) {
 			owner = null;
 			return;

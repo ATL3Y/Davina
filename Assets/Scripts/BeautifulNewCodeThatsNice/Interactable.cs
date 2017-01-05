@@ -11,6 +11,13 @@ public class Interactable: MonoBehaviour
     public Vector3 boundsMult = Vector3.one;
     private Bounds m_bounds;
 
+	protected bool m_finished = false;
+	public bool Finished { get { return m_finished; } }
+	
+	public void SetFinished(bool finished) { 
+		m_finished = finished; 
+	}
+
 	public Hand GetOwner( ) {
 		return owner;
 	}

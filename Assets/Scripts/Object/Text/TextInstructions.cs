@@ -25,23 +25,21 @@ public class TextInstructions : MonoBehaviour
 	private float lineHeightLimit = .05f;
 	private int numberOfLines = 1;
 
-	private float timeLeft=0f;
+	private float timeLeft = 0f;
 	private int currentInstruction = 0;
 	//private bool callOnce = false;
 
 	private bool characters = false;
+	private bool callOnce = true;
+
+	private bool tutorial = true;
 
 	public void Start () 
 	{
-		instructions.Add (" "); //0
-		//instructions.Add ("MAKE A CHOICE"); //1
-		instructions.Add ("POINT AND HOLD TRIGGER"); //2
-		//instructions.Add ("CARRY ITEM TO OUTLINE"); //3
-		//instructions.Add ("RELEASE TRIGGER"); //4
-		instructions.Add ("POINT AT GLOW"); //5
-		instructions.Add ("PULL TRIGGER"); //6
-		//instructions.Add ("CHOOSE"); //7
-		instructions.Add ("POINT DOWN"); //8
+		instructions.Add (""); //0
+		instructions.Add ("LOOK FOR AN ITEM"); //1
+		instructions.Add ("LISTEN TO EACH SIDE"); //2
+		instructions.Add ("LISTEN"); //3
 
 		origPos = transform.localPosition;
 		origRot = transform.localRotation;
@@ -62,24 +60,24 @@ public class TextInstructions : MonoBehaviour
 			l.layer = 20; //add to Bridge layer so it's visible by near camera
 			_alphabet.Add (l); //add letter to the list // note: could just use the array...
 		}
-		//MakeLines (instructions [0]); // LOOK AROUND AND STAND UP
-		Pause(3f);
+
+		//MakeLines (instructions [1]); //LOOK FOR AN ITEM
 	}
 
 	public void Update () 
 	{
 		timeLeft -= Time.deltaTime;
 
-		if (timeLeft < 0.0f) {
-			MakeLines (instructions [0]);
+		if (timeLeft < 0.0f && callOnce) {
+			//MakeLines (instructions [3]); //LISTEN
+		} else if (timeLeft < 0.0f) {
+			MakeLines (instructions [0]); //""
 		}
 	}
 
 	public void OnEnable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] += OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
-		M_Event.logicEvents [(int)LogicEvents.Heard] += OnHeard;
-		M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
 	}
@@ -87,30 +85,19 @@ public class TextInstructions : MonoBehaviour
 	public void OnDisable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
-		M_Event.logicEvents [(int)LogicEvents.Heard] -= OnHeard;
-		M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
 	}
 
-	void OnHeard(LogicArg arg)
-	{
-		MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
-	}
-
-	void OnEnterStory(LogicArg arg)
-	{
-		MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
-	}
-
 	void OnEnterStoryTutorial(LogicArg arg)
 	{
-		MakeLines (instructions [5]); //POINT AT GLOW
+		//MakeLines (instructions [3]); //LISTEN
+		MakeLines (instructions [1]);
 	}
 
 	void OnCharacters(LogicArg arg)
 	{
-		MakeLines (instructions [8]); //POINT DOWN
+		tutorial = false;
 	}
 		
 	NiceTeleporter teleportTo;	
@@ -120,13 +107,8 @@ public class TextInstructions : MonoBehaviour
 
 		if (t != null && t != LogicManager.Instance.StayTeleporter) { 
 			teleportTo = t;
-			MakeLines (instructions [6]); // PULL TRIGGER
+
 		} 
-	}
-
-	public void OnOutofFocus( InputArg arg )
-	{
-
 	}
 
 	public void OnTransport(InputArg arg)
@@ -134,21 +116,35 @@ public class TextInstructions : MonoBehaviour
 		/*
 		if (teleportTo.transform.root.gameObject.name == "MotherMecanim") 
 		{
-			MakeLines (instructions [2]); //POINT AND HOLD TRIGGER
+			MakeLines (instructions [1]); //LOOK FOR AN ITEM
 		} 
 		else if (teleportTo.transform.root.gameObject.name == "FloatingDavina_v3") 
 		{
-			MakeLines (instructions [5]); //POINT AT GLOW
+			
 		}
 		*/
 	}
 
+	public void PickedUpCollectable(){
+		MakeLines (instructions [2]); //LISTEN TO EACH SIDE
+	}
+	//unused
+	public void ListenToStory(){
+		//MakeLines (instructions [3]); //LISTEN
+	}
+
+	public void HeardStory(){
+		//MakeLines (instructions [1]); //LOOK FOR AN ITEM
+	}
 
 	public void MakeLines (string text){
-
+		
 		Clear ();
 		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
+		if (!tutorial)
+			return;
+		
 		List<string> lines = new List<string>();
 
 		//place all the words into an array
@@ -208,7 +204,7 @@ public class TextInstructions : MonoBehaviour
 			}
 		}
 		//leave instruction for a time
-		Pause (4f);
+		Pause (7f);
 	}
 
 	public void Clear ()

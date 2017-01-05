@@ -85,8 +85,8 @@ public class FadeMesh : MonoBehaviour
 			fadeAmount -= 0.1f;
 
 		float d = Vector3.Distance (center.position, LogicManager.Instance.GetPlayerHeadTransform ().position);
-		print (d);
-		//d -= .1f; //offset
+		//print (d);
+		d += .05f; //offset
 		fadeAmount = Mathf.Clamp01(d * d * d);
 
 		if (!transform.root.gameObject.GetComponent<MCharacter> ().IsInInnerWorld) {

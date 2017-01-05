@@ -10,7 +10,6 @@ public class NiceCollectable : Interactable
 	[SerializeField] LogicEvents onFillRaiseEvent;
 	[SerializeField] LogicEvents onFillLowerEvent;
 
-	bool m_finished = false;
 	Vector3 offset;
 	Quaternion rotationOffset;
 	public NiceHole niceHole;
@@ -38,6 +37,8 @@ public class NiceCollectable : Interactable
 	private Color color;
 	[SerializeField] protected float outlineWidth;
 
+	bool callOnce = true;
+
 	// Use this for initialization
 	void Start () {
 		base.Start ();
@@ -46,7 +47,7 @@ public class NiceCollectable : Interactable
 
 		foreach (MeshRenderer r in outlineRenders) {
 			r.material = material;
-			ColorUtility.TryParseHtmlString ("#FFFFFFFF", out color);
+			ColorUtility.TryParseHtmlString ("#FFA59565", out color);
 			r.material.SetFloat ("_Outline", outlineWidth);
 			r.material.SetVector ("_OutlineColor", color);
 		}
@@ -140,6 +141,10 @@ public class NiceCollectable : Interactable
 		}
 		
 		if (owner) {
+			if (callOnce) {
+				TextInstructions.Instance.PickedUpCollectable ();
+				callOnce = false;
+			}
 			bool dropable = true;
 			if ( TransportManager.Instance.IsTransporting ) print( "transporting" );
 			if (TransportManager.Instance.IsTransporting) {	
@@ -153,7 +158,7 @@ public class NiceCollectable : Interactable
 			//Debug.DrawLine (newPosition - Vector3.up * 0.05f, newPosition + Vector3.up * 0.05f, Color.red);
 
 			// Play story sound based on which side is facing player
-			if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.7) {
+			if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.45) {
 				//pink side out
 				ColorUtility.TryParseHtmlString ("#FFACF9FF", out color);
 				SetOutline (true);
@@ -165,8 +170,13 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceR != null && storySoundCooldownR < 0.0f) {
 					storySoundSourceR.Play ();
 					storySoundCooldownR = storySoundR.length + 3f;
+					if (owner.left) {
+						ViveInputController.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
+					} else {
+						ViveInputController.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
+					}
 				} 
-			} else if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.7) {
+			} else if (Vector3.Dot (transform.right, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.45) {
 				//blue side out 
 				ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
 				SetOutline (true);
@@ -178,20 +188,26 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceL != null && storySoundCooldownL < 0.0f) {
 					storySoundSourceL.Play ();
 					storySoundCooldownL = storySoundL.length + 3f;
+					if (owner.left) {
+						ViveInputController.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
+					} else {
+						ViveInputController.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
+					}
+
 				} 
 			} else {
 				SetOutline (false);
 			}
 
 			if (distanceToTarget < 0.11f) {
-				AxKDebugLines.AddLine (transform.position, transform.position + transform.right * .1f, Color.red, 0);
-				AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.right * .1f, Color.blue, 0);
+				//AxKDebugLines.AddLine (transform.position, transform.position + transform.right * .1f, Color.red, 0);
+				//AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.right * .1f, Color.blue, 0);
 				// orient collectable in hole based on relation to hole
 				if (Vector3.Dot (transform.right, niceHole.transform.right) > 0f) {
 					pinkSideOut = true;
 				} else if (Vector3.Dot (transform.right, niceHole.transform.right) <= 0f) {
 					pinkSideOut = false;
-					AxKDebugLines.AddSphere (transform.position, .1f, Color.cyan, 0);
+					//AxKDebugLines.AddSphere (transform.position, .1f, Color.cyan, 0);
 				}
 				float t = Mathf.Clamp01( 1.0f - ( distanceToTarget * ( 1.0f / 0.1f ) ) );
 				t = Ease (t, 0.0f, 1.0f, 1.0f );
@@ -203,7 +219,7 @@ public class NiceCollectable : Interactable
 					rot = niceHole.transform.rotation; 
 				} else {
 					rot = Quaternion.AngleAxis (180f, niceHole.transform.up) * niceHole.transform.rotation;
-					AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .1f, Color.green, 0);
+					//AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .1f, Color.green, 0);
 				}
 
 				newPosition = Vector3.Lerp (newPosition, niceHole.transform.position, t);
@@ -229,13 +245,16 @@ public class NiceCollectable : Interactable
 				niceHole.useable = false;
 				transform.parent = niceHole.gameObject.transform; 
 				m_finished = true;
+				niceHole.SetFinished(true);
 
 				// disable non-matched collectables //don't need
+				/*
 				if ( gameObject.tag == "Untagged"){
 					M_Event.FireLogicEvent( LogicEvents.ExitStory, new LogicArg( this ) );
 				} else if ( gameObject.tag == "Tutorial" ){
 					M_Event.FireLogicEvent( LogicEvents.ExitStoryTutorial, new LogicArg( this ) );
 				}
+				*/
 
 				/*
 				// speed through

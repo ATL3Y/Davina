@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class StoryObjManagerTutorial : MBehavior {
 
-	private int count = 0;
+	private int count = -1;
 	[SerializeField] List<GameObject> storyObjA;
 	[SerializeField] List<GameObject> storyObjB;
 	[SerializeField] List<GameObject> storyObjC;
@@ -17,8 +17,8 @@ public class StoryObjManagerTutorial : MBehavior {
 	protected override void MAwake ()
 	{
 		base.MAwake ();
-		currentStory = storyObjA;
-		currentStory [0].SetActive (true);
+		//currentStory = storyObjA;
+		//currentStory [0].SetActive (true);
 
 		if (levelSpecificObjects.Count > 0) {
 			for (int i = 0; i < levelSpecificObjects.Count; i++) {
@@ -33,7 +33,6 @@ public class StoryObjManagerTutorial : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.ExitStoryTutorial] += OnExitStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Credits] += OnCredits;
-		M_Event.logicEvents [(int)LogicEvents.Heard] += OnHeard;
 	}
 
 	protected override void MOnDisable(){
@@ -42,30 +41,30 @@ public class StoryObjManagerTutorial : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.ExitStoryTutorial] -= OnExitStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Credits] -= OnCredits;
-		M_Event.logicEvents [(int)LogicEvents.Heard] -= OnHeard;
 	}
 
+	//first call is by LogicManager
 	void OnEnterStoryTutorial(LogicArg arg)
 	{
 		//iterate count and enter next story upon exiting last one 
 		count++;
+		//if there is no next story, call next chapter
 		if (GetStory () == null && callOnce) {
-			LogicArg logicArg = new LogicArg (this);
-			M_Event.FireLogicEvent (LogicEvents.Characters, logicArg);
+			M_Event.FireLogicEvent (LogicEvents.Characters, new LogicArg (this));
 			callOnce = false;
 			return;
 		} 
 		
 		currentStory.Clear ();
 		currentStory = GetStory ();
-		currentStory [0].SetActive (true);
-		/*
+		//currentStory [0].SetActive (true);
+
 		for (int i = 0; i < currentStory.Count; i++) {
 			currentStory [i].SetActive (true);
 		}
-		*/
-	}
 
+	}
+	//not in use
 	void OnExitStoryTutorial(LogicArg arg)
 	{
 		for (int i=currentStory.Count-1; i>=0; i--) {
@@ -74,12 +73,6 @@ public class StoryObjManagerTutorial : MBehavior {
 				//Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
 				currentStory [i].SetActive (false);
 			}
-		}
-	}
-
-	void OnHeard(LogicArg arg){
-		for (int i = 1; i < currentStory.Count; i++) {
-			currentStory [i].SetActive (true);
 		}
 	}
 
@@ -141,31 +134,4 @@ public class StoryObjManagerTutorial : MBehavior {
 	}
 		
 }
-
-/*
- * 	//exit last story before entering new one 
-void OnExitStoryTutorial(LogicArg arg){
-	//disable remaining objects in mother
-	//Debug.Log("length of current story obj = " + currentStory.Count);
-	for (int i=currentStory.Count-1; i>=0; i--) {
-		//if (currentStory [i].layer == LayerMask.NameToLayer( "Focus" )) { 
-		//CollectableObj cobj = currentStory[i].GetComponent<CollectableObj>();
-		//if (cobj != null && !cobj.matched ) { 
-		//Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
-		currentStory [i].SetActive (false);
-		//}
-	}
-
-	//iterate count and enter next story upon exiting last one 
-	count++;
-	if (GetStory () != null) {
-		//Debug.Log( "in StoryManCharacters enter next story " );
-		LogicArg logicArg = new LogicArg (this);
-		M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, logicArg);
-	} else if (GetStory () == null && callOnce) {
-		LogicArg logicArg = new LogicArg( this );
-		M_Event.FireLogicEvent( LogicEvents.Characters, logicArg );
-		callOnce = false;
-	}
-}
-*/
+	

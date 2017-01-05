@@ -7,13 +7,18 @@ public class VOEventAudio : MonoBehaviour {
 	[SerializeField] List<AudioClip> clips0;
 	[SerializeField] List<AudioClip> clips1;
 	[SerializeField] List<AudioClip> clips2;
+	[SerializeField] List<AudioClip> clips3;
 
 	protected int i=0;
 	protected int j=0;
 
     protected AudioSource source;
 	private bool end = false;
+
 	private bool callOnce = true;
+
+	private int count = 0;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -44,8 +49,9 @@ public class VOEventAudio : MonoBehaviour {
 	}
 
 	void OnEnterStoryTutorial( LogicArg arg ){
-		if ( clips0.Count > 0) { 
-			StartCoroutine(PlayNext ( clips0 ) );
+		count++;
+		if ( clips3.Count > 0 && count == 1) { 
+			StartCoroutine(PlayNext ( clips3 ) );
 		} 
 	}
 
@@ -53,6 +59,7 @@ public class VOEventAudio : MonoBehaviour {
 		Interactable transportToObj = (Interactable)arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
 		if (transportToObj != null && transportToObj.transform.root.gameObject.name.Contains("Mother") && callOnce && clips1.Count > 0) { 
 			StartCoroutine(PlayNext ( clips1 ) );
+			callOnce = false;
 		} 
 	}
 

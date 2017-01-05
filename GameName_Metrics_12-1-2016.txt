@@ -1,0 +1,2 @@
+31.65275 in call exitstorytutorial /n
+53.0091 in call exitstorytutorial /n

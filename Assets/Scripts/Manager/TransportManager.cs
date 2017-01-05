@@ -193,15 +193,15 @@ public class TransportManager : MBehavior {
     {
         base.MUpdate( );
 
-		if ( finale && transform.position.y < posEnd.y / 3f )
+		if ( finale && transform.position.y < posEnd.y / 4f )
         {
-			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 300f;
+			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 250f;
 			//print (distance + " = distance in transport");
 			Vector3 target = new Vector3 (transform.position.x, transform.position.y + distance, transform.position.z);
 		
 			transform.position = Vector3.Lerp (transform.position, target, 1f);
         } 
-		else if (transform.position.y >= posEnd.y / 3f && callOnce )
+		else if (transform.position.y >= posEnd.y / 4f && callOnce )
         {
             LogicArg logicArg = new LogicArg( this );
             M_Event.FireLogicEvent( LogicEvents.End, logicArg );
