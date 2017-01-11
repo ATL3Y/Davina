@@ -8,7 +8,7 @@ public class TestPasserBy : MonoBehaviour {
 	[SerializeField] float value;
 	[SerializeField] float radius;
 	[SerializeField] GameObject[] models;
-	[SerializeField] NavMeshAgent agent;
+	[SerializeField] UnityEngine.AI.NavMeshAgent agent;
 	[SerializeField] float appearRange = 20f;
 
 	static TestPasserBy trading;

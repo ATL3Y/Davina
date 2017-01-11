@@ -1,4 +1,6 @@
-﻿Shader "FX/MirrorReflection"
+﻿// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
+
+Shader "FX/MirrorReflection"
 {
 	Properties
 	{
@@ -26,7 +28,7 @@
 			{
 				float4 pos : POSITION;
 				float2 uv: TEXCOORD0;
-				UNITY_INSTANCE_ID
+				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
 			struct v2f
@@ -34,7 +36,7 @@
 				float2 uv : TEXCOORD0;
 				float4 refl : TEXCOORD1;
 				float4 pos : SV_POSITION;
-				UNITY_INSTANCE_ID
+				UNITY_VERTEX_INPUT_INSTANCE_ID
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
