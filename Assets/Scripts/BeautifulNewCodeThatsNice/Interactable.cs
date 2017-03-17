@@ -53,8 +53,8 @@ public class Interactable: MonoBehaviour
 
         if ( debug )
         {
-           // if ( sphereInteractionBounds ) AxKDebugLines.AddFancySphere( m_bounds.center, GetRadius( m_bounds ), returnValue ? Color.green : Color.red );
-           // else AxKDebugLines.AddBounds( m_bounds, returnValue ? Color.green : Color.red );
+            // if ( sphereInteractionBounds ) AxKDebugLines.AddFancySphere( m_bounds.center, GetRadius( m_bounds ), returnValue ? Color.green : Color.red );
+            // else AxKDebugLines.AddBounds( m_bounds, returnValue ? Color.green : Color.red );
         }
 
         if ( returnValue )
@@ -94,7 +94,7 @@ public class Interactable: MonoBehaviour
 			mat.SetColumn( 3, new Vector4( b.center.x, b.center.y, b.center.z, 1.0f ) );
 
 			OBB obb = new OBB( t.localToWorldMatrix * mat );
-			//if ( debug ) AxKDebugLines.AddOBB( obb, Color.white );
+			if ( debug ) AxKDebugLines.AddOBB( obb, Color.white );
 
 			flag = OBB.TestOBBOBB( obb, handObb );
 		}
@@ -229,7 +229,7 @@ public class Interactable: MonoBehaviour
 
 	public virtual void Start()
 	{
-
+        print("in interactable");
 	}
 
 }

@@ -1,7 +1,0 @@
-38.14463 in call exitstorytutorial /n
-80.93922 in call exitstorytutorial /n
-151.5859; TransportStart to: (-0.1, 0.2, 3.1)/n
-184.5945; TransportStart to: (-0.6, 0.2, 15.3)/n
-224.1954; TransportStart to: (-0.1, 0.2, 3.5)/n
-235.1849; TransportStart to: (-0.7, 0.2, 14.6)/n
-251.4384; TransportStart to: (-0.1, 0.2, 3.5)/n
