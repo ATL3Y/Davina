@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: de554a8cde14a9b43b60768f7801de59
-timeCreated: 1490083234
+guid: a66698752755f6448846e01295266bb0
+timeCreated: 1490234625
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: pCylinder1
-    6400000: //RootNode
-    9500000: //RootNode
+    100000: Davina_piece:Davina_piece:Davina_piece1:pCylinder1
+    100002: //RootNode
+    400000: Davina_piece:Davina_piece:Davina_piece1:pCylinder1
+    400002: //RootNode
+    2300000: Davina_piece:Davina_piece:Davina_piece1:pCylinder1
+    3300000: Davina_piece:Davina_piece:Davina_piece1:pCylinder1
+    4300000: Davina_piece:Davina_piece:Davina_piece1:pCylinder1
   materials:
     importMaterials: 1
     materialName: 0
@@ -36,7 +36,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 2
+    globalScale: 0.008
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -74,7 +74,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

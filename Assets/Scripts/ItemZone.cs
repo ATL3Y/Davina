@@ -15,6 +15,6 @@ public class ItemZone : MonoBehaviour
 	void Update () 
 	{
 		transform.position = root.transform.position;
-		transform.rotation = root.transform.rotation * Quaternion.AngleAxis(90f, Vector3.up);
+        transform.rotation = root.transform.rotation; // * Quaternion.AngleAxis(90f, root.transform.right);
 	}
 }

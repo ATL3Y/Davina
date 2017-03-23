@@ -196,7 +196,8 @@ public class NiceCollectable : Interactable
 
 				} 
 			} else {
-				SetOutline (false);
+                SetOutline (false);
+
 			}
 
 			if (distanceToTarget < 0.11f) {
@@ -226,6 +227,8 @@ public class NiceCollectable : Interactable
 				newRotation = Quaternion.Slerp (newRotation, rot, t);
 				//AxKDebugLines.AddLine (newPosition, newPosition + transform.right * .1f, Color.yellow, 0);
 			}
+
+
 
 			transform.position = newPosition;
 			transform.rotation = newRotation;
@@ -289,7 +292,12 @@ public class NiceCollectable : Interactable
 				transform.DOLocalMove (Vector3.zero, 1f).SetEase (DG.Tweening.Ease.InCirc);
 				transform.DOLocalRotate ( rot, 1f).SetEase (DG.Tweening.Ease.InCirc); 
 				transform.DOScale (1.06f, 1f).SetEase (DG.Tweening.Ease.InCirc);
-			}
+			} else
+            // rotate before picked up
+            {
+                Quaternion turn = Quaternion.AngleAxis(10f, Vector3.forward) * transform.localRotation;
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, turn, Time.deltaTime * 7f);
+            }
 		}
 	}
 
