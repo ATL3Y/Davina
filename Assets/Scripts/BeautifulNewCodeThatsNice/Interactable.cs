@@ -229,7 +229,7 @@ public class Interactable: MonoBehaviour
 
 	public virtual void Start()
 	{
-        print("in interactable");
+        //print("in interactable");
 	}
 
 }

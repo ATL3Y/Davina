@@ -17,8 +17,7 @@ public class NiceHole : Interactable {
 
 	[SerializeField] protected MeshRenderer[] outlineRenders;
 	private Material material;
-	private Color color;
-	[SerializeField] protected float outlineWidth;
+	float outlineWidth = .9f;
 
 	//m_finished is set to true and usable set to false by the collectible upon entering the hole
 
@@ -30,9 +29,7 @@ public class NiceHole : Interactable {
 
 		foreach (MeshRenderer r in outlineRenders) {
 			r.material = material;
-			ColorUtility.TryParseHtmlString ("#FFA59565", out color);
 			r.material.SetFloat ("_Outline", outlineWidth);
-			r.material.SetVector ("_OutlineColor", color);
 		}
 
 		SetOutline (true);
@@ -70,11 +67,6 @@ public class NiceHole : Interactable {
 	void Update () {
 		base.Update ();
 
-		foreach ( MeshRenderer r in outlineRenders )
-		{
-		//	r.material.SetFloat( "_Outline", m_hoverTime > 0.5f ? outlineWidth * 2.0f : outlineWidth / 2f );
-		}
-
 		if (callOnce0 && storySoundCooldown < 0f) {
 			float d = Vector3.Distance (LogicManager.Instance.GetPlayerHeadTransform ().position, transform.position);
 			if (d < 3f) {
@@ -89,21 +81,7 @@ public class NiceHole : Interactable {
 
 		transform.localScale = originalScale; 
 
-		/*
-		// lock the scale of holes
-		Vector3 temScale = transform.lossyScale;
-		if (temScale != originalScale) {
-			Vector3 localScale = transform.localScale;
-			localScale.x *= originalScale.x / temScale.x;
-			localScale.y *= originalScale.y / temScale.y;
-			localScale.z *= originalScale.z / temScale.z;
-			transform.localScale = localScale;
-		}
-		*/
-
-		//tell TextInstructions that story was heard 
 		if (storySoundCooldown > 0.0f && storySoundCooldown < 0.1f && callOnce1 && tag == "Tutorial") {
-			//TextInstructions.Instance.HeardStory ();
 			callOnce1 = false;
 		}
 	}
@@ -144,8 +122,11 @@ public class NiceHole : Interactable {
 
 	void SetOutline( bool isOn )
 	{
+        Color color;
 		foreach (MeshRenderer r in outlineRenders) {
-			r.enabled = isOn;
+            ColorUtility.TryParseHtmlString("#00FFFFFF", out color);
+            r.material.SetVector("_OutlineColor", color);
+            r.enabled = isOn;
 		}
 	}
 }
