@@ -13,7 +13,6 @@ public class TextInstructions : MonoBehaviour
 	private List < GameObject > _letters = new List<GameObject> (); //letters in the given phrase
 
 	private int size;
-	//private float oldLength = 0f;
 	private Vector3 origPos;
 	private Quaternion origRot;
 	private Vector3 origScale;
@@ -27,12 +26,9 @@ public class TextInstructions : MonoBehaviour
 
 	private float timeLeft = 0f;
 	private int currentInstruction = 0;
-	//private bool callOnce = false;
 
 	private bool characters = false;
-	private bool callOnce = true;
-
-	private bool tutorial = true;
+	private bool end = false;
 
 	public void Start () 
 	{
@@ -40,8 +36,10 @@ public class TextInstructions : MonoBehaviour
 		instructions.Add ("LOOK FOR AN ITEM"); //1
 		instructions.Add ("LISTEN TO EACH SIDE"); //2
 		instructions.Add ("LISTEN"); //3
+        instructions.Add("USE BOTH HANDS"); //4
+        instructions.Add("DRAW"); //5
 
-		origPos = transform.localPosition;
+        origPos = transform.localPosition;
 		origRot = transform.localRotation;
 		origScale = new Vector3 (1f, 1f, 1f);
 
@@ -58,19 +56,15 @@ public class TextInstructions : MonoBehaviour
 		{
 			GameObject l = (GameObject)letter;
 			l.layer = 20; //add to Bridge layer so it's visible by near camera
-			_alphabet.Add (l); //add letter to the list // note: could just use the array...
+			_alphabet.Add (l); //add letter to the list
 		}
-
-		//MakeLines (instructions [1]); //LOOK FOR AN ITEM
 	}
 
 	public void Update () 
 	{
 		timeLeft -= Time.deltaTime;
 
-		if (timeLeft < 0.0f && callOnce) {
-			//MakeLines (instructions [3]); //LISTEN
-		} else if (timeLeft < 0.0f) {
+		if (timeLeft < 0.0f) {
 			MakeLines (instructions [0]); //""
 		}
 	}
@@ -80,25 +74,29 @@ public class TextInstructions : MonoBehaviour
 		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
-	}
+        M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
+        M_Event.logicEvents[(int)LogicEvents.End] += OnEnd;
+    }
 
 	public void OnDisable(){
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
-	}
+        M_Event.logicEvents[(int)LogicEvents.Finale] -= OnFinale;
+        M_Event.logicEvents[(int)LogicEvents.End] -= OnEnd;
+    }
 
 	void OnEnterStoryTutorial(LogicArg arg)
 	{
-		//MakeLines (instructions [3]); //LISTEN
-		MakeLines (instructions [1]);
-	}
+		MakeLines(instructions [1]); //"LOOK FOR AN ITEM"
+    }
 
 	void OnCharacters(LogicArg arg)
 	{
-		tutorial = false;
-	}
+        MakeLines(instructions[4]); //"USE BOTH HANDS"
+        characters = true;
+    }
 		
 	NiceTeleporter teleportTo;	
 	public void OnFocusNew( InputArg arg )
@@ -107,42 +105,48 @@ public class TextInstructions : MonoBehaviour
 
 		if (t != null && t != LogicManager.Instance.StayTeleporter) { 
 			teleportTo = t;
-
 		} 
 	}
 
 	public void OnTransport(InputArg arg)
 	{
-		/*
-		if (teleportTo.transform.root.gameObject.name == "MotherMecanim") 
+        /*
+         * error
+		if (teleportTo.transform.root.gameObject.name.Contains("Mother")) 
 		{
-			MakeLines (instructions [1]); //LOOK FOR AN ITEM
-		} 
-		else if (teleportTo.transform.root.gameObject.name == "FloatingDavina_v3") 
-		{
-			
-		}
-		*/
+            MakeLines(instructions[4]); //"USE BOTH HANDS"
+        } 
+        */
 	}
 
 	public void PickedUpCollectable(){
-		MakeLines (instructions [2]); //LISTEN TO EACH SIDE
-	}
-	//unused
-	public void ListenToStory(){
-		//MakeLines (instructions [3]); //LISTEN
+        if (characters)
+        {
+            MakeLines(instructions[4]); //"USE BOTH HANDS"
+        }
+        else
+        {
+            MakeLines(instructions[2]); //LISTEN TO EACH SIDE
+        }
 	}
 
-	public void HeardStory(){
-		//MakeLines (instructions [1]); //LOOK FOR AN ITEM
-	}
+    void OnFinale(LogicArg arg)
+    {
+        //print("in on finale call");
+        MakeLines(instructions[5]);
+    }
 
-	public void MakeLines (string text){
+    void OnEnd(LogicArg arg)
+    {
+        //end = true;
+    }
+
+    public void MakeLines (string text){
 		
 		Clear ();
 		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
-		if (!tutorial)
+		if (end)
 			return;
 		
 		List<string> lines = new List<string>();

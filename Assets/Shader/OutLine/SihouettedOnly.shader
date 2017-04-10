@@ -35,12 +35,14 @@ v2f vert(appdata v) {
 ENDCG
  
 	SubShader {
-		Tags { "Queue" = "Overlay" }
+		Tags { "Queue" = "1000" } //"RenderType" = "Opaque" 
  
 		Pass {
 			Name "BASE"
-			Cull Back
-			ZWrite On //[_ZWrite]
+			Cull Off
+			ZWrite On
+			//ZWrite Off //[_ZWrite]
+			//ZTest Always
 			
 			Blend Zero One
  

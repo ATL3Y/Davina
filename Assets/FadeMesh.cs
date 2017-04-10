@@ -89,7 +89,7 @@ public class FadeMesh : MonoBehaviour
 		d += .05f; //offset
 		fadeAmount = Mathf.Clamp01(d * d * d);
         */
-        fadeAmount = (Score.Instance.GetScore() + 3f) / 4f;
+        fadeAmount = (Score.Instance.GetScore() + 3f) / 5.2f;
         //print("score " + fadeAmount);
 
 		if (!transform.root.gameObject.GetComponent<MCharacter> ().IsInInnerWorld) {

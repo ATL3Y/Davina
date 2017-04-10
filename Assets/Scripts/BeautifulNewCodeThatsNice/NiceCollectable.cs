@@ -171,7 +171,7 @@ public class NiceCollectable : Interactable
 			//Debug.DrawLine (newPosition - Vector3.up * 0.05f, newPosition + Vector3.up * 0.05f, Color.red);
 
 			// Play story sound based on which side is facing player
-			if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.45) {
+			if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.45f) {
 				//SetOutline (true);
 				if (storySoundSourceL != null && storySoundSourceL.isPlaying) {
 					storySoundSourceL.Stop ();
@@ -186,7 +186,7 @@ public class NiceCollectable : Interactable
 						ViveInputController.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
 					}
 				} 
-			} else if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.45) {
+			} else if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.45f) {
                 //SetOutline (true);
 				if (storySoundSourceR != null && storySoundSourceR.isPlaying) {
 					storySoundSourceR.Stop ();

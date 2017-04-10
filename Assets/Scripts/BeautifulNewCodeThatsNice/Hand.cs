@@ -23,7 +23,7 @@ public class Hand : MonoBehaviour
 		Quaternion rotation = Quaternion.LookRotation (transform.forward, transform.up);
 		Vector3 scale = new Vector3 (0.1f, 0.1f, 0.3f) * 0.2f;
 		OBB obb = new OBB( position, rotation, scale );
-		AxKDebugLines.AddOBB (obb, Color.red);
+		//AxKDebugLines.AddOBB (obb, Color.red);
 		//AxKDebugLines.AddLine(transform.position, transform.position + transform.up, Color.green * .1f, 0);
 		//AxKDebugLines.AddLine(transform.position, transform.position + transform.right, Color.red * .1f, 0);
 		//AxKDebugLines.AddLine(transform.position, transform.position + transform.forward, Color.blue * .1f, 0);

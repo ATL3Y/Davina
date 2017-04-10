@@ -104,7 +104,7 @@ public class StoryObjManagerCharacters : MBehavior {
 			if (storyObjC.Count >0) {
                 return storyObjC;
 			} else {
-				print ("firing finale");
+				//print ("firing finale");
 				LogicArg logicArg = new LogicArg( this );
 				M_Event.FireLogicEvent( LogicEvents.Finale, logicArg );
 				return null;
