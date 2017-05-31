@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class FadeMesh : MonoBehaviour 
 {
-
-	private List <GameObject> m_childrenWithMeshes;
+    private List <GameObject> m_childrenWithMeshes;
 	private List <GameObject> m_childrenWithAlphas;
 
 	private List <Mesh> m_childMeshes;
@@ -41,6 +40,7 @@ public class FadeMesh : MonoBehaviour
 				renderer.material.color = tempColor;// ("_Color", tempColor);
 			}
 		} else {
+
 		}
 	}
 
@@ -79,15 +79,18 @@ public class FadeMesh : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
+        /*
 		if (Input.GetKeyDown (KeyCode.UpArrow))
 			fadeAmount += 0.1f;
 		else if (Input.GetKeyDown (KeyCode.DownArrow))
 			fadeAmount -= 0.1f;
 
 		float d = Vector3.Distance (center.position, LogicManager.Instance.GetPlayerHeadTransform ().position);
-		//print (d);
 		d += .05f; //offset
 		fadeAmount = Mathf.Clamp01(d * d * d);
+        */
+        fadeAmount = (Score.Instance.GetScore() + 3f) / 5.2f;
+        //print("score " + fadeAmount);
 
 		if (!transform.root.gameObject.GetComponent<MCharacter> ().IsInInnerWorld) {
 			SetAlpha (outside, fadeAmount);

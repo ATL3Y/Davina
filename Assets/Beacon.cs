@@ -20,7 +20,7 @@ public class Beacon : MonoBehaviour
 	void Update () 
 	{
 		if (color.a <= 0f) {
-			print ("done");
+			//print ("done");
 			return;
 		}
 

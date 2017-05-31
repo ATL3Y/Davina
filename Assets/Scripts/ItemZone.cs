@@ -8,13 +8,13 @@ public class ItemZone : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		transform.position = root.transform.position;
-        transform.rotation = root.transform.rotation; // * Quaternion.AngleAxis(90f, root.transform.right);
-	}
+        if (gameObject.name.Contains("Mother"))
+        {
+            transform.rotation = Quaternion.AngleAxis(90f, root.transform.right) * root.transform.rotation;
+        } else
+        {
+            transform.rotation = root.transform.rotation;
+        }
+        transform.position = root.transform.position;
+    }
 }

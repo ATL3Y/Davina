@@ -193,9 +193,9 @@ public class TransportManager : MBehavior {
     {
         base.MUpdate( );
 
-		if ( finale && transform.position.y < posEnd.y / 4f )
+		if ( finale && transform.position.y < posEnd.y / 2.3f )
         {
-			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 250f;
+			float distance = (TrailLeft.GetDistance () + TrailRight.GetDistance ()) / 170f;
 			//print (distance + " = distance in transport");
 			Vector3 target = new Vector3 (transform.position.x, transform.position.y + distance, transform.position.z);
 		
@@ -211,15 +211,14 @@ public class TransportManager : MBehavior {
 
     void OnFinale( LogicArg arg )
     {
-        Disable.Instance.DisableClidren( ); // Disable text instructions
 		finale = true;
     }
 
 	void OnEnd( LogicArg arg ){
-
-		//Debug.Log ("on end from transport manager");
-		// fire the transport start event
-		LogicArg logicArg = new LogicArg (this);
+        //Disable.Instance.DisableClidren(); // Disable text instructions
+        //Debug.Log ("on end from transport manager");
+        // fire the transport start event
+        LogicArg logicArg = new LogicArg (this);
 		logicArg.AddMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
 		M_Event.FireLogicEvent ( LogicEvents.TransportStart, logicArg);
 

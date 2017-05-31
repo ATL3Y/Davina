@@ -35,15 +35,19 @@ v2f vert(appdata v) {
 ENDCG
  
 	SubShader {
-		Tags { "Queue" = "Geometry" }
+		Tags { "Queue" = "1000" } //"RenderType" = "Opaque" 
  
 		Pass {
 			Name "BASE"
-			Cull Back
+			Cull Off
+			ZWrite On
+			//ZWrite Off //[_ZWrite]
+			//ZTest Always
+			
 			Blend Zero One
  
 			// uncomment this to hide inner details:
-			//Offset -8, -8
+			Offset 0, 50
  
 			SetTexture [_OutlineColor] {
 				ConstantColor (0,0,0,0)
@@ -56,6 +60,7 @@ ENDCG
 			Name "OUTLINE"
 			Tags { "LightMode" = "Always" }
 			Cull Front
+			ZWrite On //[_ZWrite]
  
 			// you can choose what kind of blending mode you want for the outline
 			//Blend SrcAlpha OneMinusSrcAlpha // Normal
