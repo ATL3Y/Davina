@@ -1,4 +1,6 @@
-﻿Shader "Custom/RainShader"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/RainShader"
 {
     Properties
 	{
@@ -110,7 +112,7 @@
             v2f vert(appdata_t v)
             {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv_MainTex = TRANSFORM_TEX(v.texcoord, _MainTex);
 
 //                o.color = LightForVertex(v.vertex);

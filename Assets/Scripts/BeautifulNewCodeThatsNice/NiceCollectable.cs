@@ -278,7 +278,7 @@ public class NiceCollectable : Interactable
 						storySoundSourceL.Stop ();
 					}
 					if (storySoundSourceL != null) {
-						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource (), storySoundSourceL));
+						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource(), storySoundSourceL));
 					} else {
 						CallNextEvent ();
 					}
@@ -299,11 +299,25 @@ public class NiceCollectable : Interactable
 
 	IEnumerator DelaySoundClipPlay( AudioSource holeStory, AudioSource collectableStory )
 	{
-		holeStory.Play( );
-		yield return new WaitForSeconds( holeStory.clip.length );
-		collectableStory.Play( );
-		yield return new WaitForSeconds( collectableStory.clip.length );
-		CallNextEvent( );
+        if (holeStory == null)
+        {
+            Debug.Log("need hole story");
+        }
+        else
+        {
+            holeStory.Play();
+            yield return new WaitForSeconds(holeStory.clip.length);
+        }
+		if(collectableStory == null)
+        {
+            Debug.Log("need collectable story");
+        }
+        else
+        {
+            collectableStory.Play();
+            yield return new WaitForSeconds(collectableStory.clip.length);
+            CallNextEvent();
+        }
 	}
 
 	public override void Use( Hand hand )

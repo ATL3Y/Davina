@@ -95,7 +95,7 @@ public class MCharacter : MObject {
 	private bool m_isInInnerWorld = false;
 	public bool IsInInnerWorld
 	{
-		get { return m_isInInnerWorld; }
+        get { return m_isInInnerWorld; }
 	}
 
 	Coroutine changeScale;

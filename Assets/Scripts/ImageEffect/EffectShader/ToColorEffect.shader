@@ -1,4 +1,6 @@
-﻿Shader "Custom/ToColorEffect" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/ToColorEffect" {
 Properties {
 	_MainTex ("Base (RGB)", 2D) = "white" {}
 }
@@ -50,7 +52,7 @@ Properties {
 	v2f vertThin( appdata_img v )
 	{
 		v2f o;
-		o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+		o.pos = UnityObjectToClipPos (v.vertex);
 		
 		float2 uv = v.texcoord.xy;
 		o.uv[0] = uv;

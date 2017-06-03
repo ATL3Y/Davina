@@ -29,12 +29,6 @@ public class VOEventAudio : MonoBehaviour {
             source.spatialBlend = 1f;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-
-	}
 
 	protected void OnEnable(){
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;

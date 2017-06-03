@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 Shader "Unlit/HairShadow"
 {
@@ -166,7 +168,7 @@ Shader "Unlit/HairShadow"
 				v[2] = float4(p[0].position - rightDirection1, 1.0f);
 				v[3] = float4(p[1].position - rightDirection2, 1.0f);;
 
-				float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
+				float4x4 vp = UnityObjectToClipPos(unity_WorldToObject);
 				triStream.Append(CopyToFragment(p[0], mul(vp, v[0])));
 				triStream.Append(CopyToFragment(p[1], mul(vp, v[1])));
 				triStream.Append(CopyToFragment(p[0], mul(vp, v[2])));
@@ -342,7 +344,7 @@ Shader "Unlit/HairShadow"
 				v[2] = float4(p[0].position - rightDirection1, 1.0f);
 				v[3] = float4(p[1].position - rightDirection2, 1.0f);;
 
-				float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
+				float4x4 vp = UnityObjectToClipPos(unity_WorldToObject);
 				triStream.Append(CopyToFragment(p[0], mul(vp, v[0])));
 				triStream.Append(CopyToFragment(p[1], mul(vp, v[1])));
 				triStream.Append(CopyToFragment(p[0], mul(vp, v[2])));

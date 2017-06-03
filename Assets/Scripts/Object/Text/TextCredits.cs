@@ -34,9 +34,9 @@ public class TextCredits : MonoBehaviour
 	public void Awake(){
 		instructions.Add ("                          CREDITS"); 
 		instructions.Add ("                          DAVINA");
-		instructions.Add ("STREET SCENE MODEL   BY GALLIE MICHARL    SPOOKY SUCKING AIR   BY HYKENFREAK        GALE WIND BY LANDUB"); 
-		instructions.Add ("TWO D ART            YIWEN DAI"); 
-		instructions.Add ("THREE D ART          KATIE PUSTOLSKI"); 
+		//instructions.Add ("STREET SCENE MODEL   BY GALLIE MICHARL    SPOOKY SUCKING AIR   BY HYKENFREAK        GALE WIND BY LANDUB"); 
+		//instructions.Add ("TWO D ART            YIWEN DAI"); 
+		//instructions.Add ("THREE D ART          KATIE PUSTOLSKI"); 
 		instructions.Add ("VOICE ACTOR MOTHER   YIWEN DAI"); 
 		instructions.Add ("VOICE ACTOR DAVINA   JUNG-HO SOHN");
 		instructions.Add ("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 

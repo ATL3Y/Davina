@@ -41,7 +41,7 @@ public class TransportManager : MBehavior {
 
 		// save end position as start position
 		posEnd = new Vector3(0f, 0f, 0f);
-		posEnd = transform.FindChild ("VR").position; 
+		posEnd = transform.Find ("VR").position; 
 	}
 
 	protected override void MStart ()
