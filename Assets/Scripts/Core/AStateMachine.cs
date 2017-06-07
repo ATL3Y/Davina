@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class AStateMachine<StateType,EventType> 
+public class AStateMachine<StateType, EventType> 
 	where StateType : struct , IFormattable , IConvertible , IComparable
-	where EventType : struct , IFormattable , IConvertible , IComparable {
+	where EventType : struct , IFormattable , IConvertible , IComparable
+{
 
 	private StateType m_state;
 	public bool enable = true;

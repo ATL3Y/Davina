@@ -203,8 +203,9 @@ public class TransportManager : MBehavior {
         } 
 		else if (transform.position.y >= posEnd.y / 4f && callOnce )
         {
-            LogicArg logicArg = new LogicArg( this );
-            M_Event.FireLogicEvent( LogicEvents.End, logicArg );
+            //LogicArg logicArg = new LogicArg( this );
+            //M_Event.FireLogicEvent( LogicEvents.End, logicArg );
+            LogicManager.Instance.IterateState();
             callOnce = false;
         }
     }

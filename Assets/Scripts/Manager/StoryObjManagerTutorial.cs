@@ -50,7 +50,8 @@ public class StoryObjManagerTutorial : MBehavior {
 		count++;
 		//if there is no next story, call next chapter
 		if (GetStory () == null && callOnce) {
-			M_Event.FireLogicEvent (LogicEvents.Characters, new LogicArg (this));
+            //M_Event.FireLogicEvent (LogicEvents.Characters, new LogicArg (this));
+            LogicManager.Instance.IterateState();
 			callOnce = false;
 			return;
 		} 
@@ -76,9 +77,8 @@ public class StoryObjManagerTutorial : MBehavior {
 		}
 	}
 
-	void MUpdate(){
+	protected override void MUpdate(){
 		base.MUpdate ();
-
 	}
 
 	//returns the next batch of story obj
@@ -131,7 +131,6 @@ public class StoryObjManagerTutorial : MBehavior {
 				storyObjC [i].SetActive (false);
 			}
 		}
-	}
-		
+	}	
 }
 	

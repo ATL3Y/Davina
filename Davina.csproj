@@ -99,10 +99,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Beacon.cs" />
-    <Compile Include="Assets\FadeMesh.cs" />
-    <Compile Include="Assets\RewriteTest.cs" />
-    <Compile Include="Assets\Score.cs" />
+    <Compile Include="Assets\Scripts\Beacon.cs" />
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\AxKDebugLines.cs" />
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\Hand.cs" />
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\Interactable.cs" />
@@ -114,6 +111,7 @@
     <Compile Include="Assets\Scripts\Core\Global.cs" />
     <Compile Include="Assets\Scripts\Core\MBehavior.cs" />
     <Compile Include="Assets\Scripts\Core\M_Event.cs" />
+    <Compile Include="Assets\Scripts\FadeMesh.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\BrokenColorEffect.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\BrokenEffect.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\ColorChangeEffect.cs" />
@@ -151,6 +149,8 @@
     <Compile Include="Assets\Scripts\Object\Text\TextStatic.cs" />
     <Compile Include="Assets\Scripts\Object\test\HeartItemBehavior.cs" />
     <Compile Include="Assets\Scripts\Object\test\SelectionLightController.cs" />
+    <Compile Include="Assets\Scripts\SceneRoot.cs" />
+    <Compile Include="Assets\Scripts\Score.cs" />
     <Compile Include="Assets\Scripts\Test\TestControl.cs" />
     <Compile Include="Assets\Scripts\Test\TestInputMapping.cs" />
     <Compile Include="Assets\Scripts\Test\TestLogicManager.cs" />
@@ -167,7 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Editor\Glitch\GlitchShader.shader" />
-    <None Include="Assets\NOTES.txt" />
     <None Include="Assets\Plugins\DOTween\DOTween.XML" />
     <None Include="Assets\Plugins\DOTween\DOTween43.xml" />
     <None Include="Assets\Plugins\DOTween\DOTween46.xml" />

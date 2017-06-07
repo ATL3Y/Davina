@@ -16,16 +16,10 @@ public class StoryObjManagerCharacters : MBehavior {
 	protected override void MAwake ()
 	{
 		base.MAwake ();
-		/*
-		currentStory = storyObjA;
-		for (int i = 0; i < currentStory.Count; i++) {
-			currentStory [i].SetActive (true);
-		}
-		*/
-
+        /*
 		if (levelSpecificObjects.Count > 0) {
 			for (int i = 0; i < levelSpecificObjects.Count; i++) {
-				levelSpecificObjects [i].SetActive (false);
+				levelSpecificObjects [i].SetActive (true);
 			}
 		}
 		if (disableOnFinaleObjects.Count > 0) {
@@ -33,6 +27,7 @@ public class StoryObjManagerCharacters : MBehavior {
 				disableOnFinaleObjects [i].SetActive (false);
 			}
 		}
+        */
 	}
 
 	protected override void MOnEnable(){
@@ -43,7 +38,6 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
 		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
         M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-        M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
     }
 
 	protected override void MOnDisable(){
@@ -54,11 +48,12 @@ public class StoryObjManagerCharacters : MBehavior {
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
 		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
         M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
-        M_Event.logicEvents[ ( int )LogicEvents.Credits ] -= OnCredits;
     }
 
 	void OnEnterStory(LogicArg arg)
 	{
+        // why didn't mom story B show up? 
+        // this is returning null when it shouldn't 
 		count++;
 		if (GetStory () == null) {
 			return;
@@ -87,7 +82,8 @@ public class StoryObjManagerCharacters : MBehavior {
 	//returns the next batch of story obj
 	List<GameObject> GetStory()
 	{
-		switch (count) {
+		switch (count)
+        {
 		case 0:
 			if (storyObjA.Count > 0) {
 				return storyObjA;
@@ -101,7 +97,7 @@ public class StoryObjManagerCharacters : MBehavior {
 				return null;
 			}
 		case 2:
-			if (storyObjC.Count >0) {
+			if (storyObjC.Count > 0) {
                 return storyObjC;
 			} else {
 				//print ("firing finale");
@@ -114,25 +110,33 @@ public class StoryObjManagerCharacters : MBehavior {
 		}
 	}
 
-	void OnCharacters( LogicArg arg ){
-		for (int i = 0; i < levelSpecificObjects.Count; i++) {
+	void OnCharacters(LogicArg arg )
+    {
+		for (int i = 0; i < levelSpecificObjects.Count; i++)
+        {
 			levelSpecificObjects [i].SetActive (true);
 		}
-		for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
+		for (int i = 0; i < disableOnFinaleObjects.Count; i++)
+        {
 			disableOnFinaleObjects [i].SetActive (true);
 		}
+
 		M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
 	}
 
-	void OnFinale( LogicArg arg ){
-		for (int i = disableOnFinaleObjects.Count - 1; i >=0; i--) {
+	void OnFinale( LogicArg arg )
+    {
+		for (int i = disableOnFinaleObjects.Count - 1; i >=0; i--)
+        {
 			disableOnFinaleObjects [i].SetActive (false);
 		}
 	}
-		
+
+	// should be change state then call message from state maching	
 	void OnEnd( LogicArg arg )
 	{
-		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
+		for (int i = levelSpecificObjects.Count - 1; i >=0; i--)
+        {
 			levelSpecificObjects [i].SetActive (false);
 		}
 		//disable the trails
@@ -140,10 +144,5 @@ public class StoryObjManagerCharacters : MBehavior {
 		{
 			currentStory[ i ].SetActive( false );
 		}
-	}
-
-    void OnCredits( LogicArg arg )
-    {
-
-    }		
+	}	
 }

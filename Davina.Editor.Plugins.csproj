@@ -150,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Editor\Glitch\GlitchShader.shader" />
-    <None Include="Assets\NOTES.txt" />
     <None Include="Assets\Plugins\DOTween\DOTween.XML" />
     <None Include="Assets\Plugins\DOTween\DOTween43.xml" />
     <None Include="Assets\Plugins\DOTween\DOTween46.xml" />

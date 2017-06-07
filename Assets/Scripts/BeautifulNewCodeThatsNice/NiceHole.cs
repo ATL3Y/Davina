@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NiceHole : Interactable {
+public class NiceHole : Interactable
+{
 
 	[SerializeField] protected AudioClip hoverSound;
 	protected AudioSource hoverSoundSource;
@@ -16,19 +17,15 @@ public class NiceHole : Interactable {
 	private Vector3 originalScale;
 
 	[SerializeField] protected MeshRenderer[] outlineRenders;
-	private Material material;
 	float outlineWidth = .9f;
 
-	//m_finished is set to true and usable set to false by the collectible upon entering the hole
-
 	// Use this for initialization
-	void Start () {
-		base.Start ();
+	public override void Start ()
+    {
+        base.Start();
 
-		material = new Material(Shader.Find("Outlined/Silhouette Only"));
-
-		foreach (MeshRenderer r in outlineRenders) {
-			r.material = material;
+		foreach (MeshRenderer r in outlineRenders)
+        {
 			r.material.SetFloat ("_Outline", outlineWidth);
 		}
 
@@ -42,7 +39,7 @@ public class NiceHole : Interactable {
 			hoverSoundSource.spatialBlend = 1f;
 			hoverSoundSource.clip = hoverSound;
 		}
-		// set up the story sound
+
 		if (storySound != null) {
 			storySoundSource = gameObject.AddComponent<AudioSource> ();
 			storySoundSource.playOnAwake = false;
@@ -52,9 +49,9 @@ public class NiceHole : Interactable {
 			storySoundSource.clip = storySound;
 		}
 
-		originalScale = new Vector3 (1f, 1f, 1f); //transform.lossyScale;
+		originalScale = transform.lossyScale;
 
-		//need a greater delay for the first story
+		// Need delay for the first story
 		if (Time.timeSinceLevelLoad < 20) {
 			storySoundCooldown = 18f;
 		} else {
@@ -62,14 +59,16 @@ public class NiceHole : Interactable {
 		}
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    public override void Update () {
 		base.Update ();
 
-		if (callOnce0 && storySoundCooldown < 0f) {
+		if (callOnce0 && storySoundCooldown < 0f)
+        {
 			float d = Vector3.Distance (LogicManager.Instance.GetPlayerHeadTransform ().position, transform.position);
-			if (d < 3f) {
+			if (d < 3f)
+            {
 				callOnce0 = false;
 				storySoundSource.Play ();
 				storySoundCooldown = storySound.length + 3f;
@@ -81,16 +80,16 @@ public class NiceHole : Interactable {
 
 		transform.localScale = originalScale; 
 
-		if (storySoundCooldown > 0.0f && storySoundCooldown < 0.1f && callOnce1 && tag == "Tutorial") {
+		if (storySoundCooldown > 0.0f && storySoundCooldown < 0.1f && callOnce1 && tag == "Tutorial")
+        {
 			callOnce1 = false;
 		}
 	}
 
-
-	public AudioSource GetStorySoundSource(){
+	public AudioSource GetStorySoundSource()
+    {
 		return storySoundSource;
 	}
-
 
 	public override void InUseRange()
 	{
@@ -122,10 +121,8 @@ public class NiceHole : Interactable {
 
 	void SetOutline( bool isOn )
 	{
-        Color color;
-		foreach (MeshRenderer r in outlineRenders) {
-            ColorUtility.TryParseHtmlString("#00FFFFFF", out color);
-            r.material.SetVector("_OutlineColor", color);
+		foreach (MeshRenderer r in outlineRenders)
+        {
             r.enabled = isOn;
 		}
 	}

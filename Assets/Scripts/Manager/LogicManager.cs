@@ -23,14 +23,12 @@ public class LogicManager : MBehavior {
 	[SerializeField] TextStatic text;
 
 	private NiceTeleporter m_stayTeleporter;
-
 	public NiceTeleporter StayTeleporter
 	{
 		get { return m_stayTeleporter; }
 	}
 
 	private MCharacter m_stayCharacter;
-
 	public MCharacter StayCharacter
     {
 		get { return m_stayCharacter; }
@@ -41,16 +39,21 @@ public class LogicManager : MBehavior {
 		Init, // 0
 		Tutorial, // 1
 		CharacterScene, // 2
-        End,
+        End, // 3
 	}
 
 	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
 
-	protected override void MAwake ()
+    private bool m_allScenesLoaded = false;
+    private AsyncOperation[] m_async;
+    private GameObject[] m_sceneRoots;
+
+    protected override void MAwake ()
     {
 		base.MAwake ();
 
-		if (VREnable) {
+		if (VREnable)
+        {
 			gameObject.AddComponent<ViveInputManager> ();
 		}
         else
@@ -71,71 +74,56 @@ public class LogicManager : MBehavior {
 		//Rain.transform.localPosition = Vector3.up * 5f;
 		DontDestroyOnLoad (gameObject);
 		Cursor.visible = false;
-		
-	}
-    private AsyncOperation [] m_async;
-	protected override void MStart()
-    {
-        int numScenes = 4;
-        m_async = new AsyncOperation[numScenes];
-        for(int i=1; i < numScenes; i++)
+
+        int numScenes = SceneManager.sceneCountInBuildSettings;
+        m_async = new AsyncOperation[numScenes-1];
+        for (int i = 0; i < numScenes-1; i++)
         {
-            m_async[i] = SceneManager.LoadSceneAsync(i, LoadSceneMode.Additive);
-            m_async[i].allowSceneActivation = false;
+            m_async[i] = SceneManager.LoadSceneAsync(i+1, LoadSceneMode.Additive);
         }
 
+        m_sceneRoots = new GameObject[numScenes-1];
+    }
+
+    public void SetSceneRoots(int buildIndex, GameObject sceneRoot)
+    {
+        m_sceneRoots[buildIndex-1] = sceneRoot;
+    }
+
+    public void IterateState()
+    {
+        // asyc and sceneRoot#'s == stateMachine#-1 and sceneManager#-1
+        m_stateMachine.State++;
+
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings-1; i++)
+        {
+            if (i != (int)m_stateMachine.State-1)
+            {
+                m_async[i].allowSceneActivation = false;
+                m_sceneRoots[i].SetActive(false); 
+            } 
+            else
+            {
+                m_async[i].allowSceneActivation = true;
+                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex((int)m_stateMachine.State));
+                m_sceneRoots[i].SetActive(true);
+            }     
+        }
+    }
+
+    protected override void MStart()
+    {
         InitStateMachine();
-        //M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg(this));
 	}
 
     void InitStateMachine()
     {
-		m_stateMachine.AddUpdate (State.Init, OnInit);
-
-        m_stateMachine.AddEnter(State.Tutorial, delegate () { m_async[1].allowSceneActivation = true; }); ;
-        m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.EnterStoryTutorial, new LogicArg(this)); });
-        m_stateMachine.AddUpdate(State.Tutorial, Skip);
-
-        m_stateMachine.AddEnter(State.CharacterScene, delegate () { m_async[2].allowSceneActivation = true; }); ;
-        m_stateMachine.AddEnter(State.CharacterScene, delegate () { M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this)); });
-        m_stateMachine.AddUpdate(State.CharacterScene, Skip);
-
-
-        m_stateMachine.AddEnter(State.End, delegate () { m_async[3].allowSceneActivation = true; }); ;
+        //m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.EnterStoryTutorial, new LogicArg(this)); });
+        m_stateMachine.AddEnter(State.CharacterScene, delegate () { M_Event.FireLogicEvent(LogicEvents.Characters, new LogicArg(this)); });
         m_stateMachine.AddEnter(State.End, delegate () { M_Event.FireLogicEvent(LogicEvents.End, new LogicArg(this)); });
-
-        /*
-		m_stateMachine.AddUpdate (State.Init, delegate() { m_stateMachine.State = State.Tutorial; });
-
-		m_stateMachine.AddEnter (State.Tutorial, delegate() { M_Event.FireLogicEvent(LogicEvents.TutorialSceneEnter, new LogicArg(this)); });
-
-		m_stateMachine.AddUpdate (State.Init, delegate() { m_stateMachine.State = State.CharacterScene; });
-
-		m_stateMachine.AddEnter (State.CharacterScene, delegate() { M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this)); });
-		*/
         //m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
-
         m_stateMachine.State = State.Init;
 	}
-
-	
-	void OnInit()
-	{
-        if (m_async[1].isDone)
-        {
-            m_stateMachine.State = State.Tutorial;
-        }
-	}
-
-    void Skip()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            m_stateMachine.State++;
-            Debug.Log(m_stateMachine.State);
-        }
-    }
-	
 		
 	public Transform GetPlayerTransform()
     {
@@ -196,7 +184,36 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	void OnNewAttachPoint( LogicArg arg )
+    protected override void MUpdate()
+    {
+        base.MUpdate();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            IterateState();
+        }
+
+        m_stateMachine.Update();
+
+        // Trigger Tutorial
+        if (m_allScenesLoaded)
+            return;
+
+        m_allScenesLoaded = true;
+        for(int i = 0; i < m_async.Length; i++)
+        {
+            if(m_async[i]==null || !m_async[i].isDone)
+            {
+                m_allScenesLoaded = false;
+                break;
+            }
+        }
+
+        if (m_allScenesLoaded)
+            IterateState();
+    }
+
+    void OnNewAttachPoint( LogicArg arg )
     {
 		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
 		if (point != null)
@@ -234,12 +251,6 @@ public class LogicManager : MBehavior {
 			m_stayCharacter = null;
 	}
 
-	protected override void MUpdate ()
-    {
-		base.MUpdate ();
-		m_stateMachine.Update ();
-	}
-
 	void RaiseTheBody()
     {
 		LogicArg arg = new LogicArg (this);
@@ -265,5 +276,4 @@ public class LogicManager : MBehavior {
 	void OnCredits(LogicArg arg){
 		// set active scene
 	}
-
 }

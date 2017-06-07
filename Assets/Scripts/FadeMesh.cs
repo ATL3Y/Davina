@@ -18,6 +18,7 @@ public class FadeMesh : MonoBehaviour
 	public Transform inside;
 
 	[SerializeField] Transform center;
+    private bool m_set = false;
 
 	// Use this for initialization
 	void Start () {
@@ -26,10 +27,10 @@ public class FadeMesh : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {       
         fadeAmount = (Score.Instance.GetScore() + 3f) / 5.2f;
 
-        if (!transform.root.gameObject.GetComponent<MCharacter>().IsInInnerWorld)
+        if (!GetComponent<MCharacter>().IsInInnerWorld)
         {
             SetAlpha(outside, fadeAmount);
             SetAlpha(inside, 1.0f - fadeAmount);

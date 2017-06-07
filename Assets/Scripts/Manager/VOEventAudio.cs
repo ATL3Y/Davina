@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 public class VOEventAudio : MonoBehaviour {
 
-	[SerializeField] List<AudioClip> clips0;
-	[SerializeField] List<AudioClip> clips1;
-	[SerializeField] List<AudioClip> clips2;
-	[SerializeField] List<AudioClip> clips3;
+	[SerializeField] List<AudioClip> tutorialClips;
+	[SerializeField] List<AudioClip> charactersClips;
+	[SerializeField] List<AudioClip> endClips;
 
 	protected int i=0;
 	protected int j=0;
@@ -15,9 +14,8 @@ public class VOEventAudio : MonoBehaviour {
     protected AudioSource source;
 	private bool end = false;
 
-	private bool callOnce = true;
-
-	private int count = 0;
+	private bool called0 = false;
+    private bool called1 = false;
 
 	// Use this for initialization
 	void Start () 
@@ -32,35 +30,34 @@ public class VOEventAudio : MonoBehaviour {
 
 	protected void OnEnable(){
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
-		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportEnd;
+		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
 		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
 	}
 
 	protected void OnDisable(){
 		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
-		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportEnd;
+		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnCharacters;
 		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
 	}
 
 	void OnEnterStoryTutorial( LogicArg arg ){
-		count++;
-		if ( clips3.Count > 0 && count == 1) { 
-			StartCoroutine(PlayNext ( clips3 ) );
-		} 
+		if ( !called0 && tutorialClips.Count > 0) { 
+			StartCoroutine(PlayNext ( tutorialClips ) );
+            called0 = true;
+        } 
 	}
 
-	void OnTransportEnd( LogicArg arg ){
-		Interactable transportToObj = (Interactable)arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
-		if (transportToObj != null && transportToObj.transform.root.gameObject.name.Contains("Mother") && callOnce && clips1.Count > 0) { 
-			StartCoroutine(PlayNext ( clips1 ) );
-			callOnce = false;
+	void OnCharacters( LogicArg arg ){
+		if (!called1 && charactersClips.Count > 0) { 
+			StartCoroutine(PlayNext (charactersClips) );
+			called1 = true;
 		} 
 	}
 
 	void OnEnd( LogicArg arg ){
-		if ( clips2.Count > 0) { 
+		if ( endClips.Count > 0) { 
 			end = true;
-			StartCoroutine(PlayNext ( clips2 ) );
+			StartCoroutine(PlayNext (endClips) );
 		} 
 	}
 
