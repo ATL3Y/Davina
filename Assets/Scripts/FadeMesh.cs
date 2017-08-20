@@ -21,14 +21,23 @@ public class FadeMesh : MonoBehaviour
     private bool m_set = false;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		SetWireFrame (inside);
     }
 
     // Update is called once per frame
     void Update()
-    {       
-        fadeAmount = (Score.Instance.GetScore() + 3f) / 5.2f;
+    {
+        if (gameObject.scene.buildIndex == 2) // character scene 
+        {
+            fadeAmount = (Score.Instance.GetScore() + 3f) / 5.2f;
+        }
+        else // make it more opaque
+        {
+            fadeAmount = (Score.Instance.GetScore() + 10f) / 5.2f;
+        }
+            
 
         if (!GetComponent<MCharacter>().IsInInnerWorld)
         {
@@ -39,14 +48,16 @@ public class FadeMesh : MonoBehaviour
 
     void SetAlpha (Transform t, float value)
 	{
-		for (int i = 0; i < t.childCount; i++) {
+		for (int i = 0; i < t.childCount; i++)
+        {
 			SetAlpha (t.GetChild (i), value);
 		}
 			
 		Renderer renderer = t.GetComponent< Renderer > ();
-		if (renderer != null) {
-			if (!renderer.material.HasProperty ("_Color")) {
-			} else {
+		if (renderer != null)
+        {
+			if (renderer.material.HasProperty ("_Color"))
+            {
 				//print (renderer.gameObject.name);
 				Color tempColor = renderer.material.color;
 				tempColor.a = value;
@@ -57,17 +68,17 @@ public class FadeMesh : MonoBehaviour
 
 	void SetWireFrame (Transform t )
 	{
-		for (int i = 0; i < t.childCount; i++) {
+		for (int i = 0; i < t.childCount; i++)
+        {
 			SetWireFrame (t.GetChild (i) );
 		}
 
 		SkinnedMeshRenderer filter = t.GetComponent< SkinnedMeshRenderer > ();
-		if (filter != null) {
+		if (filter != null)
+        {
 			//print (t.name);
 			Mesh tempMesh = (Mesh)Instantiate( filter.sharedMesh );
-
 			tempMesh.SetIndices (filter.sharedMesh.GetIndices (0), MeshTopology.Lines, 0);
-
 			filter.sharedMesh = tempMesh;
 		}
 	}

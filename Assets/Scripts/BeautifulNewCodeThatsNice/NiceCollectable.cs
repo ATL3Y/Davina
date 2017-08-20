@@ -4,52 +4,67 @@ using Valve.VR;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class NiceCollectable : Interactable 
+public class NiceCollectable : Interactable
 {
+    // set by container
+    public AudioClip storySoundL { get; set; } // cap later - light
+    public AudioClip storySoundR { get; set; } // cap later - dark
+    public NiceHole niceHole { get; set; } // cap later
 
-	[SerializeField] LogicEvents onFillRaiseEvent;
-	[SerializeField] LogicEvents onFillLowerEvent;
+    public AudioSource storySoundSourceL; // light
+    private float storySoundCooldownL = 0f;
+    public AudioSource storySoundSourceR; // dark
+    private float storySoundCooldownR = 0f;
 
-	Vector3 offset;
-	Quaternion rotationOffset;
-	public NiceHole niceHole;
+    [SerializeField] LogicEvents onFillRaiseEvent;
+    [SerializeField] LogicEvents onFillLowerEvent;
 
-	[SerializeField] protected AudioClip hoverSound;
-	protected AudioSource hoverSoundSource;
-	private float hoverSoundCooldown = 0f;
-	[SerializeField] protected AudioClip pickUpSound;
-	protected AudioSource pickUpSoundSource;
-	[SerializeField] protected AudioClip putDownSound;
-	protected AudioSource putDownSoundSource;
-	[SerializeField] protected AudioClip storySoundR;
-	protected AudioSource storySoundSourceR;
-	private float storySoundCooldownR = 0f;
-	[SerializeField] protected AudioClip storySoundL;
-	protected AudioSource storySoundSourceL;
-	private float storySoundCooldownL = 0f;
+    Vector3 offset;
+    Quaternion rotationOffset;
 
-	Vector3 m_baseScale;
+    [SerializeField] protected AudioClip hoverSound;
+    protected AudioSource hoverSoundSource;
+    private float hoverSoundCooldown = 0f;
+    [SerializeField] protected AudioClip pickUpSound;
+    protected AudioSource pickUpSoundSource;
+    [SerializeField] protected AudioClip putDownSound;
+    protected AudioSource putDownSoundSource;
 
-	bool whiteSideOut = false;
+    Vector3 originalScale;
 
-	[SerializeField] protected MeshRenderer[] outlineRenders;
+    private bool lightSideOut = false;
+    public bool LightSideOut{ get { return lightSideOut; } } 
+    private bool untouched = true;
+
+	public MeshRenderer[] outlineRenders;
 	float outlineWidth = .9f;
 
-	bool callOnce = true;
-    bool callOnce2 = true;
+	bool called = false;
+    bool called2 = false;
+
+    private int m_sampleDataLength = 1024; // 80ms
+    private float[] m_clipSampleData;
+
+    private Color color;
+    public Color Color { set { color = value; } }
 
     // Use this for initialization
-    public override void Start () {
-		base.Start ();
+    public override void Start()
+    {
+		base.Start();
 
-		foreach (MeshRenderer r in outlineRenders) {
+        m_clipSampleData = new float[m_sampleDataLength];
+
+        foreach (MeshRenderer r in outlineRenders)
+        {
 			r.material.SetFloat ("_Outline", outlineWidth);
             r.enabled = true;
         }
 
-		m_baseScale = transform.localScale; //local
+		originalScale = transform.lossyScale; 
 
-		if (hoverSound != null) {
+		if (hoverSound != null)
+        {
 			hoverSoundSource = gameObject.AddComponent<AudioSource> ();
 			hoverSoundSource.playOnAwake = false;
 			hoverSoundSource.loop = false;
@@ -58,7 +73,8 @@ public class NiceCollectable : Interactable
 			hoverSoundSource.clip = hoverSound;
 		}
 		// set up the select sound
-		if (pickUpSound != null) {
+		if (pickUpSound != null)
+        {
 			pickUpSoundSource = gameObject.AddComponent<AudioSource> ();
 			pickUpSoundSource.playOnAwake = false;
 			pickUpSoundSource.loop = false;
@@ -67,7 +83,8 @@ public class NiceCollectable : Interactable
 			pickUpSoundSource.clip = pickUpSound;
 		}
 		// set up the unselect sound
-		if (putDownSound != null) {
+		if (putDownSound != null)
+        {
 			putDownSoundSource = gameObject.AddComponent<AudioSource> ();
 			putDownSoundSource.playOnAwake = false;
 			putDownSoundSource.loop = false;
@@ -76,8 +93,9 @@ public class NiceCollectable : Interactable
 			putDownSoundSource.clip = putDownSound;
 		}
 		// set up the story sound R
-		if (storySoundR != null) {
-			storySoundSourceR = gameObject.AddComponent<AudioSource> ();
+		if (storySoundR != null)
+        {
+            storySoundSourceR = gameObject.AddComponent<AudioSource>();
 			storySoundSourceR.playOnAwake = false;
 			storySoundSourceR.loop = false;
 			storySoundSourceR.volume = 1f;
@@ -85,8 +103,12 @@ public class NiceCollectable : Interactable
 			storySoundSourceR.clip = storySoundR;
 		}
 		// set up the story sound L
-		if (storySoundL != null) {
-			storySoundSourceL = gameObject.AddComponent<AudioSource> ();
+		if (storySoundL != null)
+        {
+            if (storySoundSourceL == null)
+            {
+                storySoundSourceL = gameObject.AddComponent<AudioSource>();
+            }
 			storySoundSourceL.playOnAwake = false;
 			storySoundSourceL.loop = false;
 			storySoundSourceL.volume = 1f;
@@ -95,7 +117,7 @@ public class NiceCollectable : Interactable
 		}
 	}
 
-	float EaseOutCubic( float value )
+	float EaseOutCubic(float value)
 	{
 		float start = 0.0f;
 		float end = 1.0f;
@@ -112,85 +134,85 @@ public class NiceCollectable : Interactable
 	}
 
 	// Update is called once per frame
-	public override void Update ()
+	public override void Update()
     {
-		base.Update ();
+		base.Update();
 
         storySoundCooldownR -= Time.deltaTime;
 		storySoundCooldownL -= Time.deltaTime;
 		hoverSoundCooldown -= Time.deltaTime;
-		transform.localScale = m_baseScale + m_baseScale.normalized * EaseOutCubic (m_hoverTime); 
-
+		
 		if (m_finished)
         {
 			owner = null;
 			return;
 		}
-		
-		if (owner)
+
+        //AxKDebugLines.AddLine(transform.position, transform.position + transform.up * .3f, Color.green, 0);
+        //AxKDebugLines.AddLine(niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .3f, Color.green, 0);
+
+        transform.localScale = originalScale + originalScale.normalized * EaseOutCubic(m_hoverTime * .1f);
+        // transform.up go out the white side, so dot(up, toPlayer) > 0 == looking at white side 
+        Vector3 toPlayer = LogicManager.Instance.GetPlayerHeadTransform().position - transform.position;
+        float dot = Vector3.Dot(transform.up, toPlayer);
+        
+        if (dot < 0.0f)
+            lightSideOut = false;
+        else
+            lightSideOut = true;
+
+        if (owner)
         {
-			if (callOnce)
+            untouched = false;
+			if (!called)
             {
-				TextInstructions.Instance.PickedUpCollectable ();
-				callOnce = false;
+				TextInstructions.Instance.PickedUpCollectable();
+				called = true;
 			}
 			bool dropable = true;
 			//if ( TransportManager.Instance.IsTransporting ) print( "transporting" );
 			if (TransportManager.Instance.IsTransporting)
             {	
 				dropable = false;
-				transform.SetParent (null);
+				transform.SetParent(null);
 			}
 
 			Vector3 newPosition =  owner.transform.position + owner.transform.TransformDirection (offset);
 			float distanceToTarget = Vector3.Magnitude (newPosition - niceHole.transform.position);
 			Quaternion newRotation = owner.transform.rotation * rotationOffset;
-			//Debug.DrawLine (newPosition - Vector3.up * 0.05f, newPosition + Vector3.up * 0.05f, Color.red);
 
 			// Play story sound based on which side is facing player
-			if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) < -0.45f)
+			if (dot < -0.2f) // dark
             {
 				if (storySoundSourceL != null && storySoundSourceL.isPlaying)
                 {
-					storySoundSourceL.Stop ();
+					storySoundSourceL.Stop();
 				}
 
-				if (storySoundSourceR != null && storySoundCooldownR < 0.0f)
+				if (storySoundSourceR != null && storySoundCooldownR < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
-					storySoundSourceR.Play ();
+					storySoundSourceR.Play();
 					storySoundCooldownR = storySoundR.length + 3f;
-					if (owner.left) {
-						ViveInputController.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
-					} else {
-						ViveInputController.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
-					}
 				} 
 			}
-            else if (Vector3.Dot (transform.up, LogicManager.Instance.GetPlayerHeadTransform ().forward) > 0.45f)
+            else if (dot > 0.2f) // light
             {
 				if (storySoundSourceR != null && storySoundSourceR.isPlaying)
                 {
-					storySoundSourceR.Stop ();
+					storySoundSourceR.Stop();
 				}
 
-				if (storySoundSourceL != null && storySoundCooldownL < 0.0f)
+				if (storySoundSourceL != null && storySoundCooldownL < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
-					storySoundSourceL.Play ();
+					storySoundSourceL.Play();
 					storySoundCooldownL = storySoundL.length + 3f;
-					if (owner.left) {
-						ViveInputController.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
-					} else {
-						ViveInputController.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
-					}
 				} 
 			} 
 
-			if (distanceToTarget < 0.11f)
+			if (distanceToTarget < 0.2f)
             {
-				//AxKDebugLines.AddLine (transform.position, transform.position + transform.up * .3f, Color.red, 0);
-				//AxKDebugLines.AddLine (niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .3f, Color.blue, 0);
-                // orient collectable in hole based on relation to hole
 
+                // orient collectable in hole based on relation to hole
                 float t = Mathf.Clamp01(1.0f - (distanceToTarget * (1.0f / 0.1f)));
                 t = Ease(t, 0.0f, 1.0f, 1.0f);
 
@@ -199,13 +221,28 @@ public class NiceCollectable : Interactable
                 if (Vector3.Dot(transform.up, niceHole.transform.up) > 0f)
                 {
                     rot = niceHole.transform.rotation;
-                } else {
+                }
+                else
+                {
                     rot = Quaternion.AngleAxis(180f, niceHole.transform.right) * niceHole.transform.rotation;
                 }
 
 				newPosition = Vector3.Lerp (newPosition, niceHole.transform.position, t);
 				newRotation = Quaternion.Slerp (newRotation, rot, t);
-			}
+
+                float dist = 5000f / (distanceToTarget * 100f);
+                ushort distUS = (ushort)dist;
+
+                if (owner.left)
+                {
+                    SteamVR_Controller.Input(ViveInputController.Instance.leftControllerIndex).TriggerHapticPulse(distUS);
+                }
+                else
+                {
+                    SteamVR_Controller.Input(ViveInputController.Instance.rightControllerIndex).TriggerHapticPulse(distUS);
+                }
+            }
+
 			transform.position = newPosition;
 			transform.rotation = newRotation;
 
@@ -213,88 +250,122 @@ public class NiceCollectable : Interactable
 				|| (!owner.left && !ViveInputController.Instance.ReceivedRightButtonPressSignal ())))
             {
 				owner = null;
-
 				if (putDownSound)
                 {
-					putDownSoundSource.Play ();
+					putDownSoundSource.Play();
 				}
 			}
 		}
         else
         {
 			float distanceToHole = Vector3.Magnitude (transform.position - niceHole.transform.position);
-			if (distanceToHole < 0.03f)
+
+			if (distanceToHole < 0.06f)
             {
 				useable = false;
 				niceHole.useable = false;
-				//transform.parent = niceHole.gameObject.transform; 
+
 				m_finished = true;
 				niceHole.SetFinished(true);
 
-				Vector3 rot;
-				if (Vector3.Dot(transform.up, niceHole.transform.up) > 0f)
+                SetOutline(false);
+                niceHole.SetOutline(false);
+
+                Vector3 rot;
+				if (Vector3.Dot(transform.up, niceHole.transform.up) > 0f) // light
                 {
-                    whiteSideOut = true;
-                    
-                    if (callOnce2)
+                    lightSideOut = true;
+
+                    if (!called2)
                     {
-                        //invert score
-                        Score.Instance.SetScore(-1f);
-                        callOnce2 = false;
+                        // Immediate FX
+                        Score.Instance.SetScore(-1f); 
+                        M_Event.FireLogicEvent(onFillRaiseEvent, new LogicArg(this));
+                        called2 = true;
                     }
                     
                     rot = new Vector3(0f, 0f, 0f);
-					if (storySoundSourceR != null && storySoundSourceR.isPlaying) {
-						storySoundSourceR.Stop ();
-					}
-					if (storySoundSourceR != null) {
-						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource (), storySoundSourceR));
-					} else {
-						CallNextEvent ();
-					}
-				}
-                else
-                {
-                    whiteSideOut = false;
-                    if (callOnce2)
+					if (storySoundSourceR != null && storySoundSourceR.isPlaying)
                     {
-                        //invert score
+						storySoundSourceR.Stop();
+					}
+
+                    CallNextEvent();
+                    /*
+					if (storySoundSourceL != null)
+                    {
+						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource (), storySoundSourceL));
+					}
+                    else
+                    {
+						CallNextEvent();
+					}
+                    */
+                }
+                else // dark
+                {
+                    lightSideOut = false;
+
+                    if (!called2)
+                    {
+                        // Immediate FX
                         Score.Instance.SetScore(1f);
-                        callOnce2 = false;
+                        M_Event.FireLogicEvent(onFillLowerEvent, new LogicArg(this));
+                        called2 = true;
                     }
 
                     rot = new Vector3 (0f, 0f, 180f);
 					if (storySoundSourceL != null && storySoundSourceL.isPlaying)
                     {
-						storySoundSourceL.Stop ();
+						storySoundSourceL.Stop();
 					}
-					if (storySoundSourceL != null)
+
+                    CallNextEvent();
+                    /*
+					if (storySoundSourceR != null)
                     {
-						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource(), storySoundSourceL));
+						StartCoroutine (DelaySoundClipPlay (niceHole.GetStorySoundSource(), storySoundSourceR));
 					}
                     else
                     {
-						CallNextEvent ();
+						CallNextEvent();
 					}
-				}
+                    */
+                }
                 transform.parent = niceHole.gameObject.transform;
-                transform.DOLocalMove (Vector3.zero, 1f).SetEase (DG.Tweening.Ease.InCirc);
-				transform.DOLocalRotate ( rot, 1f).SetEase (DG.Tweening.Ease.InCirc); 
-				transform.DOScale (1.06f, 1f).SetEase (DG.Tweening.Ease.InCirc);
-			}
-            /*
-            else
-            {
-                // rotate continuously
-                Quaternion turn = Quaternion.AngleAxis(10f, Vector3.forward) * transform.localRotation;
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, turn, Time.deltaTime * 2f);
+                float newScale = transform.localScale.x / transform.parent.localScale.x;
+                transform.DOScale(newScale, 1f).SetEase(DG.Tweening.Ease.InCirc); // 1.06f
+                transform.DOLocalRotate ( rot, 1f).SetEase (DG.Tweening.Ease.InCirc);
+                transform.DOLocalMove(Vector3.zero, 1f).SetEase(DG.Tweening.Ease.InCirc);
             }
-            */
-		}
+
+            if(!owner && untouched)
+            {
+
+            }
+
+            if (!owner && !untouched)
+            {
+                // rotate continuously after player grabbed object the first time.
+                Quaternion turn = Quaternion.AngleAxis(10f, Vector3.forward) * transform.localRotation;
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, turn, Time.deltaTime * 1.5f);
+            }
+            
+        }       
 	}
 
-	IEnumerator DelaySoundClipPlay( AudioSource holeStory, AudioSource collectableStory )
+    IEnumerator DelaySoundClipPlay(AudioSource holeStory, AudioSource collectableStory)
 	{
+        // HACKLEY uhh... try to make sure other things aren't playing 
+        if (storySoundSourceL != null && storySoundSourceL.isPlaying)
+        {
+            storySoundSourceL.Stop();
+        }
+        if (storySoundSourceR != null && storySoundSourceR.isPlaying)
+        {
+            storySoundSourceR.Stop();
+        }
+
         if (holeStory == null)
         {
             Debug.Log("need hole story");
@@ -304,7 +375,17 @@ public class NiceCollectable : Interactable
             holeStory.Play();
             yield return new WaitForSeconds(holeStory.clip.length);
         }
-		if(collectableStory == null)
+
+        if (storySoundSourceL != null && storySoundSourceL.isPlaying)
+        {
+            storySoundSourceL.Stop();
+        }
+        if (storySoundSourceR != null && storySoundSourceR.isPlaying)
+        {
+            storySoundSourceR.Stop();
+        }
+
+        if (collectableStory == null)
         {
             Debug.Log("need collectable story");
         }
@@ -316,25 +397,25 @@ public class NiceCollectable : Interactable
         }
 	}
 
-	public override void Use( Hand hand )
+	public override void Use(Hand hand)
 	{
 		rotationOffset = Quaternion.Inverse (hand.transform.rotation) *  transform.rotation;
 		offset = hand.transform.InverseTransformDirection (transform.position - hand.transform.position);
-		//offset = transform.position - hand.transform.position;
 
 		owner = hand;
-		//transform.parent = owner.transform;
 
-		if (pickUpSound) {
-			pickUpSoundSource.Play ();
+		if (pickUpSound)
+        {
+			pickUpSoundSource.Play();
 		}
 	}
 		
 	public override void InUseRange()
 	{
-		base.InUseRange ();
+		base.InUseRange();
 
-		if (m_finished) {
+		if (m_finished)
+        {
 			owner = null;
 			return;
 		}
@@ -342,37 +423,19 @@ public class NiceCollectable : Interactable
 		if (hoverSoundCooldown > 0.0f)
 			return;
 
-		if (hoverSound && !hoverSoundSource.isPlaying) {
-			hoverSoundSource.Play ();
+		if (hoverSound && !hoverSoundSource.isPlaying)
+        {
+			hoverSoundSource.Play();
 			hoverSoundCooldown = hoverSound.length + 1f;
 		}
-	}
+    }
 
 	void CallNextEvent()
 	{
-		//advance the story
-        //invert score for correct effect
-        if(gameObject.scene.buildIndex == 2)
-        {
-            if (!whiteSideOut)
-            {
-                M_Event.FireLogicEvent(onFillRaiseEvent, new LogicArg(this));
-                M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
-            }
-            else
-            {
-                M_Event.FireLogicEvent(onFillLowerEvent, new LogicArg(this));
-                M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
-            }
-        }
-
-        if ( gameObject.scene.buildIndex == 1 ) {
-			MetricManagerScript.instance.AddToMatchList( Time.timeSinceLevelLoad + " in call exitstorytutorial "  + "/n");
-			M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg( this ) );
-		}
+        M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
 	}
 
-	void SetOutline( bool isOn )
+	void SetOutline(bool isOn)
 	{
         foreach (MeshRenderer r in outlineRenders)
         {

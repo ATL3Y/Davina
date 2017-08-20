@@ -7,7 +7,8 @@ using DG.Tweening;
 /// play the sound effect when recieve an event 
 /// 
 /// </summary>
-public class AudioManager : MBehavior {
+public class AudioManager : MBehavior
+{
 
 	public AudioManager() { s_Instance = this; }
 	public static AudioManager Instance { get { return s_Instance; } }
@@ -22,8 +23,8 @@ public class AudioManager : MBehavior {
 		public MInputType input;
 		public AudioClip clip;
 	};
-	[SerializeField] InputClipPair[] InputClipPairs;
 
+	[SerializeField] InputClipPair[] InputClipPairs;
 
 	/// <summary>
 	/// for pairing the logic event and the sound effect
@@ -33,125 +34,148 @@ public class AudioManager : MBehavior {
 	{
 		public LogicEvents type;
 		public AudioClip clip;
-
 	};
-	[SerializeField] LogicClipPair[] LogicClipPairs;
 
+	[SerializeField] LogicClipPair[] LogicClipPairs;
 	[SerializeField] AudioClip mainBGM;
 	[SerializeField] AudioClip sadBGM;
 	[SerializeField] AudioClip happyBGM;
 	private AudioSource bgmSource;
 
-	protected override void MAwake ()
+	protected override void MAwake()
 	{
-		base.MAwake ();
-		SwitchBGM (mainBGM);
+		base.MAwake();
+		SwitchBGM(mainBGM);
 	}
 
-	protected override void MOnEnable ()
+	protected override void MOnEnable()
 	{
 		base.MOnEnable ();
-		for (int i = 0; i < System.Enum.GetNames (typeof(MInputType)).Length; ++i) {
+		for (int i = 0; i < System.Enum.GetNames(typeof(MInputType)).Length; ++i)
+        {
 			M_Event.inputEvents [i] += OnInputEvent;
 		}
-		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
+
+		for (int i = 0; i < System.Enum.GetNames(typeof(LogicEvents)).Length; ++i)
+        {
 			M_Event.logicEvents [i] += OnLogicEvent;
 		}
+
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
-		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-	}
+        M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
+        M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+        M_Event.logicEvents [(int)LogicEvents.Credits] += OnCredits;
+    }
 
-	protected override void MOnDisable ()
+	protected override void MOnDisable()
 	{
-		base.MOnDisable ();
-		for (int i = 0; i < System.Enum.GetNames (typeof(MInputType)).Length; ++i) {
+		base.MOnDisable();
+		for (int i = 0; i < System.Enum.GetNames(typeof(MInputType)).Length; ++i)
+        {
 			M_Event.inputEvents [i] -= OnInputEvent;
 		}
-		for (int i = 0; i < System.Enum.GetNames (typeof(LogicEvents)).Length; ++i) {
+
+		for (int i = 0; i < System.Enum.GetNames(typeof(LogicEvents)).Length; ++i)
+        {
 			M_Event.logicEvents [i] -= OnLogicEvent;
 		}
+
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
-		M_Event.logicEvents [(int)LogicEvents.Finale] -= OnFinale;
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+        M_Event.logicEvents[(int)LogicEvents.Finale]-= OnFinale;
+        M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+        M_Event.logicEvents [(int)LogicEvents.Credits] -= OnCredits;
+    }
 
-	}
-
-	void OnInputEvent( InputArg input )
+	void OnInputEvent(InputArg input)
 	{
-		foreach (InputClipPair pair in InputClipPairs) {
-			if (pair.input == input.type) {
+		foreach(InputClipPair pair in InputClipPairs)
+        {
+			if(pair.input == input.type)
+            {
 				StartCoroutine(PlayerClip(pair.clip));
 			}
 		}
 	}
 
-	void OnLogicEvent( LogicArg logicEvent )
+	void OnLogicEvent(LogicArg logicEvent)
 	{
-		foreach (LogicClipPair pair in LogicClipPairs) {
-			if (pair.type == logicEvent.type) {
+		foreach(LogicClipPair pair in LogicClipPairs)
+        {
+			if (pair.type == logicEvent.type)
+            {
 				StartCoroutine(PlayerClip(pair.clip));
 			}
 		}
 	}
 
-	IEnumerator PlayerClip( AudioClip clip )
+	IEnumerator PlayerClip(AudioClip clip)
 	{
 		if (clip == null)
 			yield break;
-		AudioSource source = gameObject.AddComponent<AudioSource> ();
+
+		AudioSource source = gameObject.AddComponent<AudioSource>();
 		source.clip = clip;
 		source.playOnAwake = source.loop = false;
 
-		source.Play ();
-		while (source.isPlaying) {
+		source.Play();
+		while(source.isPlaying)
+        {
 			yield return null;
 		}
 
-		Destroy (source);
-		
+		Destroy(source);
 	}
 
-	void OnEnterInnerWorld( LogicArg arg )
+	void OnEnterInnerWorld(LogicArg arg)
 	{
 		AudioClip clip = (AudioClip)arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP);
-		if (clip != null) {
+		if(clip != null)
+        {
 			SwitchBGM (clip);
 		}
 	}
 
-	void OnExitInnerWorld( LogicArg arg )
+	void OnExitInnerWorld(LogicArg arg)
 	{
 		SwitchBGM (mainBGM);
 	}
 
-	void OnFinale(LogicArg arg){
-		SwitchBGM (sadBGM);
-	}
-	void OnEnd(LogicArg arg){
-		SwitchBGM (happyBGM);
+    void OnFinale(LogicArg arg)
+    {
+        SwitchBGM(happyBGM);
+    }
+
+    void OnEnd(LogicArg arg)
+    {
+		//SwitchBGM(sadBGM);
 	}
 
-	void SwitchBGM( AudioClip to )
+	void OnCredits(LogicArg arg)
+    {
+		//SwitchBGM(happyBGM);
+	}
+
+	void SwitchBGM(AudioClip to)
 	{
-		if (bgmSource == null) {
+		if (bgmSource == null)
+        {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
 			bgmSource.volume = 1f;
 			bgmSource.spatialBlend = 1f;
 		}
-		if (bgmSource != null) {
+
+		if (bgmSource != null)
+        {
 			bgmSource.DOFade (0, 1f).OnComplete (delegate {
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
 				bgmSource.Play();
-				bgmSource.DOFade( 1f , 1f );
+				bgmSource.DOFade(1f , 1f);
 			});
 		}
-
 	}
-
 }
 

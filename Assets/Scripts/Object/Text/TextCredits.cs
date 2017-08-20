@@ -9,8 +9,8 @@ public class TextCredits : MonoBehaviour
 	public static TextCredits Instance { get { return s_Instance; } }
 	private static TextCredits s_Instance;
 
-	private List < GameObject > _alphabet = new List<GameObject> (); //these are all the letters of the alphabet to spell with
-	private List < GameObject > _letters = new List<GameObject> (); //letters in the given phrase
+	private List<GameObject> _alphabet = new List<GameObject>(); //these are all the letters of the alphabet to spell with
+	private List<GameObject> _letters = new List<GameObject>(); //letters in the given phrase
 
 	private int size;
 	//private float oldLength = 0f;
@@ -21,34 +21,29 @@ public class TextCredits : MonoBehaviour
 
 	private List<string> instructions = new List<string>();
 
-	//private bool selected = false;
-
 	private float lineLengthLimit = 20f;
 	private float lineHeightLimit = 1.2f;
 	private int numberOfLines = 1;
 
 	private float timeLeft=0f;
 	private int currentInstruction = 0;
-	//private bool callOnce = false;
 
-	public void Awake(){
+	public void Awake()
+    {
 		instructions.Add ("                          CREDITS"); 
 		instructions.Add ("                          DAVINA");
-		//instructions.Add ("STREET SCENE MODEL   BY GALLIE MICHARL    SPOOKY SUCKING AIR   BY HYKENFREAK        GALE WIND BY LANDUB"); 
-		//instructions.Add ("TWO D ART            YIWEN DAI"); 
-		//instructions.Add ("THREE D ART          KATIE PUSTOLSKI"); 
 		instructions.Add ("VOICE ACTOR MOTHER   YIWEN DAI"); 
-		instructions.Add ("VOICE ACTOR DAVINA   JUNG-HO SOHN");
+		instructions.Add ("VOICE ACTOR DAVINA   JUNG HO SOHN");
 		instructions.Add ("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
 		instructions.Add ("STORY                ISABEL SHASHA"); 
 		instructions.Add ("PROGRAMMER           ATWOOD DENG"); 
 		instructions.Add ("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
-		instructions.Add ("SPECIAL THANKS       RICHARD LEMARCHAND"); 
+		instructions.Add ("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR"); 
 		instructions.Add ("USC                  INTERACTIVE MEDIA    AND GAMES");
 		instructions.Add ("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
 	}
 
-	public void Start () 
+	public void Start() 
 	{
 		origPos = transform.localPosition;
 		origRot = transform.localRotation;
@@ -59,7 +54,8 @@ public class TextCredits : MonoBehaviour
 		string levelPath = "lettersGO";
 		Object[] alphabet = Resources.LoadAll ( levelPath, typeof(GameObject));
 
-		if (alphabet == null || alphabet.Length == 0) {
+		if (alphabet == null || alphabet.Length == 0)
+        {
 			//print ("no files found");
 		}
 
@@ -67,48 +63,59 @@ public class TextCredits : MonoBehaviour
 		{
 			GameObject l = (GameObject)letter;
 			l.layer = 20; //add to Bridge layer so it's visible by near camera
-			_alphabet.Add (l); //add letter to the list // note: could just use the array...
+			_alphabet.Add(l); //add letter to the list // note: could just use the array...
 		}
 	}
 
-	public void Update () {
-		if (timeLeft > 0f) {
+	public void Update()
+    {
+
+		if(timeLeft > 0f)
+        {
 			timeLeft -= Time.deltaTime;
-		} else {
-			if (instructions [currentInstruction] != null) {
-				
-				MakeLines (instructions[currentInstruction]);
+		}
+        else
+        {
+			if(instructions [currentInstruction] != null && currentInstruction < instructions.Count)
+            {
+				MakeLines(instructions[currentInstruction]);
 				timeLeft = 3f;
 				currentInstruction++;
 			}
 		}
 	}
 
-	public void OnEnable(){
+	public void OnEnable()
+    {
 		
 	}
 
-	public void OnDisable(){
+	public void OnDisable()
+    {
+
 	}
 
-	public void MakeLines (string text){
+	public void MakeLines(string text)
+    {
 
-		if (timeLeft > 0f) {
+		if (timeLeft > 0f)
+        {
 			return;
 		}
 
-		Clear ();
+		Clear();
 		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
 		List<string> lines = new List<string>();
 
 		//place all the words into an array
-		string[] words = text.Split (' ', '\t', System.Environment.NewLine.ToCharArray () [0]);
+		string[] words = text.Split (' ', '\t', System.Environment.NewLine.ToCharArray()[0]);
 		//intantiate a line
-		System.Text.StringBuilder line = new System.Text.StringBuilder ();
+		System.Text.StringBuilder line = new System.Text.StringBuilder();
 
-		for (int i = 0; i < words.Length; i++) {
-			if (line.Length + words [i].Length + 1 > lineLengthLimit)
+		for(int i = 0; i < words.Length; i++)
+        {
+			if(line.Length + words [i].Length + 1 > lineLengthLimit)
 			{
 				//add full line to the list of lines
 				lines.Add (line.ToString ());
@@ -119,19 +126,21 @@ public class TextCredits : MonoBehaviour
 			line.Append (words[ i ] + " " );
 		}
 		// if there is a word left, add the final word
-		if (line.Length > 0) {
+		if(line.Length > 0)
+        {
 			lines.Add (line.ToString ());
 		}
 
 		numberOfLines = lines.Count;
 		//print (numberOfLines);
-		for (int i = 0; i < lines.Count; i++) {
-			MakeTextGO (lines [i], i);
+		for (int i = 0; i < lines.Count; i++)
+        {
+			MakeTextGO(lines [i], i);
 			//print ("new line");
 		}
 	}
 
-	public void MakeTextGO ( string text, int height ) //could have size, shader... //assuming all uppercase 
+	public void MakeTextGO(string text, int height) //could have size, shader... //assuming all uppercase 
 	{
 		/*
 		//center text using size of string
@@ -142,18 +151,22 @@ public class TextCredits : MonoBehaviour
 
 		float lineHeight =  lineHeightLimit * (float) (numberOfLines - height - 1);
 
-		for (int i=0; i < text.Length; i++) {
+		for(int i=0; i < text.Length; i++)
+        {
 			int count = 1; 
-			if (text [i] == ' ') {
+			if (text [i] == ' ')
+            {
 				count *= 2; //make a space 
 				continue; //jump to the next letter 
 			}
 
-			for (int j = 0; j < _alphabet.Count; j++) {
-				if (text [i].ToString() == _alphabet [j].name) { 
-					GameObject newLetter = Instantiate (_alphabet [j]);
+			for(int j = 0; j < _alphabet.Count; j++)
+            {
+				if (text [i].ToString() == _alphabet [j].name)
+                { 
+					GameObject newLetter = Instantiate(_alphabet [j]);
 					newLetter.transform.SetParent (transform);
-					newLetter.transform.localPosition = new Vector3 (-tracking * count * i, lineHeight, 0f);
+					newLetter.transform.localPosition = new Vector3(-tracking * count * i, lineHeight, 0f);
 					newLetter.transform.localRotation = Quaternion.identity;
 					_letters.Add (newLetter);
 					count = 1;
@@ -161,22 +174,24 @@ public class TextCredits : MonoBehaviour
 			}
 		}
 		//leave instruction for at least 1 second
-		Pause (4f);
+		Pause(4f);
 	}
 
-	public void Clear ()
+	public void Clear()
 	{
-		foreach (Transform child in transform) {
+		foreach (Transform child in transform)
+        {
 			GameObject.Destroy(child.gameObject);
 		}
 
-		_letters.Clear ();
+		_letters.Clear();
 		transform.localPosition = origPos; //Vector3.zero; 
 		transform.localRotation = origRot; //Quaternion.identity; 
 		transform.localScale = origScale; //new Vector3(1f, 1f, 1f); 
 	}
 
-	void Pause( float delay){
+	void Pause(float delay)
+    {
 		timeLeft = delay;
 	}
 }

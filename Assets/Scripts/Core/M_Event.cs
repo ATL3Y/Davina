@@ -47,18 +47,18 @@ public enum LogicEvents
 	End=18, // maybe these should be separate scenes and scene enter functions
 	Credits=19,
 
-	EnterStoryTutorial=20,
-	ExitStoryTutorial=21,
+	//EnterStoryTutorial=20,
+	//ExitStoryTutorial=21,
 
     Finale=22,
 	Heard=23,
 
-	OpenShotOneEnter = 101,
-	OpenShotTwoEnter = 102,
-	OpenShotThreeEnter = 103,
-	TutorialSceneEnter = 104,
+	//OpenShotOneEnter = 101,
+	//OpenShotTwoEnter = 102,
+	//OpenShotThreeEnter = 103,
+	Tutorial = 104,
 
-	CharacterSceneEnter = 201,
+	//CharacterSceneEnter = 201,
 
 }
 
@@ -77,13 +77,15 @@ public class M_Event : MonoBehaviour {
 
 //	public static LogicHandler[] logicEvents = new LogicHandler[System.Enum.GetNames (typeof (LogicEvents)).Length];
 	public static LogicHandler[] logicEvents = new LogicHandler[999];
-	public static void FireLogicEvent( LogicArg arg )
+	public static void FireLogicEvent(LogicArg arg)
 	{
-		if (arg.type != LogicEvents.None) {
+		if (arg.type != LogicEvents.None)
+        {
 			FireLogicEvent (arg.type, arg);
 		}
 	}
-	public static void FireLogicEvent( LogicEvents type , LogicArg arg )
+
+	public static void FireLogicEvent(LogicEvents type, LogicArg arg )
 	{
 		if ( logicEvents[(int)type] != null )
 		{

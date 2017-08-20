@@ -7,19 +7,20 @@ using UnityEngine.SceneManagement;
 /// 1. set up the input manager according to the VREnable
 /// 2. set up the state machine for different scenes
 /// </summary>
-public class LogicManager : MBehavior {
-
+public class LogicManager : MBehavior
+{
 	public LogicManager() { s_Instance = this; }
 	public static LogicManager Instance { get { return s_Instance; } }
 	private static LogicManager s_Instance;
 
-	public bool VREnable = false;
+	public bool VREnable = true;
 
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
 	[SerializeField] Transform playerHead;
-	[SerializeField] GameObject Rain;
+    [SerializeField] Transform playerPerson;
+    [SerializeField] GameObject Rain;
 	[SerializeField] TextStatic text;
 
 	private NiceTeleporter m_stayTeleporter;
@@ -48,17 +49,17 @@ public class LogicManager : MBehavior {
     private AsyncOperation[] m_async;
     private GameObject[] m_sceneRoots;
 
-    protected override void MAwake ()
+    protected override void MAwake()
     {
-		base.MAwake ();
-
-		if (VREnable)
+		base.MAwake();
+        //AudioListener.volume = 0f;
+        if (VREnable)
         {
-			gameObject.AddComponent<ViveInputManager> ();
+			gameObject.AddComponent<ViveInputManager>();
 		}
         else
         {
-			gameObject.AddComponent<PCInputManager> ();
+			gameObject.AddComponent<PCInputManager>();
 		}
 
 		if (PC != null)
@@ -80,6 +81,7 @@ public class LogicManager : MBehavior {
         for (int i = 0; i < numScenes-1; i++)
         {
             m_async[i] = SceneManager.LoadSceneAsync(i+1, LoadSceneMode.Additive);
+            m_async[i].allowSceneActivation = false;
         }
 
         m_sceneRoots = new GameObject[numScenes-1];
@@ -88,27 +90,28 @@ public class LogicManager : MBehavior {
     public void SetSceneRoots(int buildIndex, GameObject sceneRoot)
     {
         m_sceneRoots[buildIndex-1] = sceneRoot;
+        m_sceneRoots[buildIndex - 1].SetActive(false);
     }
 
     public void IterateState()
     {
-        // asyc and sceneRoot#'s == stateMachine#-1 and sceneManager#-1
-        m_stateMachine.State++;
+        int index = (int)m_stateMachine.State;
+        int indexMin = (int)m_stateMachine.State - 1;
 
-        for (int i = 0; i < SceneManager.sceneCountInBuildSettings-1; i++)
+        // disable current scene
+        if (indexMin > -1)
         {
-            if (i != (int)m_stateMachine.State-1)
-            {
-                m_async[i].allowSceneActivation = false;
-                m_sceneRoots[i].SetActive(false); 
-            } 
-            else
-            {
-                m_async[i].allowSceneActivation = true;
-                SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex((int)m_stateMachine.State));
-                m_sceneRoots[i].SetActive(true);
-            }     
+            m_async[indexMin].allowSceneActivation = false;
+            m_sceneRoots[indexMin].SetActive(false);
         }
+
+        // enable the next scene
+        m_async[indexMin + 1].allowSceneActivation = true;
+        m_sceneRoots[indexMin + 1].SetActive(true);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(index + 1));
+        
+        // iterate state 
+        m_stateMachine.State++;
     }
 
     protected override void MStart()
@@ -118,7 +121,7 @@ public class LogicManager : MBehavior {
 
     void InitStateMachine()
     {
-        //m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.EnterStoryTutorial, new LogicArg(this)); });
+        m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.Tutorial, new LogicArg(this)); });
         m_stateMachine.AddEnter(State.CharacterScene, delegate () { M_Event.FireLogicEvent(LogicEvents.Characters, new LogicArg(this)); });
         m_stateMachine.AddEnter(State.End, delegate () { M_Event.FireLogicEvent(LogicEvents.End, new LogicArg(this)); });
         //m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
@@ -130,12 +133,17 @@ public class LogicManager : MBehavior {
 		return VREnable ? VR.transform : PC.transform;
 	}
 
-	public Transform GetPlayerHeadTransform()
+    public Transform GetPlayerPersonTransform()
+    {
+        return VREnable ? playerPerson : PC.transform;
+    }
+
+    public Transform GetPlayerHeadTransform()
     {
 		return VREnable ? playerHead : PC.transform;
 	}
 
-	public Transform GetHandTransform( ClickType clickType )
+	public Transform GetHandTransform(ClickType clickType)
     {
 		switch (clickType) 
 		{
@@ -148,9 +156,9 @@ public class LogicManager : MBehavior {
 		}
 	}
 		
-	protected override void MOnEnable ()
+	protected override void MOnEnable()
     {
-		base.MOnEnable ();
+		base.MOnEnable();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
@@ -166,9 +174,9 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	protected override void MOnDisable ()
+	protected override void MOnDisable()
     {
-		base.MOnDisable ();
+		base.MOnDisable();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
@@ -213,22 +221,22 @@ public class LogicManager : MBehavior {
             IterateState();
     }
 
-    void OnNewAttachPoint( LogicArg arg )
+    void OnNewAttachPoint(LogicArg arg)
     {
 		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
 		if (point != null)
         {
-			transform.position = point.transform.position;
-			transform.rotation = point.transform.rotation;
+			VR.transform.position = point.transform.position;
+			VR.transform.rotation = point.transform.rotation;
 		}
 	}
 
-	void OnLogicEvent( LogicArg arg )
+	void OnLogicEvent(LogicArg arg)
     {
 		m_stateMachine.OnEvent (arg.type);
 	}
 
-	void OnTransportToNewObject( LogicArg arg )
+	void OnTransportToNewObject(LogicArg arg)
     {
 		var obj = arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
 		if (obj is NiceTeleporter)
@@ -237,14 +245,14 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	void OnEnterInnerWorld(LogicArg arg )
+	void OnEnterInnerWorld(LogicArg arg)
     {
 		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER);
 		if (character != null)
 			m_stayCharacter = character;
 	}
 
-	void OnExitInnerWorld(LogicArg arg )
+	void OnExitInnerWorld(LogicArg arg)
     {
 		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_EXITINNERWORLD_MCHARACTER);
 		if (m_stayCharacter == character)
@@ -269,11 +277,13 @@ public class LogicManager : MBehavior {
         // set  active scene
 	}
 
-	void OnEnd( LogicArg arg ){
+	void OnEnd(LogicArg arg)
+    {
         // set active scene
 	}
 
-	void OnCredits(LogicArg arg){
+	void OnCredits(LogicArg arg)
+    {
 		// set active scene
 	}
 }

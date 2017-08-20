@@ -6,61 +6,69 @@ public class NiceTeleporter : Interactable
 	[SerializeField] Transform observeLocation;
 	private GameObject player;
 
-	[SerializeField] protected MeshRenderer[] outlineRenders;
-	private Material material;
-	private Color color;
-	protected float outlineWidth = .2f;
+    [SerializeField] protected Renderer[] outlineRenders;
+    [SerializeField] protected SkinnedMeshRenderer[] outlineSkinnedMeshRenders;
+    protected float outlineWidth = 2f;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+    {
 		base.Start ();
 
-		material = new Material(Shader.Find("Outlined/Silhouette Only"));
-
-		foreach (MeshRenderer r in outlineRenders) {
-			r.material = material;
-			ColorUtility.TryParseHtmlString ("#00FFFFFF", out color);
+		foreach (Renderer r in outlineRenders)
+        {
 			r.material.SetFloat ("_Outline", outlineWidth);
-			r.material.SetVector ("_OutlineColor", color);
 		}
 
-		player = GameObject.FindGameObjectWithTag ("Player");
-		SetOutline (true);
+        foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
+        {
+            r.material.SetFloat("_Outline", outlineWidth);
+        }
+
+        player = GameObject.FindGameObjectWithTag ("Player");
+
+        SetOutline (true);
 
 		if (observeLocation == null)
 			observeLocation = transform;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		base.Update ();
+	void Update()
+    {
+		base.Update();
 
 		//turn off outline if you're at this umbrella 
-		if (Vector3.Distance (player.transform.position, transform.position) < 2f) {
-			SetOutline (false);
+		if (Vector3.Distance(player.transform.position, transform.position) < 2f){
+			SetOutline(false);
 			return;
 		} else {
-			SetOutline (true);
+			SetOutline(true);
 		}
 
-		foreach ( MeshRenderer r in outlineRenders )
-		{
-			r.material.SetFloat( "_Outline", m_hoverTime > 0.1f ? outlineWidth * 2.0f : outlineWidth / 2f );
-		}
+        foreach (Renderer r in outlineRenders)
+        {
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 4.0f : outlineWidth / 2f);
+        }
+        foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
+        {
+            bool state = m_hoverTime > 0.1f ? true : false;
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 4.0f : outlineWidth / 10.0f); // maybe f turn off somehow... 
+        }
 
-		m_hoverTime = Mathf.Clamp01( m_hoverTime - Time.deltaTime * 200.0f );
-
+        m_hoverTime = Mathf.Clamp01(m_hoverTime - Time.deltaTime * 200.0f);
 	}
 
-	public override void Use (Hand hand)
+	public override void Use(Hand hand)
 	{
 		//print ("trying to transport to " + gameObject.name + "by hand " + hand.gameObject.name);
-		TransportManager.Instance.SetTeleporter (this);
-		InputManager.Instance.FocusedObject = this; //@HACK0
-		InputManager.Instance.FireTransport ();
+		TransportManager.Instance.SetTeleporter(this);
+
+        InputManager.Instance.FocusedObject = this; //@HACK0
+		InputManager.Instance.FireTransport();
 
 		// make this teleporter not usable and all the others usable
-		foreach (NiceTeleporter t in FindObjectsOfType<NiceTeleporter>()) 
+		foreach(NiceTeleporter t in FindObjectsOfType<NiceTeleporter>()) 
 		{
 			t.useable = true;
 		}
@@ -71,21 +79,25 @@ public class NiceTeleporter : Interactable
 	{
 		Vector3 dirToPlayer = player.transform.position - observeLocation.transform.position;
 		dirToPlayer = dirToPlayer.normalized;
-		Vector3 pos = observeLocation.transform.position + dirToPlayer * .25f;
-		//print ("observe ps from passerby = " + pos);
-		return pos;
+		Vector3 pos = observeLocation.transform.position + dirToPlayer * 1.5f;
+		return observeLocation.transform.position;
 	}
 
 	public override void InUseRange()
 	{
-		base.InUseRange ();
-		m_hoverTime = Mathf.Clamp01 (m_hoverTime + Time.deltaTime * 400.0f);
+		base.InUseRange();
+		m_hoverTime = Mathf.Clamp01(m_hoverTime + Time.deltaTime * 400.0f);
 	}
 
-	void SetOutline( bool isOn )
+	void SetOutline(bool isOn)
 	{
-		foreach (MeshRenderer r in outlineRenders) {
-			r.enabled = isOn;
-		}
-	}
+        foreach (Renderer r in outlineRenders)
+        {
+            r.enabled = isOn;
+        }
+        foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
+        {
+            r.enabled = isOn;
+        }
+    }
 }

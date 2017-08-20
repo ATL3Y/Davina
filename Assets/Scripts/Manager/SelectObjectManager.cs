@@ -92,8 +92,8 @@ public class SelectObjectManager : MBehavior {
 
 	static public void AttachToStayPasserBy( Transform trans )
 	{
-		if (LogicManager.Instance.StayTeleporter != null) {
-
+		if (LogicManager.Instance.StayTeleporter != null)
+        {
 			trans.SetParent (LogicManager.Instance.StayTeleporter.transform, true);
 		}
 	}

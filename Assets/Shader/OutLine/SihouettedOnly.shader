@@ -1,9 +1,11 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "Outlined/Silhouette Only" {
-	Properties {
+Shader "Outlined/Silhouette Only" 
+{
+	Properties 
+	{
 		_OutlineColor ("Outline Color", Color) = (0,0,0,1)
-		_Outline ("Outline width", Range (0.0, 1.0)) = .01
+		_Outline ("Outline width", Range (0.0, 20.0)) = .01
 	}
  
 CGINCLUDE
@@ -37,7 +39,7 @@ v2f vert(appdata v) {
 ENDCG
  
 	SubShader {
-		Tags { "Queue" = "Background" } //"1000" } 
+		Tags { "Queue" = "Transparent" } //"Background" } //"1000" } 
  
 		Pass {
 			Name "BASE"
