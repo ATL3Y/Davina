@@ -7,30 +7,31 @@ using UnityEngine.SceneManagement;
 /// 1. set up the input manager according to the VREnable
 /// 2. set up the state machine for different scenes
 /// </summary>
-public class LogicManager : MBehavior {
-
+public class LogicManager : MBehavior
+{
 	public LogicManager() { s_Instance = this; }
 	public static LogicManager Instance { get { return s_Instance; } }
 	private static LogicManager s_Instance;
 
-	public bool VREnable = false;
+	public bool VREnable = true;
 
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
 	[SerializeField] Transform playerHead;
-	[SerializeField] GameObject Rain;
+    [SerializeField] Transform playerPerson;
+    [SerializeField] GameObject Rain;
 	[SerializeField] TextStatic text;
 
-	private NiceTeleporter m_stayTeleporter;
+    public GameObject TutorialRoot { get; set; }
 
+	private NiceTeleporter m_stayTeleporter;
 	public NiceTeleporter StayTeleporter
 	{
 		get { return m_stayTeleporter; }
 	}
 
 	private MCharacter m_stayCharacter;
-
 	public MCharacter StayCharacter
     {
 		get { return m_stayCharacter; }
@@ -41,21 +42,26 @@ public class LogicManager : MBehavior {
 		Init, // 0
 		Tutorial, // 1
 		CharacterScene, // 2
-        End,
+        End, // 3
 	}
 
 	private AStateMachine<State,LogicEvents> m_stateMachine = new AStateMachine<State, LogicEvents>();
 
-	protected override void MAwake ()
-    {
-		base.MAwake ();
+    private bool m_allScenesLoaded = false;
+    private AsyncOperation[] m_async;
+    private GameObject[] m_sceneRoots;
 
-		if (VREnable) {
-			gameObject.AddComponent<ViveInputManager> ();
+    protected override void MAwake()
+    {
+		base.MAwake();
+        //AudioListener.volume = 0f;
+        if (VREnable)
+        {
+			gameObject.AddComponent<ViveInputManager>();
 		}
         else
         {
-			gameObject.AddComponent<PCInputManager> ();
+			gameObject.AddComponent<PCInputManager>();
 		}
 
 		if (PC != null)
@@ -71,83 +77,119 @@ public class LogicManager : MBehavior {
 		//Rain.transform.localPosition = Vector3.up * 5f;
 		DontDestroyOnLoad (gameObject);
 		Cursor.visible = false;
-		
-	}
-    private AsyncOperation [] m_async;
-	protected override void MStart()
-    {
-        int numScenes = 4;
-        m_async = new AsyncOperation[numScenes];
-        for(int i=1; i < numScenes; i++)
+
+        InitScenes();
+    }
+
+    private void InitScenes()
+    { 
+        int numAsyncScenes = SceneManager.sceneCountInBuildSettings - 2; // Init and Tutorial aren't async
+        m_async = new AsyncOperation[numAsyncScenes];
+
+        // Start in the Tutorial
+        SceneManager.LoadScene("Tutorial", LoadSceneMode.Additive);
+
+        // Load other scenes async
+        for (int i = 0; i < numAsyncScenes; i++)
         {
-            m_async[i] = SceneManager.LoadSceneAsync(i, LoadSceneMode.Additive);
-            m_async[i].allowSceneActivation = false;
+            m_async[i] = SceneManager.LoadSceneAsync(i + 2, LoadSceneMode.Additive);
+            m_async[i].allowSceneActivation = false; 
         }
 
+        m_sceneRoots = new GameObject[numAsyncScenes];
+    }
+
+    public void SetSceneRoots(int buildIndex, GameObject sceneRoot)
+    {
+        m_sceneRoots[buildIndex - 2] = sceneRoot;
+        m_sceneRoots[buildIndex - 2].SetActive(false);
+    }
+
+    public void IterateState()
+    {
+        int index = (int)m_stateMachine.State;
+
+        if (index == 0)
+        {
+            Debug.Log("IterateState() 0");
+            // no need to disable the Init scene
+
+            // enable the Tutorial 
+            TutorialRoot.SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
+
+        }
+        else if (index == 1)
+        {
+            Debug.Log("IterateState() 1");
+
+            // disable the Tutorial 
+            TutorialRoot.SetActive(false);
+
+            // enable the first async scene
+            m_async[0].allowSceneActivation = true;
+            m_sceneRoots[0].SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(2));
+        }
+        else if (index == 2 && Score.Instance.GetScore() >= 0) // white ending
+        {
+            Debug.Log("IterateState() " + index + " white end.  score = " + Score.Instance.GetScore());
+            // disable the last async scene
+            m_async[index - 2].allowSceneActivation = false;
+            m_sceneRoots[index - 2].SetActive(false);
+
+            // enable the next async scene
+            m_async[index - 1].allowSceneActivation = true;
+            m_sceneRoots[index - 1].SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(index - 1));
+        }
+        else if (index == 2 && Score.Instance.GetScore() < 0) // black ending
+        {
+            Debug.Log("IterateState() " + index + " black end.  score = " + Score.Instance.GetScore());
+            // disable the last async scene
+            m_async[index - 2].allowSceneActivation = false;
+            m_sceneRoots[index - 2].SetActive(false);
+
+            // enable the next async scene
+            m_async[index].allowSceneActivation = true;
+            m_sceneRoots[index].SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(index));
+        }
+
+        // iterate state 
+        m_stateMachine.State++;
+    }
+
+    protected override void MStart()
+    {
         InitStateMachine();
-        //M_Event.FireLogicEvent (LogicEvents.EnterStoryTutorial, new LogicArg(this));
 	}
 
     void InitStateMachine()
     {
-		m_stateMachine.AddUpdate (State.Init, OnInit);
-
-        m_stateMachine.AddEnter(State.Tutorial, delegate () { m_async[1].allowSceneActivation = true; }); ;
-        m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.EnterStoryTutorial, new LogicArg(this)); });
-        m_stateMachine.AddUpdate(State.Tutorial, Skip);
-
-        m_stateMachine.AddEnter(State.CharacterScene, delegate () { m_async[2].allowSceneActivation = true; }); ;
-        m_stateMachine.AddEnter(State.CharacterScene, delegate () { M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this)); });
-        m_stateMachine.AddUpdate(State.CharacterScene, Skip);
-
-
-        m_stateMachine.AddEnter(State.End, delegate () { m_async[3].allowSceneActivation = true; }); ;
+        m_stateMachine.AddEnter(State.Tutorial, delegate () { M_Event.FireLogicEvent(LogicEvents.Tutorial, new LogicArg(this)); });
+        m_stateMachine.AddEnter(State.CharacterScene, delegate () { M_Event.FireLogicEvent(LogicEvents.Characters, new LogicArg(this)); });
         m_stateMachine.AddEnter(State.End, delegate () { M_Event.FireLogicEvent(LogicEvents.End, new LogicArg(this)); });
-
-        /*
-		m_stateMachine.AddUpdate (State.Init, delegate() { m_stateMachine.State = State.Tutorial; });
-
-		m_stateMachine.AddEnter (State.Tutorial, delegate() { M_Event.FireLogicEvent(LogicEvents.TutorialSceneEnter, new LogicArg(this)); });
-
-		m_stateMachine.AddUpdate (State.Init, delegate() { m_stateMachine.State = State.CharacterScene; });
-
-		m_stateMachine.AddEnter (State.CharacterScene, delegate() { M_Event.FireLogicEvent(LogicEvents.CharacterSceneEnter, new LogicArg(this)); });
-		*/
         //m_stateMachine.BlindTimeStateChange (State.OpenShotOne, State.MotherScene, 6f);
-
         m_stateMachine.State = State.Init;
 	}
-
-	
-	void OnInit()
-	{
-        if (m_async[1].isDone)
-        {
-            m_stateMachine.State = State.Tutorial;
-        }
-	}
-
-    void Skip()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            m_stateMachine.State++;
-            Debug.Log(m_stateMachine.State);
-        }
-    }
-	
 		
 	public Transform GetPlayerTransform()
     {
 		return VREnable ? VR.transform : PC.transform;
 	}
 
-	public Transform GetPlayerHeadTransform()
+    public Transform GetPlayerPersonTransform()
+    {
+        return VREnable ? playerPerson : PC.transform;
+    }
+
+    public Transform GetPlayerHeadTransform()
     {
 		return VREnable ? playerHead : PC.transform;
 	}
 
-	public Transform GetHandTransform( ClickType clickType )
+	public Transform GetHandTransform(ClickType clickType)
     {
 		switch (clickType) 
 		{
@@ -160,9 +202,9 @@ public class LogicManager : MBehavior {
 		}
 	}
 		
-	protected override void MOnEnable ()
+	protected override void MOnEnable()
     {
-		base.MOnEnable ();
+		base.MOnEnable();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] += OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] += OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] += OnExitInnerWorld;
@@ -178,9 +220,9 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	protected override void MOnDisable ()
+	protected override void MOnDisable()
     {
-		base.MOnDisable ();
+		base.MOnDisable();
 		M_Event.logicEvents [(int)LogicEvents.TransportEnd] -= OnTransportToNewObject;
 		M_Event.logicEvents [(int)LogicEvents.EnterInnerWorld] -= OnEnterInnerWorld;
 		M_Event.logicEvents [(int)LogicEvents.ExitInnerWorld] -= OnExitInnerWorld;
@@ -196,22 +238,55 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	void OnNewAttachPoint( LogicArg arg )
+    protected override void MUpdate()
+    {
+        base.MUpdate();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            IterateState();
+        }
+
+        m_stateMachine.Update();
+
+        // Trigger Tutorial
+        if (m_allScenesLoaded)
+            return;
+
+        m_allScenesLoaded = true;
+        for(int i = 0; i < m_async.Length; i++)
+        {
+            if(m_async[i] == null || !m_async[i].isDone)
+            {
+                Debug.Log("br");
+                m_allScenesLoaded = false;
+                break;
+            }
+        }
+
+        if (m_allScenesLoaded)
+        {
+            Debug.Log("calling IterateState()");
+            IterateState();
+        }    
+    }
+
+    void OnNewAttachPoint(LogicArg arg)
     {
 		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
 		if (point != null)
         {
-			transform.position = point.transform.position;
-			transform.rotation = point.transform.rotation;
+			VR.transform.position = point.transform.position;
+			VR.transform.rotation = point.transform.rotation;
 		}
 	}
 
-	void OnLogicEvent( LogicArg arg )
+	void OnLogicEvent(LogicArg arg)
     {
 		m_stateMachine.OnEvent (arg.type);
 	}
 
-	void OnTransportToNewObject( LogicArg arg )
+	void OnTransportToNewObject(LogicArg arg)
     {
 		var obj = arg.GetMessage (Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
 		if (obj is NiceTeleporter)
@@ -220,24 +295,18 @@ public class LogicManager : MBehavior {
 		}
 	}
 
-	void OnEnterInnerWorld(LogicArg arg )
+	void OnEnterInnerWorld(LogicArg arg)
     {
 		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER);
 		if (character != null)
 			m_stayCharacter = character;
 	}
 
-	void OnExitInnerWorld(LogicArg arg )
+	void OnExitInnerWorld(LogicArg arg)
     {
 		MCharacter character = (MCharacter) arg.GetMessage (Global.EVENT_LOGIC_EXITINNERWORLD_MCHARACTER);
 		if (m_stayCharacter == character)
 			m_stayCharacter = null;
-	}
-
-	protected override void MUpdate ()
-    {
-		base.MUpdate ();
-		m_stateMachine.Update ();
 	}
 
 	void RaiseTheBody()
@@ -258,12 +327,13 @@ public class LogicManager : MBehavior {
         // set  active scene
 	}
 
-	void OnEnd( LogicArg arg ){
+	void OnEnd(LogicArg arg)
+    {
         // set active scene
 	}
 
-	void OnCredits(LogicArg arg){
+	void OnCredits(LogicArg arg)
+    {
 		// set active scene
 	}
-
 }

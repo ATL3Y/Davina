@@ -6,7 +6,7 @@
 		_MainScale("Scale of the main texture" , float ) = 1
 		_DistortTexture("Distort Texture", 2D) = "white" {}
 		_DistortScale("Distort Scale" , float ) = 1
-		_Color("Main COlor" , Color) = (1,1,1,1)
+		_Color("Main Color" , Color) = (1,1,1,1)
 		_ColorD("Dark Color" , color ) = (1,1,1,1)
 		_Speed("Change speed" , vector ) = (1,1,1,1)
 		_DisappearRange("Disappear Range" , float ) = 0.15

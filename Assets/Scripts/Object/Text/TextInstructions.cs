@@ -30,14 +30,13 @@ public class TextInstructions : MonoBehaviour
 	private bool characters = false;
 	private bool end = false;
 
-	public void Start () 
+	public void Start() 
 	{
 		instructions.Add (""); //0
 		instructions.Add ("LOOK FOR AN ITEM"); //1
 		instructions.Add ("LISTEN TO EACH SIDE"); //2
 		instructions.Add ("LISTEN"); //3
         instructions.Add("USE BOTH HANDS"); //4
-        instructions.Add("DRAW"); //5
 
         origPos = transform.localPosition;
 		origRot = transform.localRotation;
@@ -48,7 +47,8 @@ public class TextInstructions : MonoBehaviour
 		string levelPath = "lettersGOsmall";
 		Object[] alphabet = Resources.LoadAll ( levelPath, typeof(GameObject));
 
-		if (alphabet == null || alphabet.Length == 0) {
+		if(alphabet == null || alphabet.Length == 0)
+        {
 			//print ("no files found");
 		}
 
@@ -60,7 +60,7 @@ public class TextInstructions : MonoBehaviour
 		}
 	}
 
-	public void Update () 
+	public void Update() 
 	{
 		timeLeft -= Time.deltaTime;
 
@@ -69,25 +69,21 @@ public class TextInstructions : MonoBehaviour
 		}
 	}
 
-	public void OnEnable(){
+	public void OnEnable()
+    {
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] += OnFocusNew;
-		M_Event.inputEvents [(int)MInputType.Transport] += OnTransport;
-		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] += OnEnterStoryTutorial;
+		M_Event.logicEvents [(int)LogicEvents.Tutorial] += OnTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
-        M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
-        M_Event.logicEvents[(int)LogicEvents.End] += OnEnd;
     }
 
-	public void OnDisable(){
+	public void OnDisable()
+    {
 		M_Event.inputEvents [(int)MInputType.FocusNewObject] -= OnFocusNew;
-		M_Event.inputEvents [(int)MInputType.Transport] -= OnTransport;
-		M_Event.logicEvents [(int)LogicEvents.EnterStoryTutorial] -= OnEnterStoryTutorial;
+		M_Event.logicEvents [(int)LogicEvents.Tutorial] -= OnTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
-        M_Event.logicEvents[(int)LogicEvents.Finale] -= OnFinale;
-        M_Event.logicEvents[(int)LogicEvents.End] -= OnEnd;
     }
 
-	void OnEnterStoryTutorial(LogicArg arg)
+	void OnTutorial(LogicArg arg)
 	{
 		MakeLines(instructions [1]); //"LOOK FOR AN ITEM"
     }
@@ -108,18 +104,8 @@ public class TextInstructions : MonoBehaviour
 		} 
 	}
 
-	public void OnTransport(InputArg arg)
-	{
-        /*
-         * error
-		if (teleportTo.transform.root.gameObject.name.Contains("Mother")) 
-		{
-            MakeLines(instructions[4]); //"USE BOTH HANDS"
-        } 
-        */
-	}
-
-	public void PickedUpCollectable(){
+	public void PickedUpCollectable()
+    {
         if (characters)
         {
             MakeLines(instructions[4]); //"USE BOTH HANDS"
@@ -130,19 +116,8 @@ public class TextInstructions : MonoBehaviour
         }
 	}
 
-    void OnFinale(LogicArg arg)
+    public void MakeLines(string text)
     {
-        //print("in on finale call");
-        MakeLines(instructions[5]);
-    }
-
-    void OnEnd(LogicArg arg)
-    {
-        //end = true;
-    }
-
-    public void MakeLines (string text){
-		
 		Clear ();
 		//InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
 
@@ -180,7 +155,7 @@ public class TextInstructions : MonoBehaviour
 		}
 	}
 
-	public void MakeTextGO ( string text, int height ) //could have size, shader... //assuming all uppercase 
+	public void MakeTextGO(string text, int height) //could have size, shader... //assuming all uppercase 
 	{
 		//center text using size of string
 		size = text.Length;
@@ -189,9 +164,9 @@ public class TextInstructions : MonoBehaviour
 
 		float lineHeight =  lineHeightLimit * (float) (numberOfLines - height - 1);
 
-		for (int i=0; i < text.Length; i++) {
+		for(int i=0; i < text.Length; i++){
 			int count = 1; 
-			if (text [i] == ' ') {
+			if(text [i] == ' '){
 				count *= 2; //make a space 
 				continue; //jump to the next letter 
 			}
@@ -211,9 +186,9 @@ public class TextInstructions : MonoBehaviour
 		Pause (7f);
 	}
 
-	public void Clear ()
+	public void Clear()
 	{
-		foreach (Transform child in transform) {
+		foreach(Transform child in transform){
 			GameObject.Destroy(child.gameObject);
 		}
 
@@ -223,7 +198,8 @@ public class TextInstructions : MonoBehaviour
 		transform.localScale = origScale; //new Vector3(1f, 1f, 1f); 
 	}
 
-	void Pause( float delay){
+	void Pause(float delay)
+    {
 		timeLeft = delay;
 	}
 }

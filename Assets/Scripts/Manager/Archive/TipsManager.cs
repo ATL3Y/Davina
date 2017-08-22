@@ -19,13 +19,11 @@ public class TipsManager : MBehavior {
 		InitMainRayLineTIps ();
 	}
 
-
 	protected override void MUpdate ()
 	{
 		base.MUpdate ();
 		UpdateMainRayLineTips ();
 	}
-
 
 	void InitMainRayLineTIps()
 	{
@@ -33,7 +31,6 @@ public class TipsManager : MBehavior {
 			lineTips = GetComponentInChildren<LineRenderer> ();
 		if (disableLineOnPC & !LogicManager.Instance.VREnable)
 			lineTips.enabled = false;
-
 	}
 
 	void UpdateMainRayLineTips()
@@ -47,7 +44,6 @@ public class TipsManager : MBehavior {
 			}
 			lineTips.SetPosition (0, startPosition);
 			lineTips.SetPosition (1, startPosition + InputManager.Instance.GetCenterRayCast ()[0].direction * 0.1f);
-
 		}
 	}
 }

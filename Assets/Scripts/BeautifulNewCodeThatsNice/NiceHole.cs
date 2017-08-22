@@ -1,40 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NiceHole : Interactable {
+public class NiceHole : Interactable
+{
 
-	[SerializeField] protected AudioClip hoverSound;
-	protected AudioSource hoverSoundSource;
+	public AudioClip hoverSound;
+    public AudioClip storySound;
+
+    protected AudioSource hoverSoundSource;
 	private float hoverSoundCooldown = 0f;
-	[SerializeField] protected AudioClip storySound;
-	protected AudioSource storySoundSource;
+	public AudioSource storySoundSource;
 	private float storySoundCooldown = 0f;
-
-	private bool callOnce0 = true;
-	private bool callOnce1 = true;
-
+	private bool called = false;
 	private Vector3 originalScale;
 
-	[SerializeField] protected MeshRenderer[] outlineRenders;
-	private Material material;
+	public MeshRenderer[] outlineRenders;
 	float outlineWidth = .9f;
 
-	//m_finished is set to true and usable set to false by the collectible upon entering the hole
+    private int m_sampleDataLength = 1024; // 80ms
+    private float[] m_clipSampleData;
 
-	// Use this for initialization
-	void Start () {
-		base.Start ();
+    private Color color;
+    public Color Color { set { color = value; } }
 
-		material = new Material(Shader.Find("Outlined/Silhouette Only"));
+    // Use this for initialization
+    public override void Start ()
+    {
+        base.Start();
 
-		foreach (MeshRenderer r in outlineRenders) {
-			r.material = material;
+        m_clipSampleData = new float[m_sampleDataLength];
+
+        foreach (MeshRenderer r in outlineRenders)
+        {
 			r.material.SetFloat ("_Outline", outlineWidth);
 		}
 
 		SetOutline (true);
 
-		if (hoverSound != null) {
+		if (hoverSound != null)
+        {
 			hoverSoundSource = gameObject.AddComponent<AudioSource> ();
 			hoverSoundSource.playOnAwake = false;
 			hoverSoundSource.loop = false;
@@ -42,9 +46,10 @@ public class NiceHole : Interactable {
 			hoverSoundSource.spatialBlend = 1f;
 			hoverSoundSource.clip = hoverSound;
 		}
-		// set up the story sound
-		if (storySound != null) {
-			storySoundSource = gameObject.AddComponent<AudioSource> ();
+
+		if (storySound != null)
+        {
+            storySoundSource = gameObject.AddComponent<AudioSource>();
 			storySoundSource.playOnAwake = false;
 			storySoundSource.loop = false;
 			storySoundSource.volume = 1f;
@@ -52,52 +57,52 @@ public class NiceHole : Interactable {
 			storySoundSource.clip = storySound;
 		}
 
-		originalScale = new Vector3 (1f, 1f, 1f); //transform.lossyScale;
+		originalScale = transform.lossyScale;
 
-		//need a greater delay for the first story
+		// Need delay for the first story
 		if (Time.timeSinceLevelLoad < 20) {
 			storySoundCooldown = 18f;
 		} else {
-			storySoundCooldown = 1f;
+			storySoundCooldown = 30f; // HACKLEY making coolDown huge so the story doesn't repeat more than twice 
 		}
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    public override void Update(){
 		base.Update ();
 
-		if (callOnce0 && storySoundCooldown < 0f) {
+		if (!called && storySoundCooldown < 0f)
+        {
 			float d = Vector3.Distance (LogicManager.Instance.GetPlayerHeadTransform ().position, transform.position);
-			if (d < 3f) {
-				callOnce0 = false;
-				storySoundSource.Play ();
-				storySoundCooldown = storySound.length + 3f;
+			if (d < 3f)
+            {
+				called = true;
+				storySoundSource.Play();
+				storySoundCooldown = storySound.length + 1000f;
 			}
 		}
 
 		storySoundCooldown -= Time.deltaTime;
 		hoverSoundCooldown -= Time.deltaTime;
 
+        // scale should not change 
 		transform.localScale = originalScale; 
-
-		if (storySoundCooldown > 0.0f && storySoundCooldown < 0.1f && callOnce1 && tag == "Tutorial") {
-			callOnce1 = false;
-		}
 	}
 
-
-	public AudioSource GetStorySoundSource(){
+	public AudioSource GetStorySoundSource()
+    {
 		return storySoundSource;
 	}
-
 
 	public override void InUseRange()
 	{
 		base.InUseRange ();
 
-		//m_finished is set to true and usable set to false by the collectible upon entering the hole
-		if (m_finished) {
+		//m_finished is set to true and usable set to false by the collectable upon entering the hole
+		if (m_finished)
+        {
+            Debug.Log("hole is finished");
 			owner = null;
 			return;
 		}
@@ -116,16 +121,14 @@ public class NiceHole : Interactable {
 
 		if (storySound && !storySoundSource.isPlaying) {
 			storySoundSource.Play ();
-			storySoundCooldown = storySound.length + 3f;
+			storySoundCooldown = storySound.length + 1000f;
 		}
 	}
 
-	void SetOutline( bool isOn )
+	public void SetOutline( bool isOn )
 	{
-        Color color;
-		foreach (MeshRenderer r in outlineRenders) {
-            ColorUtility.TryParseHtmlString("#00FFFFFF", out color);
-            r.material.SetVector("_OutlineColor", color);
+		foreach (MeshRenderer r in outlineRenders)
+        {
             r.enabled = isOn;
 		}
 	}

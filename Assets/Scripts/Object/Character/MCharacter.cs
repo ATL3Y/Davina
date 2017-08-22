@@ -6,8 +6,8 @@ using DG.Tweening;
 /// <summary>
 /// Script for the character
 /// </summary>
-public class MCharacter : MObject {
-
+public class MCharacter : MObject
+{
 	[SerializeField] Transform outBody;
 	[SerializeField] Transform innerWorld;
 
@@ -22,7 +22,8 @@ public class MCharacter : MObject {
 	/// The characters with controllers in its range
 	/// to make sure only one character is scaled up
 	/// </summary>
-	static private List<MCharacter> triggeredCharacter = new List<MCharacter> ();
+	static private List<MCharacter> triggeredCharacter = new List<MCharacter>();
+
 	/// <summary>
 	/// The focused character.
 	/// </summary>
@@ -38,31 +39,31 @@ public class MCharacter : MObject {
 	/// Record the original scale of the charcter
 	/// </summary>
 	Vector3 originScale;
-	protected override void MAwake ()
+	protected override void MAwake()
 	{
-		base.MAwake ();
-		if (innerWorldCollider != null && innerWorld != null) {
-			pivot = new GameObject ();
-			pivot.transform.SetParent (transform);
+		base.MAwake();
+		if (innerWorldCollider != null && innerWorld != null)
+        {
+			pivot = new GameObject();
+			pivot.transform.SetParent(transform);
 
 			pivot.transform.localPosition = innerWorldCollider.center * innerWorld.localScale.x;
 		}
 
 		originScale = transform.localScale;
-		innerWorld.gameObject.SetActive (true);
+		innerWorld.gameObject.SetActive(true);
 	}
 
-	protected override void MOnEnable(){
-		base.MOnEnable ();
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-		//test
-		//changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 6f));
-
+	protected override void MOnEnable()
+    {
+		base.MOnEnable();
+		M_Event.logicEvents[(int)LogicEvents.End] += OnEnd;
+		// changeScale =  StartCoroutine(ChangeScale(originScale * enterInnerWorldScaleUp, 6f));
 	}
 
 	protected override void MOnDisable(){
-		base.MOnDisable ();
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+		base.MOnDisable();
+		M_Event.logicEvents[(int)LogicEvents.End] -= OnEnd;
 	}
 
 
@@ -70,25 +71,27 @@ public class MCharacter : MObject {
 	/// set this game object and all the body renders to a specific layer
 	/// </summary>
 	/// <param name="layer">Layer.</param>
-	void SetToLayer( string layer )
+	void SetToLayer(string layer)
 	{
-		gameObject.layer = LayerMask.NameToLayer (layer);
-		foreach (Transform t in outBody.GetComponentsInChildren<Transform>()) {
-			t.gameObject.layer = LayerMask.NameToLayer (layer);
+		gameObject.layer = LayerMask.NameToLayer(layer);
+		foreach(Transform t in outBody.GetComponentsInChildren<Transform>())
+        {
+			t.gameObject.layer = LayerMask.NameToLayer(layer);
 		}
-		foreach (Transform t in innerWorld.GetComponentsInChildren<Transform>()) {
-			t.gameObject.layer = LayerMask.NameToLayer (layer);
+		foreach(Transform t in innerWorld.GetComponentsInChildren<Transform>())
+        {
+			t.gameObject.layer = LayerMask.NameToLayer(layer);
 		}
 	}
 
-	public override void OnFocus ()
+	public override void OnFocus()
 	{
-		base.OnFocus ();
+		base.OnFocus();
 	}
 
-	public override void OnOutofFocus ()
+	public override void OnOutofFocus()
 	{
-		base.OnOutofFocus ();
+		base.OnOutofFocus();
 
 	}
 
@@ -100,25 +103,23 @@ public class MCharacter : MObject {
 
 	Coroutine changeScale;
 
-
 	/// <summary>
 	/// TODO: revise the scale design
 	/// </summary>
 	/// <param name="col">Col.</param>
-	void OnTriggerEnter( Collider col )
+	void OnTriggerEnter(Collider col)
 	{
-		if ( (col.gameObject.tag == "GameController" &&
-			LogicManager.Instance.VREnable) || 
-			(col.gameObject.tag == "Player") ) //!LogicManager.Instance.VREnable
+		if ((col.gameObject.tag == "GameController" && LogicManager.Instance.VREnable) || (col.gameObject.tag == "Player")) //!LogicManager.Instance.VREnable
         {
 			triggeredCharacter.Add (this);
 
-			if (focusedCharacter == null) {
+			if (focusedCharacter == null)
+            {
 				focusedCharacter = this;
-				LogicArg arg = new LogicArg (this);
-				M_Event.FireLogicEvent (LogicEvents.EnterCharacterRange, arg);
+				LogicArg arg = new LogicArg(this);
+				M_Event.FireLogicEvent(LogicEvents.EnterCharacterRange, arg);
 				focusedCharacter = this;
-				EnterCharacterRange ();
+				EnterCharacterRange();
 			}
 		}
 	}
@@ -127,38 +128,40 @@ public class MCharacter : MObject {
 	/// TODO: revise the scale design
 	/// </summary>
 	/// <param name="col">Col.</param>
-	void OnTriggerExit( Collider col )
+	void OnTriggerExit(Collider col)
 	{
 		if ( (col.gameObject.tag == "GameController" &&
 			LogicManager.Instance.VREnable) || 
 			(col.gameObject.tag == "Player")) 
 				//&& !LogicManager.Instance.VREnable) ) //so head triggers mesh for vr or no
 		{
-			if ( triggeredCharacter.Contains(this))
+			if(triggeredCharacter.Contains(this))
 				triggeredCharacter.Remove (this);
 
-			if (focusedCharacter == this) {
+			if(focusedCharacter == this)
+            {
 				focusedCharacter = null;
 				LogicArg arg = new LogicArg (this);
 				M_Event.FireLogicEvent (LogicEvents.ExitCharacterRange, arg);
 			}
 
-			if (focusedCharacter == null && triggeredCharacter.Count > 0) {
-				focusedCharacter = triggeredCharacter [0];
-				LogicArg arg = new LogicArg (focusedCharacter);
-				M_Event.FireLogicEvent (LogicEvents.EnterCharacterRange, arg);
+			if(focusedCharacter == null && triggeredCharacter.Count > 0)
+            {
+				focusedCharacter = triggeredCharacter[0];
+				LogicArg arg = new LogicArg(focusedCharacter);
+				M_Event.FireLogicEvent(LogicEvents.EnterCharacterRange, arg);
 			}
 		}
 	}
 
 	public void EnterCharacterRange()
 	{
-		innerWorld.gameObject.SetActive (true);
+		innerWorld.gameObject.SetActive(true);
 	}
 
 	public void ExitCharacterRange()
 	{
-		innerWorld.gameObject.SetActive (false);
+		innerWorld.gameObject.SetActive(false);
 	}
 
 	/// <summary>
@@ -167,29 +170,30 @@ public class MCharacter : MObject {
 	/// and disable the exterior model
 	/// </summary>
 	/// <param name="col">Col.</param>
-	public void EnterInnerWorld( Collider col )
+	public void EnterInnerWorld(Collider col)
 	{
-		if (!m_isInInnerWorld) {
-
+		if(!m_isInInnerWorld)
+        {
 			// fire the event
-			LogicArg arg = new LogicArg (this);
-			arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP, innerWorldClip);
-			arg.AddMessage (Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER, this);
-			M_Event.FireLogicEvent (LogicEvents.EnterInnerWorld, arg);
+			LogicArg arg = new LogicArg(this);
+			arg.AddMessage(Global.EVENT_LOGIC_ENTERINNERWORLD_CLIP, innerWorldClip);
+			arg.AddMessage(Global.EVENT_LOGIC_ENTERINNERWORLD_MCHARACTER, this);
+			M_Event.FireLogicEvent(LogicEvents.EnterInnerWorld, arg);
 
 			m_isInInnerWorld = true;
 
 			// scale up the model
 			if (changeScale != null)
-				StopCoroutine (changeScale);
-			changeScale =  StartCoroutine (ChangeScale ( originScale * enterInnerWorldScaleUp, 2f));
+				StopCoroutine(changeScale);
+			changeScale =  StartCoroutine(ChangeScale(originScale * enterInnerWorldScaleUp, 2f));
 
 			// disable the exterior model
-			foreach (Renderer r in outerRender) {
+			foreach(Renderer r in outerRender)
+            {
 				r.enabled = false;
 			}
 
-//			transform.DOScale (transform.localScale.x * enterInnerWorldScaleUp, 0.5f);
+            // transform.DOScale (transform.localScale.x * enterInnerWorldScaleUp, 0.5f);
 		}
 	}
 
@@ -197,9 +201,10 @@ public class MCharacter : MObject {
 	/// Called when exit the inner world
 	/// </summary>
 	/// <param name="col">Col.</param>
-	public void ExitInnerWorld( Collider col )
+	public void ExitInnerWorld(Collider col)
 	{
-		if (m_isInInnerWorld) {
+		if (m_isInInnerWorld)
+        {
 			// fire the exit event
 			LogicArg arg = new LogicArg (this);
 
@@ -210,14 +215,16 @@ public class MCharacter : MObject {
 
 			// scale down the model
 			if (changeScale != null)
-				StopCoroutine (changeScale);
-			changeScale = StartCoroutine (ChangeScale ( originScale , 2f));
+				StopCoroutine(changeScale);
+			changeScale = StartCoroutine(ChangeScale(originScale , 2f));
 
 			// enable the exterior model
-			foreach (Renderer r in outerRender) {
+			foreach(Renderer r in outerRender)
+            {
 				r.enabled = true;
 			}
-//			transform.DOScale (transform.localScale / enterInnerWorldScaleUp, 0.5f);
+
+            // transform.DOScale (transform.localScale / enterInnerWorldScaleUp, 0.5f);
 		}
 	}
 
@@ -227,17 +234,18 @@ public class MCharacter : MObject {
 	/// <returns>The scale.</returns>
 	/// <param name="_toScale">To scale.</param>
 	/// <param name="time">Time.</param>
-	IEnumerator ChangeScale( Vector3 _toScale , float time )
+	IEnumerator ChangeScale(Vector3 _toScale , float time)
 	{
-		if ( pivot == null )
+		if (pivot == null)
 			yield break;
 		Vector3 originPosition = pivot.transform.position;
-		//Debug.Log ("pivot pos " + pivot.transform.position);
+		// Debug.Log("pivot pos " + pivot.transform.position);
 
 		float timer = 0;
 		Vector3 fromScale = transform.localScale;
 		Vector3 toScale = _toScale;
-		while (timer < time ) {
+		while (timer < time)
+        {
 			timer += Time.deltaTime;
 			transform.localScale = Vector3.Lerp (fromScale, toScale, timer / time);
 			Vector3 offset = pivot.transform.position - originPosition;
@@ -248,18 +256,19 @@ public class MCharacter : MObject {
 	}
 
 
-	protected override void MUpdate ()
+	protected override void MUpdate()
 	{
-		base.MUpdate ();
+		base.MUpdate();
 
 		// update the position of the character
-		if (!IsInInnerWorld) {
+		if(!IsInInnerWorld)
+        {
 			transform.position += fallingSpeed * Time.deltaTime;
 		}
 	}
 
-	void OnEnd( LogicArg arg ){
-		//Debug.Log ("onend in mcharacter");
+    void OnEnd(LogicArg arg)
+    {
+		// Debug.Log ("onend in mcharacter");
 	}
-
 }

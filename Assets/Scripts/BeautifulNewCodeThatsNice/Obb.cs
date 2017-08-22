@@ -23,8 +23,6 @@ public class OBB
         up = quaternion * Vector3.up;
         forward = quaternion * Vector3.forward;
         scale = scale_INPUT;
-
-
     }
 
     public OBB( Matrix4x4 input )

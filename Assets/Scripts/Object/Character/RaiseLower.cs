@@ -2,80 +2,71 @@
 using System.Collections;
 using DG.Tweening;
 
-public class RaiseLower : MonoBehaviour {
-
-	//GameObject newParent;
+public class RaiseLower : MonoBehaviour
+{
 	float t = 0f;
 	private bool finale = false;
+    [SerializeField] Transform finaleTransform;
 
 	// called when object enabled 
 	void OnEnable()
 	{
-		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] += OnRaise;
-		M_Event.logicEvents [(int)LogicEvents.LowerFallingCharacter] += OnLower;
-        M_Event.logicEvents[ ( int )LogicEvents.Finale ] += OnFinale;
-
-		//test
-		/*
-		newParent = new GameObject ();
-		newParent.transform.position = transform.position;
-		newParent.transform.rotation = transform.rotation;
-		newParent.transform.localScale = transform.localScale;
-		transform.SetParent (newParent.transform);
-		height = newParent.transform.position.y;
-		*/
+		M_Event.logicEvents[(int)LogicEvents.RaiseFallingCharacter] += OnRaise;
+		M_Event.logicEvents[(int)LogicEvents.LowerFallingCharacter] += OnLower;
+        M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
     }
 
 	void OnDisable()
 	{
-		M_Event.logicEvents [(int)LogicEvents.RaiseFallingCharacter] -= OnRaise;
-		M_Event.logicEvents [(int)LogicEvents.LowerFallingCharacter] -= OnLower;
-        M_Event.logicEvents[ ( int )LogicEvents.Finale ] -= OnFinale;
+		M_Event.logicEvents[(int)LogicEvents.RaiseFallingCharacter] -= OnRaise;
+		M_Event.logicEvents[(int)LogicEvents.LowerFallingCharacter] -= OnLower;
+        M_Event.logicEvents[(int)LogicEvents.Finale] -= OnFinale;
     }
 
-	void OnRaise( LogicArg arg )
+	void OnRaise(LogicArg arg)
 	{
-		//something obvious here
-		transform.DOLocalMove (transform.position + new Vector3 (0f, .15f, 0f), 2f).SetEase (Ease.InOutSine);
+		transform.DOLocalMove(transform.position + new Vector3(0f, .2f, 0f), 2f).SetEase(Ease.InOutSine);
 	}
 
 	void OnLower(LogicArg arg)
 	{
-		transform.DOLocalMove (transform.position + new Vector3 (0f, -.15f, 0f), 2f).SetEase (Ease.InOutSine);
+		transform.DOLocalMove(transform.position + new Vector3(0f, -.2f, 0f), 2f).SetEase(Ease.InOutSine);
 	}
 
-    protected void Update( )
+    protected void Update()
     {
-		if (GetComponent<MCharacter> ().IsInInnerWorld) {
+        if(gameObject.scene.buildIndex == 1) // don't run this shit for the tutorial 
+            return;
+
+		if (GetComponent<MCharacter>().IsInInnerWorld)
+        {
 			t = 0f;
 		}
 
-		if ( finale && !GetComponent<MCharacter>().IsInInnerWorld)
+        
+		if(finale && !GetComponent<MCharacter>().IsInInnerWorld)
         {
-            //transform.position = new Vector3( transform.position.x, height, transform.position.z );
-			//could acc height based on controller distance squared
-			//Vector3 target = new Vector3 (newParent.transform.position.x, LogicManager.Instance.GetPlayerTransform ().position.y + .7f, newParent.transform.position.z); //+ Mathf.Sin(Time.timeSinceLevelLoad / 1000f)
-			Vector3 target = new Vector3 (transform.position.x, LogicManager.Instance.GetPlayerHeadTransform ().position.y + .8f, transform.position.z);
+            //Quaternion turn = Quaternion.AngleAxis(10f, Vector3.forward) * transform.localRotation;
+            //Vector3 toPlayer = LogicManager.Instance.GetPlayerHeadTransform().position - transform.position;
+            //Quaternion look = Quaternion.LookRotation(toPlayer) * transform.localRotation;
+            //transform.localRotation = Quaternion.Slerp(transform.localRotation, look, Time.deltaTime * 1.5f);
 
-			if (t < 1f) {
+            Vector3 target = new Vector3(transform.position.x, LogicManager.Instance.GetPlayerHeadTransform().position.y, transform.position.z);
+			if(t < 1f)
+            {
 				t += Time.deltaTime / 500f;
 			}
-			//transform.position = Vector3.Lerp (newParent.transform.position, target, t);
-			transform.position = Vector3.Lerp (transform.position, target, t);
+			transform.position = Vector3.Lerp(transform.position, target, t);
         }
     }
 
-    void OnFinale( LogicArg arg )
+    void OnFinale(LogicArg arg)
     {
-		// raise a new parent that won't be affected by change scale
-		/*
-		newParent = new GameObject ();
-		newParent.transform.position = transform.position;
-		newParent.transform.rotation = transform.rotation;
-		newParent.transform.localScale = transform.localScale;
-		transform.SetParent (newParent.transform);
-		height = newParent.transform.position.y;
-		*/
-		finale = true;
+        //Vector3 rot = transform.rotation.ToEulerAngles();
+        //rot = new Vector3(rot.x, rot.y + 180.0f, rot.z);
+        //transform.DOLocalRotate(rot, 1f);
+        finale = true;
+        Vector3 finaleRot = new Vector3(0f, 180f, 0f); // -76.6f, -112.6f, -288.0f);
+        transform.DOLocalRotate(finaleRot, 2f).SetEase(Ease.InOutSine);
     }
 }

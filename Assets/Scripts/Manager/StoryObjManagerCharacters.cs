@@ -2,84 +2,169 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class StoryObjManagerCharacters : MBehavior {
-
-	private int count = -1;
+public class StoryObjManagerCharacters : MBehavior
+{
 	[SerializeField] List<GameObject> storyObjA;
 	[SerializeField] List<GameObject> storyObjB;
 	[SerializeField] List<GameObject> storyObjC;
-	[SerializeField] List<GameObject> levelSpecificObjects;
-	[SerializeField] List<GameObject> disableOnFinaleObjects;
 
 	private List<GameObject> currentStory = new List<GameObject>();
 
-	protected override void MAwake ()
-	{
-		base.MAwake ();
-		/*
-		currentStory = storyObjA;
-		for (int i = 0; i < currentStory.Count; i++) {
-			currentStory [i].SetActive (true);
-		}
-		*/
+    private int count = -1;
 
-		if (levelSpecificObjects.Count > 0) {
-			for (int i = 0; i < levelSpecificObjects.Count; i++) {
-				levelSpecificObjects [i].SetActive (false);
-			}
-		}
-		if (disableOnFinaleObjects.Count > 0) {
-			for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
-				disableOnFinaleObjects [i].SetActive (false);
-			}
-		}
-	}
-
-	protected override void MOnEnable(){
-
+    protected override void MOnEnable()
+    {
 		base.MOnEnable ();
-		M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
+        M_Event.logicEvents [(int)LogicEvents.Tutorial] += OnTutorial;
+        M_Event.logicEvents [(int)LogicEvents.EnterStory] += OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] += OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
-        M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-        M_Event.logicEvents[ ( int )LogicEvents.Credits ] += OnCredits;
     }
 
-	protected override void MOnDisable(){
-
+	protected override void MOnDisable()
+    {
 		base.MOnDisable ();
-		M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
+        M_Event.logicEvents [(int)LogicEvents.Tutorial] -= OnTutorial;
+        M_Event.logicEvents [(int)LogicEvents.EnterStory] -= OnEnterStory;
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] -= OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.Finale] += OnFinale;
-        M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
-        M_Event.logicEvents[ ( int )LogicEvents.Credits ] -= OnCredits;
     }
-
 	void OnEnterStory(LogicArg arg)
 	{
-		count++;
-		if (GetStory () == null) {
-			return;
-		} 
+        M_Event.FireLogicEvent(LogicEvents.ExitStory, new LogicArg(this));
 
-		currentStory.Clear ();
-		currentStory = GetStory ();
-		for (int i = 0; i < currentStory.Count; i++) {
-			currentStory [i].SetActive (true);
+        count++;
+		if (GetStory() == null)
+        {
+            if (gameObject.scene.buildIndex == 1) // tutorial scene 
+            {
+                if(Score.Instance.GetScore() == 0) // they tried both sides
+                {
+                    // print("firing switch scene to characters");
+                    // LogicManager.Instance.IterateState();
+                    timer = 1.5f;
+                    return;
+                }
+                else // try the other side until the score is 0.
+                {
+                    GenerateInteraction();
+                }
+            }
+            else if (gameObject.scene.buildIndex == 2) // characters scene
+            {
+                // M_Event.FireLogicEvent(LogicEvents.Finale, new LogicArg(this)); // START THE FINALE!
+                timer = 2f;
+                return;
+            }   
+		}
+
+        //currentStory.Clear();
+        for (int i = 0; i < currentStory.Count; i++) // instead of clearing?
+        {
+            for(int j=0; j < currentStory[i].transform.childCount; j++)
+            {
+                currentStory[i].transform.GetChild(j).gameObject.SetActive(false);
+            }
+            currentStory[i].SetActive(false);
+        }
+
+        currentStory = GetStory();
+		for (int i = 0; i < currentStory.Count; i++)
+        {
+			currentStory[i].SetActive(true);
 		}
 	}
+
+    float timer = 0f;
+    bool called = false;
+    protected override void MUpdate()
+    {
+        base.MUpdate();
+
+        timer -= Time.deltaTime;
+
+        if(!called && timer <= 0f)
+        {
+            called = true;
+            if (gameObject.scene.buildIndex == 1) // tutorial scene 
+            {
+                LogicManager.Instance.IterateState();
+            }
+            else if (gameObject.scene.buildIndex == 2) // characters scene
+            {
+                M_Event.FireLogicEvent(LogicEvents.Finale, new LogicArg(this));
+            }
+        }
+    }
+
+    void GenerateInteraction()
+    {
+        if (Score.Instance.GetScore() >= 1) // If score is positive, require a negative to get 0
+        {
+            Score.Instance.ForceSetScore(1);
+            count = 1; // Try the last story again
+            
+            for (int i = 0; i < storyObjB.Count; i++) // Sort of make a new story
+            {
+                storyObjB[i].SetActive(false);
+            }
+             
+            SpawnCollectibleHoleSet spawn = GetComponent<SpawnCollectibleHoleSet>();
+            if (spawn != null)
+            {
+                HoleContainer holeCont = storyObjB[0].GetComponent<HoleContainer>(); // Set the color
+                if (holeCont != null)
+                {
+                    holeCont.color = spawn.Color();
+                }
+
+                CollectableContainer collCont = storyObjB[1].GetComponent<CollectableContainer>(); // Set the audio
+                if (collCont != null)
+                {
+                    collCont.storySoundL = spawn.storySoundR;
+                    collCont.storySoundR = spawn.storySoundL;
+                }
+            } 
+        }
+        else if (Score.Instance.GetScore() <= -1) // If score is negative, require a positive to get 0
+        {
+            Score.Instance.ForceSetScore(-1);
+            count = 1; // Try the last story again
+            
+            for (int i = 0; i < storyObjB.Count; i++) // Sort of make a new story
+            {
+                storyObjB[i].SetActive(false);
+            }
+
+            SpawnCollectibleHoleSet spawn = GetComponent<SpawnCollectibleHoleSet>();
+            if (spawn != null)
+            {
+                HoleContainer holeCont = storyObjB[0].GetComponent<HoleContainer>(); // Set the color
+                if (holeCont != null)
+                {
+                    holeCont.color = spawn.Color();
+                }
+
+                CollectableContainer collCont = storyObjB[1].GetComponent<CollectableContainer>(); // Set the audio
+                if (collCont != null)
+                {
+                    collCont.storySoundL = spawn.storySoundL;
+                    collCont.storySoundR = spawn.storySoundR;
+                }
+            }
+        }
+    }
 
 	//exit last story before entering new one 
 	void OnExitStory(LogicArg arg)
 	{
-		for (int i=currentStory.Count-1; i>=0; i--) {
-
-			NiceCollectable niceCollectable = currentStory [i].GetComponent<NiceCollectable>();
-			if (niceCollectable != null && niceCollectable != (NiceCollectable)arg.sender) {
-				//Debug.Log( "in StoryManTutorial deactivating " + currentStory[ i ].name );
-				currentStory [i].SetActive (false);
+		for (int i=currentStory.Count-1; i>=0; i--)
+        {
+			NiceCollectable niceCollectable = currentStory[i].GetComponent<NiceCollectable>();
+			if (niceCollectable != null && niceCollectable != (NiceCollectable)arg.sender)
+            {
+				Debug.Log("in OnExitStory deactivating");
+				currentStory[i].SetActive (false);
 			}
 		}
 	}
@@ -87,63 +172,59 @@ public class StoryObjManagerCharacters : MBehavior {
 	//returns the next batch of story obj
 	List<GameObject> GetStory()
 	{
-		switch (count) {
-		case 0:
-			if (storyObjA.Count > 0) {
-				return storyObjA;
-			} else {
-				return null;
-			}
-		case 1:
-			if (storyObjB.Count > 0) {
-				return storyObjB;
-			} else {
-				return null;
-			}
-		case 2:
-			if (storyObjC.Count >0) {
-                return storyObjC;
-			} else {
-				//print ("firing finale");
-				LogicArg logicArg = new LogicArg( this );
-				M_Event.FireLogicEvent( LogicEvents.Finale, logicArg );
-				return null;
-			}
-		default:
-			return null;
+		switch(count)
+        {
+		    case 0:
+			    if (storyObjA.Count > 0) {
+				    return storyObjA;
+			    } else {
+				    return null;
+			    }
+		    case 1:
+			    if (storyObjB.Count > 0) {
+				    return storyObjB;
+			    } else {
+				    return null;
+			    }
+            case 2:
+                if (storyObjC.Count > 0) {
+                    return storyObjC;
+                } else {
+                    return null;
+                }
+            case 3:
+                return null;
+            default:
+                return null;
 		}
 	}
 
-	void OnCharacters( LogicArg arg ){
-		for (int i = 0; i < levelSpecificObjects.Count; i++) {
-			levelSpecificObjects [i].SetActive (true);
-		}
-		for (int i = 0; i < disableOnFinaleObjects.Count; i++) {
-			disableOnFinaleObjects [i].SetActive (true);
-		}
-		M_Event.FireLogicEvent( LogicEvents.EnterStory, new LogicArg( this ) );
-	}
-
-	void OnFinale( LogicArg arg ){
-		for (int i = disableOnFinaleObjects.Count - 1; i >=0; i--) {
-			disableOnFinaleObjects [i].SetActive (false);
-		}
-	}
-		
-	void OnEnd( LogicArg arg )
-	{
-		for (int i = levelSpecificObjects.Count - 1; i >=0; i--) {
-			levelSpecificObjects [i].SetActive (false);
-		}
-		//disable the trails
-		for ( int i = currentStory.Count - 1; i >= 0; i-- )
-		{
-			currentStory[ i ].SetActive( false );
-		}
-	}
-
-    void OnCredits( LogicArg arg )
+    void OnTutorial(LogicArg arg)
     {
+        Init();
+        M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
+    }
 
-    }		
+	void OnCharacters(LogicArg arg)
+    {
+        Init();
+		M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
+	}
+
+    void Init()
+    {
+        // set stories to false and level objects to true
+        for (int i = 0; i < storyObjA.Count; i++)
+        {
+            storyObjA[i].SetActive(false);
+        }
+        for (int i = 0; i < storyObjB.Count; i++)
+        {
+            storyObjB[i].SetActive(false);
+        }
+        for (int i = 0; i < storyObjC.Count; i++)
+        {
+            storyObjC[i].SetActive(false);
+        }
+    }
 }

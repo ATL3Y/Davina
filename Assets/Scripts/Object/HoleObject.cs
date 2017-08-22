@@ -153,13 +153,12 @@ public class HoleObject : MObject {
 	protected virtual void OnMatchObject( LogicArg arg )
 	{
 		CollectableObj cobj = (CollectableObj) arg.GetMessage (Global.EVENT_LOGIC_MATCH_COBJECT);
-		//print ("in hole on match obj");
+
 		// if the match succeeds
-		if (cobj != null && cobj.gameObject == matchObject) {
+		if (cobj != null && cobj.gameObject == matchObject)
+        {
             gameObject.layer = LayerMask.NameToLayer( "Done" ); 
-            //Debug.Log( "change hole obj " + gameObject.name + " to layer " + gameObject.layer + " in Hole Object" );
             cobj.gameObject.layer = LayerMask.NameToLayer( "Done" ); 
-            //Debug.Log( "change match obj " + cobj.gameObject.name + " to layer " + cobj.gameObject.layer + " in Hole Object" );
 
             //print ("in hole on match obj condition");
             // vibrate the controller holding the matchObject
