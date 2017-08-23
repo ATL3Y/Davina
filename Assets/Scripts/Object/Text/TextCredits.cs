@@ -30,18 +30,19 @@ public class TextCredits : MonoBehaviour
 
 	public void Awake()
     {
-		instructions.Add ("                          CREDITS"); 
-		instructions.Add ("                          DAVINA");
-		instructions.Add ("VOICE ACTOR MOTHER   YIWEN DAI"); 
-		instructions.Add ("VOICE ACTOR DAVINA   JUNG HO SOHN");
-		instructions.Add ("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
-		instructions.Add ("STORY                ISOBEL SHASHA"); 
-		instructions.Add ("PROGRAMMER           ATWOOD DENG"); 
-		instructions.Add ("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
-		instructions.Add ("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR"); 
-		instructions.Add ("USC                  INTERACTIVE MEDIA    AND GAMES");
-		instructions.Add ("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
-	}
+        instructions.Add("");
+        instructions.Add("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
+		instructions.Add("                          DAVINA");
+		instructions.Add("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
+		instructions.Add("STORY                ISOBEL SHASHA"); 
+		instructions.Add("PROGRAMMER           ATWOOD DENG");
+        instructions.Add("VOICE ACTOR MOTHER   YIWEN DAI");
+        instructions.Add("VOICE ACTOR DAVINA   JUNG HO SOHN");
+        instructions.Add("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
+		instructions.Add("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR"); 
+		instructions.Add("USC                  INTERACTIVE MEDIA    AND GAMES");
+        instructions.Add("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
+    }
 
 	public void Start() 
 	{

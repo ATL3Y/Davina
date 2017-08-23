@@ -218,7 +218,7 @@ public class TransportManager : MBehavior
         if (toColorEffect != null && bloomAndFlares != null)
         {
             transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime));
-            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime));
+            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 3f, fadeTime));
         }
 
         GameObject targetGO = GameObject.Find("endPos");
@@ -234,6 +234,13 @@ public class TransportManager : MBehavior
 
         Vector3 playerCenter = new Vector3(0.0f, LogicManager.Instance.GetPlayerPersonTransform().position.y, 0.0f);
         transportSequence.Append(LogicManager.Instance.GetPlayerPersonTransform().DOLocalMove(playerCenter, transportTime)); // move the player to the center of the room, keeping player height the same
+
+        // add the vfx if there is the image effect in the camera
+        if (toColorEffect != null && bloomAndFlares != null)
+        {
+            transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
+            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
+        }
 
         transportSequence.OnComplete(OnTransportComplete);
     }

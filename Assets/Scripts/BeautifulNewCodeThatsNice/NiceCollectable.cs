@@ -48,6 +48,26 @@ public class NiceCollectable : Interactable
     private Color color;
     public Color Color { set { color = value; } }
 
+    private int transportCount = 0;
+
+    // Better longterm solution would be to just know where we're transporting to!!
+    protected override void MOnEnable()
+    {
+        base.MOnEnable();
+        M_Event.inputEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
+    }
+
+    protected override void MOnDisable()
+    {
+        base.MOnDisable();
+        M_Event.inputEvents[(int)LogicEvents.TransportEnd] -= OnTransportEnd;
+    }
+
+    public void OnTransportEnd(InputArg arg)
+    {
+        transportCount++;
+    }
+
     // Use this for initialization
     public override void Start()
     {
@@ -152,14 +172,26 @@ public class NiceCollectable : Interactable
         //AxKDebugLines.AddLine(niceHole.transform.position, niceHole.transform.position + niceHole.transform.up * .3f, Color.green, 0);
 
         transform.localScale = originalScale + originalScale.normalized * EaseOutCubic(m_hoverTime * .1f);
-        // transform.up go out the white side, so dot(up, toPlayer) > 0 == looking at white side 
-        Vector3 toPlayer = LogicManager.Instance.GetPlayerHeadTransform().position - transform.position;
-        float dot = Vector3.Dot(transform.up, toPlayer);
-        
-        if (dot < 0.0f)
-            lightSideOut = false;
-        else
+
+        float dot = 0f;
+        // We need to always do what's facing us because the shader covers the whole obj
+        // If we're at mom, just play what's facing us
+        //if (transportCount < 2)
+        {
+            // transform.up go out the white side, so dot(up, toPlayer) > 0 == looking at white side 
+            Vector3 toPlayer = LogicManager.Instance.GetPlayerHeadTransform().position - transform.position;
+            dot = Vector3.Dot(transform.up, toPlayer);
+        }
+        // If we're at Davina, play what's facing Davina
+        //else
+        //{
+        //    dot = Vector3.Dot(transform.up, niceHole.transform.up);
+        //}
+
+        if (dot > 0.0f) // light
             lightSideOut = true;
+        else // dark
+            lightSideOut = false;
 
         if (owner)
         {
@@ -181,7 +213,7 @@ public class NiceCollectable : Interactable
 			float distanceToTarget = Vector3.Magnitude (newPosition - niceHole.transform.position);
 			Quaternion newRotation = owner.transform.rotation * rotationOffset;
 
-			// Play story sound based on which side is facing player
+			// Play story sound dot
 			if (dot < -0.2f) // dark
             {
 				if (storySoundSourceL != null && storySoundSourceL.isPlaying)
@@ -291,6 +323,7 @@ public class NiceCollectable : Interactable
 					}
 
                     CallNextEvent();
+
                     /*
 					if (storySoundSourceL != null)
                     {

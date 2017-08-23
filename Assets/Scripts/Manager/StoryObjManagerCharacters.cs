@@ -29,6 +29,7 @@ public class StoryObjManagerCharacters : MBehavior
 		M_Event.logicEvents [(int)LogicEvents.ExitStory] -= OnExitStory;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
     }
+
 	void OnEnterStory(LogicArg arg)
 	{
         M_Event.FireLogicEvent(LogicEvents.ExitStory, new LogicArg(this));
@@ -42,7 +43,8 @@ public class StoryObjManagerCharacters : MBehavior
                 {
                     // print("firing switch scene to characters");
                     // LogicManager.Instance.IterateState();
-                    timer = 1.5f;
+                    timer = 3f;
+                    runTimer = true;
                     return;
                 }
                 else // try the other side until the score is 0.
@@ -53,7 +55,8 @@ public class StoryObjManagerCharacters : MBehavior
             else if (gameObject.scene.buildIndex == 2) // characters scene
             {
                 // M_Event.FireLogicEvent(LogicEvents.Finale, new LogicArg(this)); // START THE FINALE!
-                timer = 2f;
+                timer = 3f;
+                runTimer = true;
                 return;
             }   
 		}
@@ -76,23 +79,25 @@ public class StoryObjManagerCharacters : MBehavior
 	}
 
     float timer = 0f;
-    bool called = false;
+    bool runTimer = false;
     protected override void MUpdate()
     {
         base.MUpdate();
 
-        timer -= Time.deltaTime;
-
-        if(!called && timer <= 0f)
+        if(runTimer)
         {
-            called = true;
-            if (gameObject.scene.buildIndex == 1) // tutorial scene 
+            timer -= Time.deltaTime;
+            if (timer <= 0f)
             {
-                LogicManager.Instance.IterateState();
-            }
-            else if (gameObject.scene.buildIndex == 2) // characters scene
-            {
-                M_Event.FireLogicEvent(LogicEvents.Finale, new LogicArg(this));
+                runTimer = false;
+                if (gameObject.scene.buildIndex == 1) // tutorial scene 
+                {
+                    LogicManager.Instance.IterateState();
+                }
+                else if (gameObject.scene.buildIndex == 2) // characters scene
+                {
+                    M_Event.FireLogicEvent(LogicEvents.Finale, new LogicArg(this));
+                }
             }
         }
     }

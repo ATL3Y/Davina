@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class NiceHole : Interactable
 {
@@ -10,7 +11,7 @@ public class NiceHole : Interactable
     protected AudioSource hoverSoundSource;
 	private float hoverSoundCooldown = 0f;
 	public AudioSource storySoundSource;
-	private float storySoundCooldown = 0f;
+	// private float storySoundCooldown = 0f;
 	private bool called = false;
 	private Vector3 originalScale;
 
@@ -22,6 +23,40 @@ public class NiceHole : Interactable
 
     private Color color;
     public Color Color { set { color = value; } }
+
+    // Just play this shit on transport 
+    protected override void MOnEnable()
+    {
+        base.MOnEnable();
+        M_Event.inputEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
+    }
+
+    protected override void MOnDisable()
+    {
+        base.MOnDisable();
+        M_Event.inputEvents[(int)LogicEvents.TransportEnd] -= OnTransportEnd;
+    }
+
+    public void OnTransportEnd(InputArg arg)
+    {
+        Debug.Log("OnTransportEnd in hole");
+
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            Debug.Log("OnTransportEnd in hole tut");
+            storySoundSource.Play();
+        }
+        else
+        {
+            float d = Vector3.Distance(LogicManager.Instance.GetPlayerHeadTransform().position, transform.position);
+            Debug.Log(d);
+            if(d < 10f)
+            {
+                Debug.Log("OnTransportEnd in hole char d");
+                storySoundSource.Play();
+            }
+        }
+    }
 
     // Use this for initialization
     public override void Start ()
@@ -59,19 +94,20 @@ public class NiceHole : Interactable
 
 		originalScale = transform.lossyScale;
 
+        /*
 		// Need delay for the first story
 		if (Time.timeSinceLevelLoad < 20) {
 			storySoundCooldown = 18f;
-		} else {
-			storySoundCooldown = 30f; // HACKLEY making coolDown huge so the story doesn't repeat more than twice 
-		}
-
+		} 
+        */
 	}
 
     // Update is called once per frame
-    public override void Update(){
+    public override void Update()
+    {
 		base.Update ();
 
+        /*
 		if (!called && storySoundCooldown < 0f)
         {
 			float d = Vector3.Distance (LogicManager.Instance.GetPlayerHeadTransform ().position, transform.position);
@@ -79,14 +115,16 @@ public class NiceHole : Interactable
             {
 				called = true;
 				storySoundSource.Play();
-				storySoundCooldown = storySound.length + 1000f;
+				storySoundCooldown = storySound.length + 3f;
 			}
 		}
 
-		storySoundCooldown -= Time.deltaTime;
-		hoverSoundCooldown -= Time.deltaTime;
+        storySoundCooldown -= Time.deltaTime;
+        */
 
-        // scale should not change 
+        hoverSoundCooldown -= Time.deltaTime;
+
+        // scale should not change, but it is changing because I'm not accounting for the change 
 		transform.localScale = originalScale; 
 	}
 
@@ -110,19 +148,24 @@ public class NiceHole : Interactable
 		if (hoverSoundCooldown > 0.0f)
 			return;
 
-		if (hoverSound && !hoverSoundSource.isPlaying) {
+		if (hoverSound && !hoverSoundSource.isPlaying)
+        {
 			hoverSoundSource.Play ();
 			hoverSoundCooldown = hoverSound.length + 1f;
 		}
 
-		if (storySoundCooldown > 0.0f) {
+        /*
+		if (storySoundCooldown > 0.0f)
+        {
 			return;
 		}
 
-		if (storySound && !storySoundSource.isPlaying) {
+		if (storySound && !storySoundSource.isPlaying)
+        {
 			storySoundSource.Play ();
-			storySoundCooldown = storySound.length + 1000f;
+			storySoundCooldown = storySound.length;
 		}
+        */
 	}
 
 	public void SetOutline( bool isOn )

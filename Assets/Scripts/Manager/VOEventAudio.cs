@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class VOEventAudio : MonoBehaviour
 {
@@ -73,14 +74,15 @@ public class VOEventAudio : MonoBehaviour
 
 	void OnEnd(LogicArg arg)
     {
-        if(gameObject.scene.buildIndex == 3)
+        if(SceneManager.GetActiveScene().buildIndex == 3)
         {
             if (endWhiteClips.Count > 0)
             {
                 end = true;
                 StartCoroutine(PlayNext(endWhiteClips));
             }
-        }else if(gameObject.scene.buildIndex == 4)
+        }
+        else if(SceneManager.GetActiveScene().buildIndex == 4)
         {
             if (endBlackClips.Count > 0)
             {
@@ -93,8 +95,28 @@ public class VOEventAudio : MonoBehaviour
 	IEnumerator PlayNext(List<AudioClip> clips)
     {
         //yield return new WaitForSeconds(2f); //wait unitl match VO is over
-		source.clip = clips[i];
-		source.Play ();
+        // have the grandfather's line play from that game object
+        if (SceneManager.GetActiveScene().buildIndex == 4 && i == 3)
+        {
+            AudioSourceTexture[] audioSourceTextures = GameObject.FindObjectsOfType<AudioSourceTexture>();
+            for(int j=0; j< audioSourceTextures.Length; j++)
+            {
+                if(audioSourceTextures[j].GetComponent<AudioSource>() != null)
+                {
+                    audioSourceTextures[j].GetComponent<AudioSource>().clip = clips[i];
+                    audioSourceTextures[j].GetComponent<AudioSource>().Play();
+                }else
+                {
+                    Debug.Log("There's no audiosource on the game object.");
+                }
+            }
+        }
+        else
+        {
+            source.clip = clips[i];
+            source.Play();
+        }
+        
 		yield return new WaitForSeconds (source.clip.length);
 		i++;
         if (i < clips.Count)
@@ -106,6 +128,7 @@ public class VOEventAudio : MonoBehaviour
             i = 0;
 			if (end)
             {
+                Debug.Log("firing on credits");
                 LogicArg logicArg = new LogicArg(this);
                 M_Event.FireLogicEvent(LogicEvents.Credits, logicArg);
             }

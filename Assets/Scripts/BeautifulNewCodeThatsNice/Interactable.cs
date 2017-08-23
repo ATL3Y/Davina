@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Interactable: MonoBehaviour
+public class Interactable: MBehavior
 {
     public bool insideBounds;
-    private bool debug = true;
+    private bool debug = false;  // I'm just getting rid of the lines for now since they're not clarifying 
     public bool Ddebug { get { return debug; } }
     public int priority;
     public string displayMessage;

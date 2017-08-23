@@ -107,25 +107,23 @@ public class LogicManager : MBehavior
 
     public void IterateState()
     {
+        // build indexes: init: 0, tutorial: 1, characters: 2, endWhite: 3, endBlack: 4
+        // async/root indexes: characters: 0, endWhite: 1, endBlack: 2
         int index = (int)m_stateMachine.State;
 
         if (index == 0)
         {
             Debug.Log("IterateState() 0");
             // no need to disable the Init scene
-
             // enable the Tutorial 
             TutorialRoot.SetActive(true);
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(1));
-
         }
         else if (index == 1)
         {
             Debug.Log("IterateState() 1");
-
             // disable the Tutorial 
             TutorialRoot.SetActive(false);
-
             // enable the first async scene
             m_async[0].allowSceneActivation = true;
             m_sceneRoots[0].SetActive(true);
@@ -135,25 +133,25 @@ public class LogicManager : MBehavior
         {
             Debug.Log("IterateState() " + index + " white end.  score = " + Score.Instance.GetScore());
             // disable the last async scene
-            m_async[index - 2].allowSceneActivation = false;
-            m_sceneRoots[index - 2].SetActive(false);
+            m_async[0].allowSceneActivation = false;
+            m_sceneRoots[0].SetActive(false);
 
-            // enable the next async scene
-            m_async[index - 1].allowSceneActivation = true;
-            m_sceneRoots[index - 1].SetActive(true);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(index - 1));
+            // enable white ending
+            m_async[1].allowSceneActivation = true;
+            m_sceneRoots[1].SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(3));
         }
         else if (index == 2 && Score.Instance.GetScore() < 0) // black ending
         {
             Debug.Log("IterateState() " + index + " black end.  score = " + Score.Instance.GetScore());
-            // disable the last async scene
-            m_async[index - 2].allowSceneActivation = false;
-            m_sceneRoots[index - 2].SetActive(false);
+            // disable character scene
+            m_async[0].allowSceneActivation = false;
+            m_sceneRoots[0].SetActive(false);
 
-            // enable the next async scene
-            m_async[index].allowSceneActivation = true;
-            m_sceneRoots[index].SetActive(true);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(index));
+            // enable the black ending
+            m_async[2].allowSceneActivation = true;
+            m_sceneRoots[2].SetActive(true);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(4));
         }
 
         // iterate state 

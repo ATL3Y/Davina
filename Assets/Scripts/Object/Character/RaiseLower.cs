@@ -43,7 +43,6 @@ public class RaiseLower : MonoBehaviour
 			t = 0f;
 		}
 
-        
 		if(finale && !GetComponent<MCharacter>().IsInInnerWorld)
         {
             //Quaternion turn = Quaternion.AngleAxis(10f, Vector3.forward) * transform.localRotation;
@@ -54,7 +53,7 @@ public class RaiseLower : MonoBehaviour
             Vector3 target = new Vector3(transform.position.x, LogicManager.Instance.GetPlayerHeadTransform().position.y, transform.position.z);
 			if(t < 1f)
             {
-				t += Time.deltaTime / 500f;
+				t += Time.deltaTime / 200f; // lag so Davina doesn't jump up at first
 			}
 			transform.position = Vector3.Lerp(transform.position, target, t);
         }
@@ -66,7 +65,7 @@ public class RaiseLower : MonoBehaviour
         //rot = new Vector3(rot.x, rot.y + 180.0f, rot.z);
         //transform.DOLocalRotate(rot, 1f);
         finale = true;
-        Vector3 finaleRot = new Vector3(0f, 180f, 0f); // -76.6f, -112.6f, -288.0f);
-        transform.DOLocalRotate(finaleRot, 2f).SetEase(Ease.InOutSine);
+        // Vector3 finaleRot = new Vector3(0f, 180f, 0f); // -76.6f, -112.6f, -288.0f);
+        // transform.DOLocalRotate(finaleRot, 2f).SetEase(Ease.InOutSine);
     }
 }
