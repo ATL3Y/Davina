@@ -28,32 +28,30 @@ public class NiceHole : Interactable
     protected override void MOnEnable()
     {
         base.MOnEnable();
-        M_Event.inputEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
+        M_Event.logicEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
     }
 
     protected override void MOnDisable()
     {
         base.MOnDisable();
-        M_Event.inputEvents[(int)LogicEvents.TransportEnd] -= OnTransportEnd;
+        M_Event.logicEvents[(int)LogicEvents.TransportEnd] -= OnTransportEnd;
     }
 
-    public void OnTransportEnd(InputArg arg)
+    public void OnTransportEnd(LogicArg arg)
     {
-        Debug.Log("OnTransportEnd in hole");
+        Interactable teleportedTo;
 
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        if((Interactable)arg.GetMessage(Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT) != null)
         {
-            Debug.Log("OnTransportEnd in hole tut");
-            storySoundSource.Play();
-        }
-        else
-        {
-            float d = Vector3.Distance(LogicManager.Instance.GetPlayerHeadTransform().position, transform.position);
-            Debug.Log(d);
-            if(d < 10f)
+            teleportedTo = (Interactable)arg.GetMessage(Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT);
+            if (teleportedTo.name.Contains("Davina"))
             {
-                Debug.Log("OnTransportEnd in hole char d");
+                Debug.Log("OnTransportEnd at Davina");
                 storySoundSource.Play();
+            }
+            else if (teleportedTo.name.Contains("Mom"))
+            {
+                Debug.Log("OnTransportEnd at Mom");
             }
         }
     }

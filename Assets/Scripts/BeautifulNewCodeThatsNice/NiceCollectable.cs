@@ -48,26 +48,6 @@ public class NiceCollectable : Interactable
     private Color color;
     public Color Color { set { color = value; } }
 
-    private int transportCount = 0;
-
-    // Better longterm solution would be to just know where we're transporting to!!
-    protected override void MOnEnable()
-    {
-        base.MOnEnable();
-        M_Event.inputEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
-    }
-
-    protected override void MOnDisable()
-    {
-        base.MOnDisable();
-        M_Event.inputEvents[(int)LogicEvents.TransportEnd] -= OnTransportEnd;
-    }
-
-    public void OnTransportEnd(InputArg arg)
-    {
-        transportCount++;
-    }
-
     // Use this for initialization
     public override void Start()
     {
@@ -129,6 +109,7 @@ public class NiceCollectable : Interactable
             {
                 storySoundSourceL = gameObject.AddComponent<AudioSource>();
             }
+
 			storySoundSourceL.playOnAwake = false;
 			storySoundSourceL.loop = false;
 			storySoundSourceL.volume = 1f;
@@ -153,6 +134,8 @@ public class NiceCollectable : Interactable
 		return b + c * ( 0.95f * tc * ts + -5.1425f * ts * ts + 10.29f * tc + -10.395f * ts + 5.297f * t);
 	}
 
+    private bool calledReleaseInstructions = false;
+
 	// Update is called once per frame
 	public override void Update()
     {
@@ -173,22 +156,10 @@ public class NiceCollectable : Interactable
 
         transform.localScale = originalScale + originalScale.normalized * EaseOutCubic(m_hoverTime * .1f);
 
-        float dot = 0f;
-        // We need to always do what's facing us because the shader covers the whole obj
-        // If we're at mom, just play what's facing us
-        //if (transportCount < 2)
-        {
-            // transform.up go out the white side, so dot(up, toPlayer) > 0 == looking at white side 
-            Vector3 toPlayer = LogicManager.Instance.GetPlayerHeadTransform().position - transform.position;
-            dot = Vector3.Dot(transform.up, toPlayer);
-        }
         // If we're at Davina, play what's facing Davina
-        //else
-        //{
-        //    dot = Vector3.Dot(transform.up, niceHole.transform.up);
-        //}
+        float dot = dot = Vector3.Dot(transform.up, niceHole.transform.up);
 
-        if (dot > 0.0f) // light
+        if (dot > 0.0f) // light -- the white side is in the +y direction
             lightSideOut = true;
         else // dark
             lightSideOut = false;
@@ -224,7 +195,7 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceR != null && storySoundCooldownR < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
 					storySoundSourceR.Play();
-					storySoundCooldownR = storySoundR.length + 3f;
+					storySoundCooldownR = storySoundR.length + 6f;
 				} 
 			}
             else if (dot > 0.2f) // light
@@ -237,19 +208,24 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceL != null && storySoundCooldownL < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
 					storySoundSourceL.Play();
-					storySoundCooldownL = storySoundL.length + 3f;
+					storySoundCooldownL = storySoundL.length + 6f;
 				} 
 			} 
 
-			if (distanceToTarget < 0.2f)
+			if (distanceToTarget < 0.4f)
             {
+                if (!calledReleaseInstructions)
+                {
+                    TextInstructions.Instance.OnReleaseRange();
+                    calledReleaseInstructions = true;
+                }
 
                 // orient collectable in hole based on relation to hole
                 float t = Mathf.Clamp01(1.0f - (distanceToTarget * (1.0f / 0.1f)));
                 t = Ease(t, 0.0f, 1.0f, 1.0f);
 
                 Quaternion rot = new Quaternion();
-
+                
                 if (Vector3.Dot(transform.up, niceHole.transform.up) > 0f)
                 {
                     rot = niceHole.transform.rotation;
@@ -292,7 +268,7 @@ public class NiceCollectable : Interactable
         {
 			float distanceToHole = Vector3.Magnitude (transform.position - niceHole.transform.position);
 
-			if (distanceToHole < 0.06f)
+			if (distanceToHole < 0.5f)
             {
 				useable = false;
 				niceHole.useable = false;

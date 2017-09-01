@@ -4,23 +4,14 @@ using System.Collections.Generic;
 
 public class StoryObjManagerCredits : MBehavior
 {
-
-	//private int count = 0;
 	[SerializeField] List<GameObject> levelSpecificObjects;
-	//private bool callOnce = true;
 
-	protected override void MAwake()
+    protected override void MAwake()
 	{
 		base.MAwake();
 
-		if (levelSpecificObjects.Count > 0) // HACKLEY trying to control when objects show and don't show
+        if (levelSpecificObjects.Count > 0) 
         {
-            /*
-			for (int i = 0; i < levelSpecificObjects.Count; i++)
-            {
-				levelSpecificObjects [i].SetActive(false);
-			}
-            */
             levelSpecificObjects[0].SetActive(false);
             levelSpecificObjects[1].SetActive(true);
         }
@@ -40,13 +31,12 @@ public class StoryObjManagerCredits : MBehavior
 
 	void OnCredits(LogicArg arg)
     {
-        /*
-		for (int i = 0; i < levelSpecificObjects.Count; i++)
-        {
-			levelSpecificObjects [i].SetActive(true);
-		}
-        */
-        levelSpecificObjects[0].SetActive(true); // HACKLEY trying to control when objects show and don't show
+        levelSpecificObjects[0].SetActive(true);
         levelSpecificObjects[1].SetActive(false);
-    }	
+    }
+
+    protected override void MUpdate()
+    {
+        base.MUpdate();
+    }
 }

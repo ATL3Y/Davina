@@ -89,6 +89,8 @@ public class LogicManager : MBehavior
         // Start in the Tutorial
         SceneManager.LoadScene("Tutorial", LoadSceneMode.Additive);
 
+        TransportManager.Instance.StationaryEffect();
+
         // Load other scenes async
         for (int i = 0; i < numAsyncScenes; i++)
         {

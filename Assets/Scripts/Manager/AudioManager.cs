@@ -163,7 +163,7 @@ public class AudioManager : MBehavior
         {
 			bgmSource = gameObject.AddComponent<AudioSource> ();
 			bgmSource.loop = true;
-			bgmSource.volume = 1f;
+			bgmSource.volume = .5f;
 			bgmSource.spatialBlend = 1f;
 		}
 
@@ -173,7 +173,7 @@ public class AudioManager : MBehavior
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
 				bgmSource.Play();
-				bgmSource.DOFade(1f , 1f);
+				bgmSource.DOFade(.5f, 1f);
 			});
 		}
 	}

@@ -31,7 +31,6 @@ public class TextCredits : MonoBehaviour
 	public void Awake()
     {
         instructions.Add("");
-        instructions.Add("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
 		instructions.Add("                          DAVINA");
 		instructions.Add("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
 		instructions.Add("STORY                ISOBEL SHASHA"); 
@@ -70,19 +69,22 @@ public class TextCredits : MonoBehaviour
 
 	public void Update()
     {
-
 		if(timeLeft > 0f)
         {
 			timeLeft -= Time.deltaTime;
 		}
         else
         {
-			if(instructions [currentInstruction] != null && currentInstruction < instructions.Count)
+			if(currentInstruction < instructions.Count)
             {
-				MakeLines(instructions[currentInstruction]);
+				MakeLines(instructions[currentInstruction], currentInstruction);
 				timeLeft = 3f;
 				currentInstruction++;
-			}
+            }
+            else
+            {
+                TransportManager.Instance.FadeToWhite();
+            }
 		}
 	}
 
@@ -96,7 +98,7 @@ public class TextCredits : MonoBehaviour
 
 	}
 
-	public void MakeLines(string text)
+	public void MakeLines(string text, int index)
     {
 
 		if (timeLeft > 0f)
@@ -136,12 +138,12 @@ public class TextCredits : MonoBehaviour
 		//print (numberOfLines);
 		for (int i = 0; i < lines.Count; i++)
         {
-			MakeTextGO(lines [i], i);
+			MakeTextGO(lines [i], i, index);
 			//print ("new line");
 		}
 	}
 
-	public void MakeTextGO(string text, int height) //could have size, shader... //assuming all uppercase 
+	public void MakeTextGO(string text, int height, int index) //could have size, shader... //assuming all uppercase 
 	{
 		/*
 		//center text using size of string
@@ -167,8 +169,8 @@ public class TextCredits : MonoBehaviour
                 { 
 					GameObject newLetter = Instantiate(_alphabet [j]);
 					newLetter.transform.SetParent (transform);
-					newLetter.transform.localPosition = new Vector3(-tracking * count * i, lineHeight, 0f);
-					newLetter.transform.localRotation = Quaternion.identity;
+					newLetter.transform.localPosition = new Vector3(-tracking * count * i, lineHeight, 0f); //lineHeight * index
+                    newLetter.transform.localRotation = Quaternion.identity;
 					_letters.Add (newLetter);
 					count = 1;
 				} 

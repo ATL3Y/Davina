@@ -12,7 +12,7 @@ public class TransportManager : MBehavior
 	[SerializeField] ToColorEffect toColorEffect;
 	[SerializeField] BloomAndFlares bloomAndFlares;
 	[SerializeField] float fadeTime = .5f;
-	[SerializeField] float transportTime = 1.82f;
+	[SerializeField] float transportTime = 1.42f;
 	[SerializeField] LineRenderer transportLine;
 	[SerializeField] ParticleSystem transportCircle;
 
@@ -56,8 +56,8 @@ public class TransportManager : MBehavior
 		M_Event.inputEvents[(int)MInputType.OutOfFocusObject] += OnOutofFocus;
         M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
         M_Event.logicEvents[(int)LogicEvents.End] += OnEnd;
-		M_Event.logicEvents[(int)LogicEvents.Credits] += OnCredits; 
-	}
+        M_Event.logicEvents[(int)LogicEvents.Credits] += OnCredits;
+    }
 
 	protected override void MOnDisable()
 	{
@@ -82,7 +82,7 @@ public class TransportManager : MBehavior
 				Vector3 transportStart = Camera.main.transform.position;
 				Vector3 transportToward = focusTeleporter.GetObservePosition();
 				float length = (transportStart - transportToward).magnitude;
-				transportStart.y = transportToward.y = .25f; 
+                transportStart.y = transportToward.y = .25f;
 
 				transportLine.enabled = true;
 				transportLine.SetPosition(0, transportStart);
@@ -93,8 +93,8 @@ public class TransportManager : MBehavior
 			if(transportCircle != null)
             {
 				Vector3 transportToward = focusTeleporter.GetObservePosition ();
-				transportToward.y = .25f;
-				transportCircle.transform.position = transportToward;
+                transportToward.y = .25f;
+                transportCircle.transform.position = transportToward;
 				transportCircle.gameObject.SetActive(true);
 			}
 		}
@@ -169,6 +169,30 @@ public class TransportManager : MBehavior
 		}
 	}
 
+    public void StationaryEffect()
+    {
+        // set up the animation sequence
+        transportSequence = DOTween.Sequence();
+        // add the vfx if there is the image effect in the camera
+        if (toColorEffect != null && bloomAndFlares != null)
+        {
+            transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, 0f));
+            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, 0f));
+        }
+        Vector3 target = new Vector3(-0.4f, 0.0f, 30.057f);
+        transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime)); // move nowhere
+
+        //Vector3 playerCenter = Vector3.zero;
+        //transportSequence.Append(LogicManager.Instance.GetPlayerPersonTransform().DOLocalMove(playerCenter, transportTime / 10.0f));
+                                                                                                                                     
+        if (toColorEffect != null && bloomAndFlares != null)
+        {
+            transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
+            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
+        }
+        transportSequence.OnComplete(OnTransportComplete);
+    }
+
 	void OnTransportComplete()
 	{
         // fire the transport end event
@@ -179,6 +203,7 @@ public class TransportManager : MBehavior
 			arg.AddMessage(Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
 			M_Event.FireLogicEvent(LogicEvents.TransportEnd, arg);
 		}
+
 		transportSequence = null;
 		transportToObject = null;
 
@@ -203,7 +228,19 @@ public class TransportManager : MBehavior
 			float distance = (TrailLeft.GetDistance() + TrailRight.GetDistance()) / 170f;
 			Vector3 target = new Vector3(transform.position.x, transform.position.y + distance, transform.position.z);
 			transform.position = Vector3.Lerp(transform.position, target, 1f);
+
+            // Fade to white after reaching a certain height
+            if (LogicManager.Instance.GetPlayerHeadTransform().position.y > 20.0f)
+            {
+                FadeToWhite();
+            }
         } 
+    }
+
+    public void FadeToWhite()
+    {
+        DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime);
+        DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime);
     }
 
     void OnFinale(LogicArg arg)
@@ -232,7 +269,7 @@ public class TransportManager : MBehavior
 
         transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime * 3)); // move room to the target 
 
-        Vector3 playerCenter = new Vector3(0.0f, LogicManager.Instance.GetPlayerPersonTransform().position.y, 0.0f);
+        Vector3 playerCenter = new Vector3(0.0f, 0.0f, 0.0f); // need? LogicManager.Instance.GetPlayerPersonTransform().position.y
         transportSequence.Append(LogicManager.Instance.GetPlayerPersonTransform().DOLocalMove(playerCenter, transportTime)); // move the player to the center of the room, keeping player height the same
 
         // add the vfx if there is the image effect in the camera

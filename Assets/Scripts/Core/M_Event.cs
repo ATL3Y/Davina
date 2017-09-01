@@ -47,9 +47,6 @@ public enum LogicEvents
 	End=18, // maybe these should be separate scenes and scene enter functions
 	Credits=19,
 
-	//EnterStoryTutorial=20,
-	//ExitStoryTutorial=21,
-
     Finale=22,
 	Heard=23,
 
@@ -163,7 +160,8 @@ public class MsgArg : BasicArg
 	}
 }
 
-public enum ClickType{
+public enum ClickType
+{
 	Mouse, 
 	LeftController,
 	RightController,

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class RaiseLower : MonoBehaviour
 {
@@ -25,12 +26,24 @@ public class RaiseLower : MonoBehaviour
 
 	void OnRaise(LogicArg arg)
 	{
-		transform.DOLocalMove(transform.position + new Vector3(0f, .2f, 0f), 2f).SetEase(Ease.InOutSine);
+        // Make sure we don't get out of range in tutorial
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            return;
+        }
+
+        transform.DOLocalMove(transform.position + new Vector3(0f, .13f, 0f), 2f).SetEase(Ease.InOutSine);
 	}
 
 	void OnLower(LogicArg arg)
 	{
-		transform.DOLocalMove(transform.position + new Vector3(0f, -.2f, 0f), 2f).SetEase(Ease.InOutSine);
+        // Make sure we don't get out of range in tutorial
+        if(SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            return;
+        }
+
+        transform.DOLocalMove(transform.position + new Vector3(0f, -.13f, 0f), 2f).SetEase(Ease.InOutSine);
 	}
 
     protected void Update()
