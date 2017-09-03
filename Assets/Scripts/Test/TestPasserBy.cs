@@ -65,7 +65,7 @@ public class TestPasserBy : MonoBehaviour {
 	{
 		if ( ( ( ( 1 << col.gameObject.layer) & testMask.value ) != 0 ) && ( trading == null ) )
 		{
-			agent.Stop ();	
+            agent.isStopped = true;	
 			transform.DOPause ();
 //			TestLogicManager.Instance.result.text = "Press Space to trade with this person.";
 			trading = this;

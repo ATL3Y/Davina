@@ -20,7 +20,7 @@ public class Hand : MonoBehaviour
 	{
 		Vector3 position = transform.position;// ViveInputController.Instance.boundsLeftController;
 		Vector3 forward = Vector3.Normalize(1.5f * transform.forward - transform.up);
-		AxKDebugLines.AddLine(transform.position, transform.position + forward, selectColor, 0);
+		//AxKDebugLines.AddLine(transform.position, transform.position + forward, selectColor, 0);
 		Quaternion rotation = Quaternion.LookRotation (transform.forward, transform.up);
 		Vector3 scale = new Vector3 (0.1f, 0.1f, 0.3f) * 0.2f;
 		OBB obb = new OBB(position, rotation, scale);
@@ -29,7 +29,7 @@ public class Hand : MonoBehaviour
 		AxKDebugLines.AddLine(transform.position, transform.position + transform.right * .1f, Color.red * .3f, 0);
 		AxKDebugLines.AddLine(transform.position, transform.position + transform.forward * .1f, Color.cyan * .3f, 0);
 
-		bool handFulls = false;
+		//bool handFulls = false;
 		List<Interactable> availableInteractions = new List<Interactable>();
        // if ( Input.GetMouseButtonDown( 0 ) )
         {

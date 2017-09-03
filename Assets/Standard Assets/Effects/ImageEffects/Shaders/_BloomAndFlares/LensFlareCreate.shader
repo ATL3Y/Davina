@@ -29,10 +29,12 @@ Shader "Hidden/LensFlareCreate" {
 		o.uv[1] = ( ( v.texcoord.xy - 0.5 ) * -1.45 ) + 0.5;
 		o.uv[2] = ( ( v.texcoord.xy - 0.5 ) * -2.55 ) + 0.5;
 		o.uv[3] = ( ( v.texcoord.xy - 0.5 ) * -4.15 ) + 0.5;
+
 		return o;
 	}
 	
 	fixed4 frag(v2f i) : SV_Target {
+
 		fixed4 color = float4 (0,0,0,0);
 		color += tex2D(_MainTex, i.uv[0] ) * colorA;
 		color += tex2D(_MainTex, i.uv[1] ) * colorB;

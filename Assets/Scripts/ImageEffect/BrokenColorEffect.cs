@@ -3,7 +3,8 @@ using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
 [ExecuteInEditMode]
-public class BrokenColorEffect : ImageEffectBase {
+public class BrokenColorEffect : ImageEffectBase
+{
 
 	[Range(0,1)]
 	[SerializeField] float toGrayRate = 0;
@@ -43,7 +44,6 @@ public class BrokenColorEffect : ImageEffectBase {
 		float beta = Mathf.Atan (forward.y / Mathf.Sqrt (forward.z * forward.z + forward.x * forward.x ) ) / Mathf.PI * 2f;
 		material.SetVector ("_Camera_Forward", new Vector4 (alpha, beta, forward.x, forward.y));
 			
-
 		RenderTexture overflowBuffer = RenderTexture.GetTemporary (source.width, source.height);
 		RenderTexture grayBuffer = RenderTexture.GetTemporary (source.width, source.height);
 
@@ -78,7 +78,7 @@ public class BrokenColorEffect : ImageEffectBase {
 		RenderTexture.ReleaseTemporary (grayBuffer);
 	}
 
-	void OnDisable()
+	protected override void OnDisable()
 	{
 		DestroyImmediate (recordTex);
 		recordTex = null;

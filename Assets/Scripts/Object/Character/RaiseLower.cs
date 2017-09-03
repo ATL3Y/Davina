@@ -63,10 +63,10 @@ public class RaiseLower : MonoBehaviour
             //Quaternion look = Quaternion.LookRotation(toPlayer) * transform.localRotation;
             //transform.localRotation = Quaternion.Slerp(transform.localRotation, look, Time.deltaTime * 1.5f);
 
-            Vector3 target = new Vector3(transform.position.x, LogicManager.Instance.GetPlayerHeadTransform().position.y, transform.position.z);
+            Vector3 target = new Vector3(transform.position.x, LogicManager.Instance.GetPlayerHeadTransform().position.y + .5f, transform.position.z);
 			if(t < 1f)
             {
-				t += Time.deltaTime / 200f; // lag so Davina doesn't jump up at first
+				t += Time.deltaTime / 50f; // lag so Davina doesn't jump up at first
 			}
 			transform.position = Vector3.Lerp(transform.position, target, t);
         }

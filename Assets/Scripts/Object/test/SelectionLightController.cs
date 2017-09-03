@@ -15,7 +15,7 @@ public class SelectionLightController : MonoBehaviour
 
 	void Start () 
 	{
-		Color color = new Color ();
+		//Color color = new Color ();
 		
 //		defaultMat = GetComponent<Renderer> ().material;
 //		glowHoverMat = (Material)Resources.Load("GlowHover", typeof(Material));

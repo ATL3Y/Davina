@@ -25,7 +25,7 @@ public class TextCredits : MonoBehaviour
 	private float lineHeightLimit = 1.2f;
 	private int numberOfLines = 1;
 
-	private float timeLeft=0f;
+	private float timeLeft = 0f;
 	private int currentInstruction = 0;
 
 	public void Awake()
@@ -35,10 +35,9 @@ public class TextCredits : MonoBehaviour
 		instructions.Add("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
 		instructions.Add("STORY                ISOBEL SHASHA"); 
 		instructions.Add("PROGRAMMER           ATWOOD DENG");
-        instructions.Add("VOICE ACTOR MOTHER   YIWEN DAI");
-        instructions.Add("VOICE ACTOR DAVINA   JUNG HO SOHN");
+        instructions.Add("VOICE ACTORS         JUNG HO SOHN         YIWEN DAI");
         instructions.Add("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
-		instructions.Add("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR"); 
+		instructions.Add("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR       MY FAMILY"); 
 		instructions.Add("USC                  INTERACTIVE MEDIA    AND GAMES");
         instructions.Add("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
     }

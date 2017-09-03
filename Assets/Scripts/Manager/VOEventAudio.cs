@@ -11,7 +11,6 @@ public class VOEventAudio : MonoBehaviour
     [SerializeField] List<AudioClip> endBlackClips;
 
     protected int i=0;
-	protected int j=0;
 
     protected AudioSource source;
 	private bool end = false;
@@ -33,10 +32,7 @@ public class VOEventAudio : MonoBehaviour
 
     private void Update()
     {
-        if(gameObject.scene.buildIndex == 2 && called1) // characters scene
-        {
 
-        }
     }
 
     protected void OnEnable()
@@ -64,6 +60,7 @@ public class VOEventAudio : MonoBehaviour
 
 	void OnCharacters(LogicArg arg)
     {
+        i = 0;
         // SHOULD TRIGGER THE RIGHT CLIP WHEN PLAYER LOOKS AT THEIR BODY
 		if (!called1 && charactersClips.Count > 0)
         { 
@@ -99,13 +96,14 @@ public class VOEventAudio : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 4 && i == 3)
         {
             AudioSourceTexture[] audioSourceTextures = GameObject.FindObjectsOfType<AudioSourceTexture>();
-            for(int j=0; j< audioSourceTextures.Length; j++)
+            for(int j = 0; j < audioSourceTextures.Length; j++)
             {
                 if(audioSourceTextures[j].GetComponent<AudioSource>() != null)
                 {
                     audioSourceTextures[j].GetComponent<AudioSource>().clip = clips[i];
                     audioSourceTextures[j].GetComponent<AudioSource>().Play();
-                }else
+                }
+                else
                 {
                     Debug.Log("There's no audiosource on the game object.");
                 }

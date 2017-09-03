@@ -15,6 +15,8 @@ public class LogicManager : MBehavior
 
 	public bool VREnable = true;
 
+    public bool VolumetricLights;
+
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
 	[SerializeField] Transform PCHand;
@@ -79,6 +81,15 @@ public class LogicManager : MBehavior
 		Cursor.visible = false;
 
         InitScenes();
+
+        if (VolumetricLights)
+        {
+            gameObject.GetComponentInChildren<HxVolumetricCamera>().enabled = true;
+        }
+        else
+        {
+            gameObject.GetComponentInChildren<HxVolumetricCamera>().enabled = false;
+        }
     }
 
     private void InitScenes()

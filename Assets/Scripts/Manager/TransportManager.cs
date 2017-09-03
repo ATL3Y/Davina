@@ -44,8 +44,14 @@ public class TransportManager : MBehavior
 	protected override void MStart()
 	{
 		base.MStart();
-		toColorEffect = LogicManager.Instance.GetPlayerTransform().GetComponentInChildren<ToColorEffect>();
-		bloomAndFlares = LogicManager.Instance.GetPlayerTransform().GetComponentInChildren<BloomAndFlares>();
+        if(toColorEffect == null)
+        {
+            toColorEffect = LogicManager.Instance.GetPlayerTransform().GetComponentInChildren<ToColorEffect>();
+        }
+		if(bloomAndFlares == null)
+        {
+            bloomAndFlares = LogicManager.Instance.GetPlayerTransform().GetComponentInChildren<BloomAndFlares>();
+        }
 	}
 
 	protected override void MOnEnable()
@@ -233,6 +239,7 @@ public class TransportManager : MBehavior
             if (LogicManager.Instance.GetPlayerHeadTransform().position.y > 20.0f)
             {
                 FadeToWhite();
+                AudioListener.volume = Mathf.Lerp(AudioListener.volume, 0f, Time.deltaTime);
             }
         } 
     }

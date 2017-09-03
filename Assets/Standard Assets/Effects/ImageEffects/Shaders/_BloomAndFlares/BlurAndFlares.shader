@@ -45,6 +45,7 @@ Shader "Hidden/BlurAndFlares" {
 		v2f o;
 		o.pos = UnityObjectToClipPos(v.vertex);
 		o.uv =  v.texcoord.xy;
+
 		return o;
 	}
 
@@ -103,6 +104,7 @@ Shader "Hidden/BlurAndFlares" {
 		color += 0.075 * tex2D (_MainTex, i.uv45.zw);	
 		color += 0.0525 * tex2D (_MainTex, i.uv67.xy);
 		color += 0.0525 * tex2D (_MainTex, i.uv67.zw);
+
 		return color;
 	} 
 
@@ -132,6 +134,7 @@ Shader "Hidden/BlurAndFlares" {
 	}	
 	
 	half4 fragPost (v2f_opts i) : SV_Target {
+
 		half4 color = tex2D (_MainTex, i.uv[0]);
 		color += tex2D (_MainTex, i.uv[1]);
 		color += tex2D (_MainTex, i.uv[2]);

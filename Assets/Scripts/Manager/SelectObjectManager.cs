@@ -52,9 +52,10 @@ public class SelectObjectManager : MBehavior {
 			for ( int i = 0; i < focus.Length; i++ )
 			{
 				if ( focus[ i ] is Interactable) {
-					Interactable cobj = (Interactable)focus[ i ];
-					//Debug.Log ("Try Select");
-					/*
+
+                    //Debug.Log ("Try Select");
+                    /*
+                     * Interactable cobj = (Interactable)focus[ i ];
 					if (cobj.Select (arg.clickType)) {
 						//Debug.Log ("Select success");
 						m_SelectObj = cobj;
@@ -65,8 +66,8 @@ public class SelectObjectManager : MBehavior {
 
 					}
 				*/
-				}
-			}
+                }
+            }
 		} // unselect option available once object is held
 		else if (m_SelectObj != null) {
 			//print (" in on select obj and m_SelectObj = " + m_SelectObj.name);

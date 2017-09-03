@@ -10,8 +10,8 @@ public class NiceTeleporter : Interactable
     [SerializeField] protected SkinnedMeshRenderer[] outlineSkinnedMeshRenders;
     protected float outlineWidth;
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    public override void Start()
     {
 		base.Start ();
 
@@ -40,9 +40,9 @@ public class NiceTeleporter : Interactable
 		if (observeLocation == null)
 			observeLocation = transform;
 	}
-	
-	// Update is called once per frame
-	void Update()
+
+    // Update is called once per frame
+    public override void Update()
     {
 		base.Update();
 
@@ -60,7 +60,7 @@ public class NiceTeleporter : Interactable
         }
         foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
         {
-            bool state = m_hoverTime > 0.1f ? true : false;
+            //bool state = m_hoverTime > 0.1f ? true : false;
             r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 4.0f : outlineWidth / 10.0f); // maybe f turn off somehow... 
         }
 
