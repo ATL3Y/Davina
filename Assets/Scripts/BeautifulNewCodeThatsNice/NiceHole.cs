@@ -29,6 +29,7 @@ public class NiceHole : Interactable
     {
         base.MOnEnable();
         M_Event.logicEvents[(int)LogicEvents.TransportEnd] += OnTransportEnd;
+        
     }
 
     protected override void MOnDisable()
@@ -92,13 +93,11 @@ public class NiceHole : Interactable
 
 		originalScale = transform.lossyScale;
 
-        /*
-		// Need delay for the first story
-		if (Time.timeSinceLevelLoad < 20) {
-			storySoundCooldown = 18f;
-		} 
-        */
-	}
+        if (SceneManager.GetActiveScene().buildIndex == 2 && storySound && !storySoundSource.isPlaying)
+        {
+            storySoundSource.Play();
+        }
+    }
 
     // Update is called once per frame
     public override void Update()

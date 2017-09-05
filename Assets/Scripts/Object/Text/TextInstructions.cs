@@ -206,7 +206,7 @@ public class TextInstructions : MonoBehaviour
 			}
 		}
 		//leave instruction for a time
-		Pause (7f);
+		Pause (10f);
 	}
 
 	public void Clear()

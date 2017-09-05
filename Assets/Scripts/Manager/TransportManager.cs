@@ -224,7 +224,8 @@ public class TransportManager : MBehavior
 	{
 		t = teleporter;
 	}
-
+    private bool faded = false;
+    private bool credtsDone = false;
     protected override void MUpdate()
     {
         base.MUpdate();
@@ -236,9 +237,14 @@ public class TransportManager : MBehavior
 			transform.position = Vector3.Lerp(transform.position, target, 1f);
 
             // Fade to white after reaching a certain height
-            if (LogicManager.Instance.GetPlayerHeadTransform().position.y > 20.0f)
+            if (!faded && LogicManager.Instance.GetPlayerHeadTransform().position.y > 20.0f)
             {
+                faded = true;
                 FadeToWhite();
+            }
+
+            if (credtsDone)
+            {
                 AudioListener.volume = Mathf.Lerp(AudioListener.volume, 0f, Time.deltaTime);
             }
         } 
@@ -246,6 +252,7 @@ public class TransportManager : MBehavior
 
     public void FadeToWhite()
     {
+        credtsDone = true;
         DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime);
         DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime);
     }

@@ -195,7 +195,7 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceR != null && storySoundCooldownR < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
 					storySoundSourceR.Play();
-					storySoundCooldownR = storySoundR.length + 6f;
+					storySoundCooldownR = storySoundR.length + 10f;
 				} 
 			}
             else if (dot > 0.2f) // light
@@ -208,7 +208,7 @@ public class NiceCollectable : Interactable
 				if (storySoundSourceL != null && storySoundCooldownL < 0.0f && !niceHole.storySoundSource.isPlaying)
                 {
 					storySoundSourceL.Play();
-					storySoundCooldownL = storySoundL.length + 6f;
+					storySoundCooldownL = storySoundL.length + 10f;
 				} 
 			} 
 

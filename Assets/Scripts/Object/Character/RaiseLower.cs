@@ -66,7 +66,7 @@ public class RaiseLower : MonoBehaviour
             Vector3 target = new Vector3(transform.position.x, LogicManager.Instance.GetPlayerHeadTransform().position.y + .5f, transform.position.z);
 			if(t < 1f)
             {
-				t += Time.deltaTime / 50f; // lag so Davina doesn't jump up at first
+				t += Time.deltaTime / 20f; // lag so Davina doesn't jump up at first
 			}
 			transform.position = Vector3.Lerp(transform.position, target, t);
         }
