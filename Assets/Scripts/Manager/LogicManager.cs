@@ -14,7 +14,6 @@ public class LogicManager : MBehavior
 	private static LogicManager s_Instance;
 
 	public bool VREnable = true;
-
     public bool VolumetricLights;
 
 	[SerializeField] GameObject PC;
