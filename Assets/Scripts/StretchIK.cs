@@ -28,7 +28,7 @@ public class StretchIK : MonoBehaviour
     private float[] lArmOrigLocYs;
     private float[] rArmOrigLocYs;
 
-    private bool debug = true;
+    private bool debug = false;
 
     #endregion
 

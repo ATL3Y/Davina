@@ -85,13 +85,9 @@ namespace UnityStandardAssets.ImageEffects
             CheckSupport (false);
 
             screenBlend = CheckShaderAndCreateMaterial (screenBlendShader, screenBlend);
-            Debug.Log(screenBlendShader.name);
             lensFlareMaterial = CheckShaderAndCreateMaterial(lensFlareShader,lensFlareMaterial);
-            Debug.Log(lensFlareShader.name);
             blurAndFlaresMaterial = CheckShaderAndCreateMaterial (blurAndFlaresShader, blurAndFlaresMaterial);
-            Debug.Log(blurAndFlaresShader.name);
             brightPassFilterMaterial = CheckShaderAndCreateMaterial(brightPassFilterShader, brightPassFilterMaterial);
-            Debug.Log(brightPassFilterShader.name);
 
             if (!isSupported)
                 ReportAutoDisable ();
