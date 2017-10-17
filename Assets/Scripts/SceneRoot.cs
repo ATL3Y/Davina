@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneRoot : MonoBehaviour
 {
-    Transform startPos;
     [SerializeField]
     GameObject lights;
     [SerializeField]
@@ -23,14 +22,6 @@ public class SceneRoot : MonoBehaviour
             LogicManager.Instance.SetSceneRoots(gameObject.scene.buildIndex, gameObject);
         }
         
-
-        if (startPos != null)
-        {
-            Debug.Log("Running scene root pt fyi and b4 " + LogicManager.Instance.transform.position);
-            LogicManager.Instance.transform.position = startPos.position;
-            LogicManager.Instance.transform.rotation = startPos.rotation;
-            Debug.Log("Running scene root pt fyi and after " + LogicManager.Instance.transform.position);
-        }
         if (lights != null && lightsVolumetric != null)
         {
             if (LogicManager.Instance.VolumetricLights)

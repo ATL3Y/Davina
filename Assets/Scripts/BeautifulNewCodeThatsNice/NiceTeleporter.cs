@@ -17,10 +17,11 @@ public class NiceTeleporter : Interactable
 
         if(gameObject.scene.buildIndex == 1)
         {
-            outlineWidth = .5f;
-        }else
+            outlineWidth = 20f;
+        }
+        else
         {
-            outlineWidth = 2f;
+            outlineWidth = 1f;
         }
 
 		foreach (Renderer r in outlineRenders)

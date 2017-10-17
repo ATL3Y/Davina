@@ -18,7 +18,7 @@ public class RootMotion : MonoBehaviour
     void Update ()
     {
         Vector3 direction = Vector3.Normalize(target - transform.position);
-        Vector3 toTarget = Vector3.Lerp(transform.position, transform.position + direction, Time.deltaTime * .075f);
+        Vector3 toTarget = Vector3.Lerp(transform.position, transform.position + direction, Time.deltaTime * .03f);
         transform.position = new Vector3(toTarget.x, .23f, toTarget.z); //1.13f? 
 
         /*

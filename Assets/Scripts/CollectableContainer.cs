@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollectableContainer : MonoBehaviour
 {
@@ -21,6 +22,11 @@ public class CollectableContainer : MonoBehaviour
     void OnEnable()
     {
         //transform.SetParent(parent);
+
+        if(SceneManager.GetActiveScene().buildIndex == 2 )
+        {
+            transform.SetParent ( LogicManager.Instance.VRLeftHand.transform );
+        }
 
         GameObject temp = GameObject.Instantiate(prefab);
         if (temp.GetComponent<NiceCollectable>() != null)

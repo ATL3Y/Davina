@@ -13,12 +13,17 @@ public class LogicManager : MBehavior
 	public static LogicManager Instance { get { return s_Instance; } }
 	private static LogicManager s_Instance;
 
-	public bool VREnable = true;
+    [SerializeField]
+    Transform nextStartPos;
+
+    public bool VREnable = true;
     public bool VolumetricLights;
 
 	[SerializeField] GameObject PC;
 	[SerializeField] GameObject VR;
-	[SerializeField] Transform PCHand;
+    public GameObject VRLeftHand;
+    public GameObject VRRightHand;
+    [SerializeField] Transform PCHand;
 	[SerializeField] Transform playerHead;
     [SerializeField] Transform playerPerson;
     [SerializeField] GameObject Rain;
@@ -50,7 +55,7 @@ public class LogicManager : MBehavior
 
     private bool m_allScenesLoaded = false;
     private AsyncOperation[] m_async;
-    private GameObject[] m_sceneRoots;
+    public GameObject[] m_sceneRoots;
 
     protected override void MAwake()
     {
@@ -99,7 +104,7 @@ public class LogicManager : MBehavior
         // Start in the Tutorial
         SceneManager.LoadScene("Tutorial", LoadSceneMode.Additive);
 
-        TransportManager.Instance.StationaryEffect();
+        TransportManager.Instance.StationaryEffect( nextStartPos.position );
 
         // Load other scenes async
         for (int i = 0; i < numAsyncScenes; i++)
@@ -286,7 +291,8 @@ public class LogicManager : MBehavior
 		CameraAttachPoint point = (CameraAttachPoint)arg.sender;
 		if (point != null)
         {
-			VR.transform.position = point.transform.position;
+            Debug.Log ( "OnNewAttachPoint: " + point.transform.position + " local pos " + point.transform.localPosition + " in scene " + SceneManager.GetActiveScene().name );
+            VR.transform.position = point.transform.position;
 			VR.transform.rotation = point.transform.rotation;
 		}
 	}

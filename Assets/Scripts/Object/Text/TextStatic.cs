@@ -18,7 +18,11 @@ public class TextStatic : MonoBehaviour
 
 	[SerializeField] string firstPhrase;
 
-	public void Start() 
+    private float lineLengthLimit = 25f;
+    private float lineHeightLimit = .5f;
+    private int numberOfLines = 1;
+
+    public void Start() 
 	{
 		origPos = transform.position;
 		origRot = transform.rotation;
@@ -31,10 +35,11 @@ public class TextStatic : MonoBehaviour
         {
             levelPath = "lettersGOlarge";
             tracking = 2.5f;
-        }else
+        }
+        else
         {
             levelPath = "lettersGO";
-            tracking = .5f;
+            tracking = .3f;
         }
         
 		Object[] alphabet = Resources.LoadAll(levelPath, typeof(GameObject));
@@ -51,10 +56,49 @@ public class TextStatic : MonoBehaviour
 			_alphabet.Add(l); //add letter to the list // note: could just use the array...
 		}
 
-		MakeTextGO(firstPhrase);
+        MakeLines ( firstPhrase);
 	}
-		
-	public void MakeTextGO(string text) //could have size, shader... //assuming all uppercase 
+
+    public void MakeLines ( string text )
+    {
+        Clear ( );
+        //InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
+
+        List<string> lines = new List<string>();
+
+        //place all the words into an array
+        string[] words = text.Split(' ', '\t', System.Environment.NewLine.ToCharArray()[0]);
+        //intantiate a line
+        System.Text.StringBuilder line = new System.Text.StringBuilder();
+
+        for ( int i = 0; i < words.Length; i++ )
+        {
+            if ( line.Length + words [ i ].Length + 1 > lineLengthLimit )
+            {
+                //add full line to the list of lines
+                lines.Add ( line.ToString ( ) );
+                //clear the line
+                line.Remove ( 0, line.Length );
+            }
+            //add the word that put the last line over the limit to the new line
+            line.Append ( words [ i ] + " " );
+        }
+        // if there is a word left, add the final word
+        if ( line.Length > 0 )
+        {
+            lines.Add ( line.ToString ( ) );
+        }
+
+        numberOfLines = lines.Count;
+        //print (numberOfLines);
+        for ( int i = 0; i < lines.Count; i++ )
+        {
+            MakeTextGO ( lines [ i ], i );
+            //print ("new line");
+        }
+    }
+
+    public void MakeTextGOOld(string text) //could have size, shader... //assuming all uppercase 
 	{
 		Clear ();
 
@@ -88,7 +132,40 @@ public class TextStatic : MonoBehaviour
 		}
 	}
 
-	public void SwapCharGO(char c, int item) //could have size, shader... //assuming all uppercase 
+    public void MakeTextGO ( string text, int height ) //could have size, shader... //assuming all uppercase 
+    {
+        //center text using size of string and number of lines
+        size = text.Length;
+        float length = size * tracking;
+        transform.position += transform.right * ( length / ( 2 * numberOfLines ) ) * transform.lossyScale.x;
+
+        float lineHeight =  lineHeightLimit * (float) (numberOfLines - height - 1);
+
+        for ( int i = 0; i < text.Length; i++ )
+        {
+            int count = 1;
+            if ( text [ i ] == ' ' )
+            {
+                count *= 4; //make a space 
+                continue; //jump to the next letter 
+            }
+
+            for ( int j = 0; j < _alphabet.Count; j++ )
+            {
+                if ( text [ i ].ToString ( ) == _alphabet [ j ].name )
+                {
+                    GameObject newLetter = Instantiate (_alphabet [j]);
+                    newLetter.transform.SetParent ( transform );
+                    newLetter.transform.localPosition = new Vector3 ( -tracking * count * i, lineHeight, 0f );
+                    newLetter.transform.localRotation = Quaternion.identity;
+                    _letters.Add ( newLetter );
+                    count = 1;
+                }
+            }
+        }
+    }
+
+    public void SwapCharGO(char c, int item) //could have size, shader... //assuming all uppercase 
 	{
 		GameObject newLetter = new GameObject();
 

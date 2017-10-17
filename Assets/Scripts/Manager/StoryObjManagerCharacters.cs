@@ -213,7 +213,8 @@ public class StoryObjManagerCharacters : MBehavior
 	void OnCharacters(LogicArg arg)
     {
         Init();
-		M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
+        enabled = false;
+		// M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
 	}
 
     void Init()

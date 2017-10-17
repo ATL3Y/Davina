@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using UnityStandardAssets.ImageEffects;
+using UnityEngine.SceneManagement;
 
 public class TransportManager : MBehavior
 {
@@ -12,7 +13,7 @@ public class TransportManager : MBehavior
 	[SerializeField] ToColorEffect toColorEffect;
 	[SerializeField] BloomAndFlares bloomAndFlares;
 	[SerializeField] float fadeTime = .5f;
-	[SerializeField] float transportTime = 1.42f;
+	[SerializeField] float transportTime = 1.12f;
 	[SerializeField] LineRenderer transportLine;
 	[SerializeField] ParticleSystem transportCircle;
 
@@ -136,11 +137,19 @@ public class TransportManager : MBehavior
 			transportToObject = InputManager.Instance.FocusedObject;
 
 			// do not transport to myself
-			if(transportToObject == LogicManager.Instance.StayTeleporter)
-				return;
+			if( transportToObject == LogicManager.Instance.StayTeleporter )
+            {
+                Debug.Log ( "transportToObject == LogicManager.Instance.StayTeleporter" );
+                return;
+            }
+				
 
-			if(t == null)
-				return;
+			if( t == null )
+            {
+                Debug.Log ( "t == null" );
+                return;
+            }
+				
             // Debug.Log("OnTransport - TransportStart");
 
             // fire the transport start event
@@ -171,11 +180,11 @@ public class TransportManager : MBehavior
 				transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
 			}
 
-			transportSequence.OnComplete(OnTransportComplete);
+			transportSequence.OnComplete( OnTransportComplete );
 		}
 	}
 
-    public void StationaryEffect()
+    public void StationaryEffect( Vector3 target )
     {
         // set up the animation sequence
         transportSequence = DOTween.Sequence();
@@ -185,7 +194,6 @@ public class TransportManager : MBehavior
             transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, 0f));
             transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, 0f));
         }
-        Vector3 target = new Vector3(-0.4f, 0.0f, 30.057f);
         transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime)); // move nowhere
 
         //Vector3 playerCenter = Vector3.zero;
@@ -196,10 +204,14 @@ public class TransportManager : MBehavior
             transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
             transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
         }
-        transportSequence.OnComplete(OnTransportComplete);
+        transportSequence.OnComplete( OnTransportComplete );
+        if ( SceneManager.GetActiveScene ( ).buildIndex != 0 )
+        {
+            transportSequence.OnComplete ( LogicManager.Instance.IterateState );
+        }
     }
 
-	void OnTransportComplete()
+	void OnTransportComplete( )
 	{
         // fire the transport end event
         if(transportToObject != null)
@@ -208,22 +220,40 @@ public class TransportManager : MBehavior
 			LogicArg arg = new LogicArg(this);
 			arg.AddMessage(Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
 			M_Event.FireLogicEvent(LogicEvents.TransportEnd, arg);
+
+            if(SceneManager.GetActiveScene().buildIndex == 2 )
+            {
+                if( transportToObject.gameObject.name.Contains ( "Davina" ) )
+                {
+                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "Davina" );
+                }
+                else if ( transportToObject.gameObject.name.Contains ( "Mom" ) )
+                {
+                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "Mom" );
+                }
+                else if ( transportToObject.gameObject.name.Contains ( "BigD" ) )
+                {
+                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "BigD" );
+                }
+            }
 		}
 
 		transportSequence = null;
 		transportToObject = null;
-
+        /*
         if (finale)
         {
-            Debug.Log("Calling iterate to end state from finale in transport.");
+            Debug.Log("Calling iterate state");
             LogicManager.Instance.IterateState();
         }
+        */
     }
 
 	public void SetTeleporter(NiceTeleporter teleporter)
 	{
 		t = teleporter;
 	}
+
     private bool faded = false;
     private bool credtsDone = false;
     protected override void MUpdate()

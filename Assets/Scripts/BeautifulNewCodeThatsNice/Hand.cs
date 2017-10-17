@@ -19,8 +19,9 @@ public class Hand : MonoBehaviour
 	void Update ()
 	{
 		Vector3 position = transform.position;// ViveInputController.Instance.boundsLeftController;
-		Vector3 forward = Vector3.Normalize(1.5f * transform.forward - transform.up);
-		//AxKDebugLines.AddLine(transform.position, transform.position + forward, selectColor, 0);
+        //Vector3 forward = Vector3.Normalize(1.5f * transform.forward - transform.up);
+        Vector3 forward = transform.forward;
+        AxKDebugLines.AddLine(transform.position, transform.position + forward, selectColor, 0);
 		Quaternion rotation = Quaternion.LookRotation (transform.forward, transform.up);
 		Vector3 scale = new Vector3 (0.1f, 0.1f, 0.3f) * 0.2f;
 		OBB obb = new OBB(position, rotation, scale);
@@ -44,10 +45,10 @@ public class Hand : MonoBehaviour
             for (int i = 0; i < interactions.Length; i++)
             {
 				Interactable interaction = interactions[i];
-				//print ("int " + interaction.gameObject.name + " has owner " + interaction.HasOwner() +" is in range " + interaction.IsInInteractionRange (position, new Ray (position, forward), obb));
+				// print ("int " + interaction.gameObject.name + " has owner " + interaction.HasOwner() +" is in range " + interaction.IsInInteractionRange (position, new Ray (position, forward), obb));
 				if (interaction.enabled && !interaction.HasOwner() && interaction.useable && interaction.IsInInteractionRange(position, new Ray(position, forward), obb))
                 {
-					//print (interaction.gameObject.name);
+					// print (interaction.gameObject.name);
                     availableInteractions.Add(interaction);
                 }
             }

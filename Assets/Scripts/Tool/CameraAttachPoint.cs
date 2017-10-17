@@ -26,7 +26,7 @@ public class CameraAttachPoint : MBehavior {
         if (activePoint != this)
         {
             activePoint = this;
-            //Debug.Log("Running camera attach pt fyi");
+            Debug.Log("Running camera attach pt fyi");
 
             M_Event.FireLogicEvent(LogicEvents.CameraAttachPointChange, new LogicArg(this));
         }

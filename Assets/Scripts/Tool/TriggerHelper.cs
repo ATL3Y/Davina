@@ -4,7 +4,8 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
-public class TriggerHelper : MBehavior {
+public class TriggerHelper : MBehavior
+{
 	[SerializeField] List<string> senseTags;
 	[SerializeField] MTriggerEvent enterEvent;
 	[SerializeField] MTriggerEvent stayEvent;

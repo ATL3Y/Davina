@@ -99,8 +99,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\FXOutlinePulse.cs" />
-    <Compile Include="Assets\ObserveLocation.cs" />
+    <Compile Include="Assets\PhaseManagerCharacters.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -146,7 +145,6 @@
     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
-    <Compile Include="Assets\ScreenFade.cs" />
     <Compile Include="Assets\Scripts\AlwaysFacePlayer.cs" />
     <Compile Include="Assets\Scripts\AudioListenerTexture.cs" />
     <Compile Include="Assets\Scripts\AudioSourceTexture.cs" />
@@ -158,12 +156,14 @@
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\NiceHole.cs" />
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\NiceTeleporter.cs" />
     <Compile Include="Assets\Scripts\BeautifulNewCodeThatsNice\Obb.cs" />
+    <Compile Include="Assets\Scripts\Button.cs" />
     <Compile Include="Assets\Scripts\CollectableContainer.cs" />
     <Compile Include="Assets\Scripts\Core\AStateMachine.cs" />
     <Compile Include="Assets\Scripts\Core\Global.cs" />
     <Compile Include="Assets\Scripts\Core\M_Event.cs" />
     <Compile Include="Assets\Scripts\Core\MBehavior.cs" />
     <Compile Include="Assets\Scripts\FadeMesh.cs" />
+    <Compile Include="Assets\Scripts\FXOutlinePulse.cs" />
     <Compile Include="Assets\Scripts\FXParticlesSwirl.cs" />
     <Compile Include="Assets\Scripts\FXParticlesSwirl_Parent.cs" />
     <Compile Include="Assets\Scripts\HoleContainer.cs" />
@@ -202,9 +202,11 @@
     <Compile Include="Assets\Scripts\Object\Text\TextCredits.cs" />
     <Compile Include="Assets\Scripts\Object\Text\TextInstructions.cs" />
     <Compile Include="Assets\Scripts\Object\Text\TextStatic.cs" />
+    <Compile Include="Assets\Scripts\ObserveLocation.cs" />
     <Compile Include="Assets\Scripts\RootMotion.cs" />
     <Compile Include="Assets\Scripts\SceneRoot.cs" />
     <Compile Include="Assets\Scripts\Score.cs" />
+    <Compile Include="Assets\Scripts\ScreenFade.cs" />
     <Compile Include="Assets\Scripts\SetAudioListenerTexture.cs" />
     <Compile Include="Assets\Scripts\SetAudioSourceTexture.cs" />
     <Compile Include="Assets\Scripts\SpawnCollectibleHoleSet.cs" />

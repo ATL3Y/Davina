@@ -4,7 +4,7 @@ using System.Collections;
 public class Interactable: MBehavior
 {
     public bool insideBounds;
-    private bool debug = false;  // I'm just getting rid of the lines for now since they're not clarifying 
+    private bool debug = true;  // I'm just getting rid of the lines for now since they're not clarifying 
     public bool Ddebug { get { return debug; } }
     public int priority;
     public string displayMessage;
@@ -12,7 +12,7 @@ public class Interactable: MBehavior
     public Vector3 boundsMult = Vector3.one;
     private Bounds m_bounds;
 
-    private Color selectColor = new Color(0.0f, 7.0f, 144.0f, 1.0f);
+    private Color selectColor = new Color(200.0f, 7.0f, 144.0f, 1.0f);
     Color defaultColor;
 
     protected bool m_finished = false;
@@ -135,7 +135,7 @@ public class Interactable: MBehavior
             {
                 Vector3 centroid = ( points[ ( int )tris[ i ].x ] + points[ ( int )tris[ i ].y ] + points[ ( int )tris[ i ].z ] ) / 3.0f;
 
-                float range = 1000.25f;
+                float range = 10000.25f;
                 if ( Vector3.SqrMagnitude( centroid - inputLookDirection.origin ) > range && 
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].x ] - inputLookDirection.origin ) > range &&
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].y ] - inputLookDirection.origin ) > range &&
