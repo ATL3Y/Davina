@@ -1,0 +1,174 @@
+fileFormatVersion: 2
+guid: 5f1f05e83d222d84cb7b7fa12de2ae56
+timeCreated: 1508050304
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: streetlights01_obj:Box01
+    100004: streetlights01_obj:Box010
+    100006: streetlights01_obj:Box02
+    100008: streetlights01_obj:Box05
+    100010: streetlights01_obj:Box07
+    100012: streetlights01_obj:Box08
+    100014: streetlights01_obj:Box09
+    100016: streetlights01_obj:Cylinder01
+    100018: streetlights01_obj:Cylinder02
+    100020: streetlights01_obj:Cylinder03
+    100022: streetlights01_obj:Cylinder04
+    100024: streetlights01_obj:Line01
+    100026: streetlights01_obj:Line03
+    100028: streetlights01_obj:Object01
+    100030: streetlights01_obj:Object03
+    100032: streetlights01_obj:Object04
+    100034: streetlights01_obj:Object06
+    100036: streetlights01_obj:OilTank04
+    100038: streetlights01_obj:OilTank05
+    100040: streetlights01_obj:Rectangle01
+    100042: streetlights01_obj:Sphere01
+    100044: streetlights01_obj:Sphere02
+    100046: streetlights01_obj:transform1
+    100048: streetlights01_obj:transform10
+    100050: streetlights01_obj:transform11
+    100052: streetlights01_obj:transform12
+    100054: streetlights01_obj:transform13
+    100056: streetlights01_obj:transform14
+    100058: streetlights01_obj:transform15
+    100060: streetlights01_obj:transform16
+    100062: streetlights01_obj:transform17
+    100064: streetlights01_obj:transform18
+    100066: streetlights01_obj:transform19
+    100068: streetlights01_obj:transform2
+    100070: streetlights01_obj:transform20
+    100072: streetlights01_obj:transform21
+    100074: streetlights01_obj:transform3
+    100076: streetlights01_obj:transform4
+    100078: streetlights01_obj:transform5
+    100080: streetlights01_obj:transform6
+    100082: streetlights01_obj:transform7
+    100084: streetlights01_obj:transform8
+    100086: streetlights01_obj:transform9
+    400000: //RootNode
+    400002: streetlights01_obj:Box01
+    400004: streetlights01_obj:Box010
+    400006: streetlights01_obj:Box02
+    400008: streetlights01_obj:Box05
+    400010: streetlights01_obj:Box07
+    400012: streetlights01_obj:Box08
+    400014: streetlights01_obj:Box09
+    400016: streetlights01_obj:Cylinder01
+    400018: streetlights01_obj:Cylinder02
+    400020: streetlights01_obj:Cylinder03
+    400022: streetlights01_obj:Cylinder04
+    400024: streetlights01_obj:Line01
+    400026: streetlights01_obj:Line03
+    400028: streetlights01_obj:Object01
+    400030: streetlights01_obj:Object03
+    400032: streetlights01_obj:Object04
+    400034: streetlights01_obj:Object06
+    400036: streetlights01_obj:OilTank04
+    400038: streetlights01_obj:OilTank05
+    400040: streetlights01_obj:Rectangle01
+    400042: streetlights01_obj:Sphere01
+    400044: streetlights01_obj:Sphere02
+    400046: streetlights01_obj:transform1
+    400048: streetlights01_obj:transform10
+    400050: streetlights01_obj:transform11
+    400052: streetlights01_obj:transform12
+    400054: streetlights01_obj:transform13
+    400056: streetlights01_obj:transform14
+    400058: streetlights01_obj:transform15
+    400060: streetlights01_obj:transform16
+    400062: streetlights01_obj:transform17
+    400064: streetlights01_obj:transform18
+    400066: streetlights01_obj:transform19
+    400068: streetlights01_obj:transform2
+    400070: streetlights01_obj:transform20
+    400072: streetlights01_obj:transform21
+    400074: streetlights01_obj:transform3
+    400076: streetlights01_obj:transform4
+    400078: streetlights01_obj:transform5
+    400080: streetlights01_obj:transform6
+    400082: streetlights01_obj:transform7
+    400084: streetlights01_obj:transform8
+    400086: streetlights01_obj:transform9
+    2300000: streetlights01_obj:Box010
+    3300000: streetlights01_obj:Box010
+    4300000: streetlights01_obj:Box010
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.05
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
