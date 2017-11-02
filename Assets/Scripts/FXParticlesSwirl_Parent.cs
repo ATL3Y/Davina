@@ -5,7 +5,7 @@ using System.Linq;
 
 public class FXParticlesSwirl_Parent: MonoBehaviour
 {
-    public NiceHole Hole { get; set; }
+    // public NiceHole Hole { get; set; }
     private bool finished = false;
 
     [SerializeField] Color c1;
@@ -20,7 +20,6 @@ public class FXParticlesSwirl_Parent: MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate ()
     {
-
         /*
         if (finished)
             return;
@@ -32,9 +31,11 @@ public class FXParticlesSwirl_Parent: MonoBehaviour
         }
         */
 
+        /*
         Vector3 direction = Hole.transform.position - transform.position;
         Quaternion temp = Quaternion.AngleAxis(Time.timeSinceLevelLoad * 180.0f, direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, temp, Time.deltaTime * 20.0f);
+        */
     }
     /*
     private IEnumerator Stop()

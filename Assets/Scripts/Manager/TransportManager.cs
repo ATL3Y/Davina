@@ -31,8 +31,10 @@ public class TransportManager : MBehavior
     {
 		get
         { 
-			if(transportSequence != null) 
-				return !transportSequence.IsComplete();
+			if(transportSequence != null )
+            {
+                return !transportSequence.IsComplete ( );
+            }
 			return false;
 		}
 	}
@@ -128,11 +130,14 @@ public class TransportManager : MBehavior
 	public void OnTransport(InputArg arg)
 	{
         // Debug.Log("OnTransport");
-        if(InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is NiceTeleporter)
+        if( InputManager.Instance.FocusedObject != null && InputManager.Instance.FocusedObject is NiceTeleporter )
         {
-			// do not make a mutiple transport
-			if(IsTransporting)
-				return;
+            // do not make a mutiple transport
+            if ( IsTransporting )
+            {
+                Debug.Log ( "IsTeleporting" );
+                return;
+            }
 
 			transportToObject = InputManager.Instance.FocusedObject;
 
@@ -141,8 +146,7 @@ public class TransportManager : MBehavior
             {
                 Debug.Log ( "transportToObject == LogicManager.Instance.StayTeleporter" );
                 return;
-            }
-				
+            }	
 
 			if( t == null )
             {
@@ -167,7 +171,7 @@ public class TransportManager : MBehavior
 			}
 
             Vector3 target = t.GetObservePosition();
-			MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
+			//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
 
 			transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime)); // move room to the target 
 
@@ -204,49 +208,36 @@ public class TransportManager : MBehavior
             transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
             transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
         }
-        transportSequence.OnComplete( OnTransportComplete );
-        if ( SceneManager.GetActiveScene ( ).buildIndex != 0 )
+
+        if( SceneManager.GetActiveScene ( ).buildIndex == 1 )
         {
-            transportSequence.OnComplete ( LogicManager.Instance.IterateState );
+            changeScene = true;
         }
+
+        transportSequence.OnComplete( OnTransportComplete );
     }
 
+    private bool changeScene = false;
 	void OnTransportComplete( )
 	{
         // fire the transport end event
         if(transportToObject != null)
         {
             //Debug.Log("OnTransportComplete - transportToObject is " + transportToObject.name);
-			LogicArg arg = new LogicArg(this);
+            LogicArg arg = new LogicArg(this);
 			arg.AddMessage(Global.EVENT_LOGIC_TRANSPORTTO_MOBJECT, transportToObject);
 			M_Event.FireLogicEvent(LogicEvents.TransportEnd, arg);
-
-            if(SceneManager.GetActiveScene().buildIndex == 2 )
-            {
-                if( transportToObject.gameObject.name.Contains ( "Davina" ) )
-                {
-                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "Davina" );
-                }
-                else if ( transportToObject.gameObject.name.Contains ( "Mom" ) )
-                {
-                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "Mom" );
-                }
-                else if ( transportToObject.gameObject.name.Contains ( "BigD" ) )
-                {
-                    LogicManager.Instance.m_sceneRoots [ 0 ].gameObject.GetComponent<PhaseManagerCharacters> ( ).RegisterTravel ( "BigD" );
-                }
-            }
-		}
-
-		transportSequence = null;
+        }
+        // Debug.Log ( "getting to null" );
+        transportSequence = null;
 		transportToObject = null;
-        /*
-        if (finale)
+
+        // We need a scene change from Tutorial to Characters 
+        if( changeScene  )
         {
-            Debug.Log("Calling iterate state");
+            changeScene = false;
             LogicManager.Instance.IterateState();
         }
-        */
     }
 
 	public void SetTeleporter(NiceTeleporter teleporter)
@@ -307,9 +298,12 @@ public class TransportManager : MBehavior
         if (targetGO != null)
         {
             target = targetGO.transform.position;
+        }else
+        {
+            Debug.Log ( "we need an end position." );
         }
 
-        MetricManagerScript.instance.AddToMatchList(Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
+        //MetricManagerScript.instance.AddToMatchList(Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
 
         transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime * 3)); // move room to the target 
 

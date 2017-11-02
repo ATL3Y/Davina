@@ -10,6 +10,7 @@
 		_ColorD("Dark Color" , color ) = (1,1,1,1)
 		_Speed("Change speed" , vector ) = (1,1,1,1)
 		_DisappearRange("Disappear Range" , float ) = 0.15
+		_TestMode("Test Mode" , int ) = 4 // ZTest LEqual is 4 (for dark side), Always is 8 (for light side)
 	}
 	SubShader
 	{
@@ -21,7 +22,7 @@
 			 Tags { "LightMode" = "Always" } 
 
 			ZWrite Off
-			ZTest LEqual
+			ZTest [_TestMode]
 			Cull front
 			Blend SrcAlpha OneMinusSrcAlpha  
 

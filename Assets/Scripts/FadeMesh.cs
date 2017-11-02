@@ -33,6 +33,20 @@ public class FadeMesh : MonoBehaviour
         // score: 1 is light and -1 is dark 
         // the score goes from -2 to 2 in tutorial and -3 to 3 in characters 
 
+        Lens currentLens = Lens.instance; //LogicManager.Instance.GetCurrentLens();
+        if ( currentLens != null )
+        {
+            fadeAmount = ( currentLens.Dot + 1.0f ) / 2.0f;
+            // Debug.Log ( "fadeAmount is " + fadeAmount );
+        }
+        // Otherwise look normal
+        else
+        {
+            // Debug.Log ( "currentLens is null." );
+            fadeAmount = 1.0f;
+        }
+
+        /*
         if (Score.Instance.GetScore() == 0)
         {
             fadeAmount = .5f;
@@ -61,6 +75,7 @@ public class FadeMesh : MonoBehaviour
         {
             fadeAmount = .1f;
         }
+        */
 
         if (!GetComponent<MCharacter>().IsInInnerWorld)
         {
@@ -106,8 +121,6 @@ public class FadeMesh : MonoBehaviour
 		}
 	}
 	
-
-
     /*
 	void FadeToLine(){
 		//print ("fade to line");

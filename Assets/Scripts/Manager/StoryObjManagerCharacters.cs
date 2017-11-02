@@ -8,7 +8,9 @@ public class StoryObjManagerCharacters : MBehavior
 	[SerializeField] List<GameObject> storyObjB;
 	[SerializeField] List<GameObject> storyObjC;
 
-	private List<GameObject> currentStory = new List<GameObject>();
+    [SerializeField] GameObject transport;
+
+    private List<GameObject> currentStory = new List<GameObject>();
 
     private int count = -1;
 
@@ -213,7 +215,6 @@ public class StoryObjManagerCharacters : MBehavior
 	void OnCharacters(LogicArg arg)
     {
         Init();
-        enabled = false;
 		// M_Event.FireLogicEvent(LogicEvents.EnterStory, new LogicArg(this));
 	}
 

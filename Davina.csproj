@@ -99,7 +99,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\PhaseManagerCharacters.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
@@ -166,6 +165,7 @@
     <Compile Include="Assets\Scripts\FXOutlinePulse.cs" />
     <Compile Include="Assets\Scripts\FXParticlesSwirl.cs" />
     <Compile Include="Assets\Scripts\FXParticlesSwirl_Parent.cs" />
+    <Compile Include="Assets\Scripts\FXShaderZTest.cs" />
     <Compile Include="Assets\Scripts\HoleContainer.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\BrokenColorEffect.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\BrokenEffect.cs" />
@@ -175,6 +175,9 @@
     <Compile Include="Assets\Scripts\ImageEffect\PulseEffect.cs" />
     <Compile Include="Assets\Scripts\ImageEffect\ToColorEffect.cs" />
     <Compile Include="Assets\Scripts\ItemZone.cs" />
+    <Compile Include="Assets\Scripts\Lens.cs" />
+    <Compile Include="Assets\Scripts\LensContainer.cs" />
+    <Compile Include="Assets\Scripts\LensManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Archive\TipsManager.cs" />
     <Compile Include="Assets\Scripts\Manager\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Manager\Input\InputManager.cs" />
@@ -203,6 +206,7 @@
     <Compile Include="Assets\Scripts\Object\Text\TextInstructions.cs" />
     <Compile Include="Assets\Scripts\Object\Text\TextStatic.cs" />
     <Compile Include="Assets\Scripts\ObserveLocation.cs" />
+    <Compile Include="Assets\Scripts\PhaseManagerCharacters.cs" />
     <Compile Include="Assets\Scripts\RootMotion.cs" />
     <Compile Include="Assets\Scripts\SceneRoot.cs" />
     <Compile Include="Assets\Scripts\Score.cs" />
@@ -224,6 +228,8 @@
     <Compile Include="Assets\Scripts\Tool\EnableHelper.cs" />
     <Compile Include="Assets\Scripts\Tool\FinaleTrailEnable.cs" />
     <Compile Include="Assets\Scripts\Tool\TriggerHelper.cs" />
+    <Compile Include="Assets\Scripts\TutorialLensManager.cs" />
+    <Compile Include="Assets\Scripts\VidCam.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Editor\Glitch\GlitchShader.shader" />

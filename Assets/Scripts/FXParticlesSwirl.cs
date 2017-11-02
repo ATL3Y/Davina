@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class FXParticlesSwirl : MonoBehaviour
 {
-    public NiceHole Hole { get; set; }
     [SerializeField] ParticleSystem particleSystem;
     private ParticleSystem.Particle[] particles = new ParticleSystem.Particle[1000];
     private Color color;
-    private NiceCollectable collectable;
     [SerializeField] bool gray;
 
     // Use this for initialization
@@ -41,6 +39,7 @@ public class FXParticlesSwirl : MonoBehaviour
 
     private void Start()
     {
+        /*
         HoleContainer holeContainer = Hole.transform.parent.GetComponent<HoleContainer>();
         if (holeContainer != null)
         {
@@ -58,27 +57,36 @@ public class FXParticlesSwirl : MonoBehaviour
         {
             particleSystem.startColor = collectable.LightSideOut ? Color.white : Color.black;
         }
+        */
+
+        if ( Lens.instance != null && !gray )  
+        {
+            color = Lens.instance.Color;
+        }
+        else
+        {
+            color = Lens.instance.LightSide ? Color.white : Color.black;
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(collectable == null)
-            Debug.Log("collectable is null");
+        if ( gray )
+        {
+            color = Lens.instance.LightSide ? Color.white : Color.black;
+        }
 
-        if (gray)
-            color = collectable.LightSideOut ? Color.white : Color.black;
-        
         int particleLength = particleSystem.GetParticles(particles);
 
         for (int i = 0; i < particleLength; i++)
         {
-            Vector3 direction = Vector3.Normalize(Hole.transform.position - particles[i].position);
-            Vector3 targetPos = particles[i].position + direction;
-            particles[i].position = Vector3.Lerp(particles[i].position, targetPos, .008f);
+            //Vector3 direction = Vector3.Normalize(Hole.transform.position - particles[i].position);
+            //Vector3 targetPos = particles[i].position + direction;
+            //particles[i].position = Vector3.Lerp(particles[i].position, targetPos, .008f);
             particles[i].startColor = color;
         }
-        
+
         particleSystem.SetParticles(particles, particleLength);
     }
 }

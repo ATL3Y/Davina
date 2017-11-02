@@ -44,18 +44,7 @@ public class Score : MonoBehaviour {
     {
         _score += add;
 
-        if(lights == null || lights.Length == 0)
-        {
-            Debug.Log("lights is null");
-            return;
-        }
-
-        for(int i = 0; i < lights.Length; i++)
-        {
-            //lights[i].intensity += add * lightIntensities[i]; // "add" is just the sign
-        }
-
-        Debug.Log("new score is " + _score);
+        Debug.Log ( "new score is " + _score );
     }
 
     public float GetScore()

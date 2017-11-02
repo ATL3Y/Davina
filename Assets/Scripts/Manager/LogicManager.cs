@@ -43,7 +43,21 @@ public class LogicManager : MBehavior
 		get { return m_stayCharacter; }
 	}
 
-	public enum State
+    public GameObject GetCurrentSceneRoot ( )
+    {
+        if( SceneManager.GetActiveScene().buildIndex == 1 )
+        {
+            return TutorialRoot;
+        }
+        else if( SceneManager.GetActiveScene ( ).buildIndex == 2 )
+        {
+            return m_sceneRoots [ 0 ].gameObject;
+        }
+
+        return null;
+    }
+
+    public enum State
     {
 		Init, // 0
 		Tutorial, // 1
@@ -259,7 +273,8 @@ public class LogicManager : MBehavior
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            IterateState();
+            Vector3 pos = new Vector3(9.46f, 0.17f, 2.48f);
+            TransportManager.Instance.StationaryEffect ( pos );
         }
 
         m_stateMachine.Update();
@@ -339,7 +354,8 @@ public class LogicManager : MBehavior
 		M_Event.FireLogicEvent (LogicEvents.LowerFallingCharacter, arg);
 	}
 
-	public void OnCharacters (LogicArg arg ){
+	public void OnCharacters (LogicArg arg )
+    {
         // set  active scene
 	}
 

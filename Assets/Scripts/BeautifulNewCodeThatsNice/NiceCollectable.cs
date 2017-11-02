@@ -42,11 +42,11 @@ public class NiceCollectable : Interactable
 	bool called = false;
     bool called2 = false;
 
-    private int m_sampleDataLength = 1024; // 80ms
-    private float[] m_clipSampleData;
-
     private Color color;
     public Color Color { set { color = value; } }
+
+    private int m_sampleDataLength = 1024; // 80ms
+    private float[] m_clipSampleData;
 
     // Use this for initialization
     public override void Start()

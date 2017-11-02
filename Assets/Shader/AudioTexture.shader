@@ -58,6 +58,7 @@
 			v2f vert (appdata_base v)
 			{
 				v2f o;
+				o.uv = TRANSFORM_TEX (v.texcoord, _MainTex);
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.posScreen = o.vertex;
 				o.posScreen.xy /= o.posScreen.w;

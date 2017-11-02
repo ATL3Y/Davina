@@ -14,14 +14,15 @@ public class CollectableContainer : MonoBehaviour
     public AudioClip storySoundR;
 
     private Color color;
-
-    [SerializeField]
-    GameObject anchor;
+    [SerializeField] GameObject anchor;
 
     // Use this for initialization
     void OnEnable()
     {
-        //transform.SetParent(parent);
+        transform.SetParent(LogicManager.Instance.VRRightHand.transform);
+        transform.localPosition = new Vector3 ( 0.0f, -0.02f, 0.23f );
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = new Vector3 ( 1.0f, 1.0f, 1.0f );
 
         if(SceneManager.GetActiveScene().buildIndex == 2 )
         {
@@ -51,18 +52,17 @@ public class CollectableContainer : MonoBehaviour
             collectable.niceHole = hole;
             foreach(FXParticlesSwirl_Parent fx in collectable.transform.GetComponentsInChildren<FXParticlesSwirl_Parent>())
             {
-                fx.Hole = hole;
+                //fx.Hole = hole;
             }
             foreach (FXParticlesSwirl fx in collectable.transform.GetComponentsInChildren<FXParticlesSwirl>())
             {
-                fx.Hole = hole;
+                //fx.Hole = hole;
             }
         }
         else
         {
             Debug.Log("hole is null");
         }
-
 
         collectable.Color = color;
         color = holeContainer.color;
@@ -77,6 +77,7 @@ public class CollectableContainer : MonoBehaviour
     {
         if (anchor != null)
         {
+            Debug.Log ( "anchor in use" );
             transform.position = anchor.transform.position + anchor.transform.forward * 2.2f - anchor.transform.up * .5f;
         }
     }

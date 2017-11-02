@@ -47,11 +47,14 @@ public class NiceTeleporter : Interactable
     {
 		base.Update();
 
-		//turn off outline if you're at this umbrella 
-		if (Vector3.Distance(player.transform.position, transform.position) < 2f){
+		// Turn off outline if you're at this umbrella 
+		if (Vector3.Distance(player.transform.position, transform.position) < 2f)
+        {
 			SetOutline(false);
 			return;
-		} else {
+		}
+        else
+        {
 			SetOutline(true);
 		}
 
@@ -98,7 +101,7 @@ public class NiceTeleporter : Interactable
 		m_hoverTime = Mathf.Clamp01(m_hoverTime + Time.deltaTime * 400.0f);
 	}
 
-	void SetOutline(bool isOn)
+	public void SetOutline(bool isOn)
 	{
         foreach (Renderer r in outlineRenders)
         {

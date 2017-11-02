@@ -170,7 +170,7 @@ public class CollectableObj : MObject {
             LogicArg logicArg = new LogicArg (this);
 			logicArg.AddMessage(Global.EVENT_LOGIC_MATCH_COBJECT, this);
 			M_Event.FireLogicEvent (LogicEvents.MatchObject, logicArg);
-			MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name + "/n");
+			//MetricManagerScript.instance.AddToMatchList (Time.timeSinceLevelLoad + "; MatchObject name: " + gameObject.name + "/n");
 		}
 		return false;
 

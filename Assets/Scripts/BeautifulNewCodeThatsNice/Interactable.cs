@@ -4,7 +4,7 @@ using System.Collections;
 public class Interactable: MBehavior
 {
     public bool insideBounds;
-    private bool debug = true;  // I'm just getting rid of the lines for now since they're not clarifying 
+    private bool debug = false;  // I'm just getting rid of the lines for now since they're not clarifying 
     public bool Ddebug { get { return debug; } }
     public int priority;
     public string displayMessage;
@@ -61,6 +61,7 @@ public class Interactable: MBehavior
         {
             // if ( sphereInteractionBounds ) AxKDebugLines.AddFancySphere( m_bounds.center, GetRadius( m_bounds ), returnValue ? Color.green : Color.red );
             // else AxKDebugLines.AddBounds( m_bounds, returnValue ? Color.green : Color.red );
+            AxKDebugLines.AddBounds ( m_bounds, returnValue ? Color.green : Color.red );
         }
 
         if (returnValue)
@@ -100,7 +101,7 @@ public class Interactable: MBehavior
 			mat.SetColumn(3, new Vector4(b.center.x, b.center.y, b.center.z, 1.0f));
 
 			OBB obb = new OBB(t.localToWorldMatrix * mat);
-			//if (debug) AxKDebugLines.AddOBB(obb, Color.white);
+			// if (debug) AxKDebugLines.AddOBB(obb, Color.blue);
 
 			flag = OBB.TestOBBOBB(obb, handObb);
 		}
@@ -135,7 +136,7 @@ public class Interactable: MBehavior
             {
                 Vector3 centroid = ( points[ ( int )tris[ i ].x ] + points[ ( int )tris[ i ].y ] + points[ ( int )tris[ i ].z ] ) / 3.0f;
 
-                float range = 10000.25f;
+                float range = 5000.25f;
                 if ( Vector3.SqrMagnitude( centroid - inputLookDirection.origin ) > range && 
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].x ] - inputLookDirection.origin ) > range &&
                     Vector3.SqrMagnitude( points[ ( int )tris[ i ].y ] - inputLookDirection.origin ) > range &&
