@@ -32,14 +32,15 @@ public class TextCredits : MonoBehaviour
     {
         instructions.Add("");
 		instructions.Add("                          DAVINA");
-		instructions.Add("MUSIC AND            SOUND DESIGN         RICKIE LEE KROELL"); 
-		instructions.Add("STORY                ISOBEL SHASHA"); 
-		instructions.Add("PROGRAMMER           ATWOOD DENG");
-        instructions.Add("VOICE ACTORS         JUNG HO SOHN         YIWEN DAI");
-        instructions.Add("GAME DESIGN          PROGRAMMER           ATLEY LOUGHRIDGE"); 
-		instructions.Add("SPECIAL THANKS       RICHARD LEMARCHAND   RUSSELL HONOR       MY FAMILY"); 
-		instructions.Add("USC                  INTERACTIVE MEDIA    AND GAMES");
-        instructions.Add("IN HONOR OF          THE STRUGGLE FOR     SELF AND LOVE");
+		instructions.Add("MUSIC AND             SOUND DESIGN            RICKIE LEE KROELL");
+        instructions.Add("STORY                 ISOBEL SHASHA" );
+        instructions.Add("PROGRAMMER            ATWOOD DENG");
+        instructions.Add("VOICE ACTORS          KYLER ONEAL             MAGALIS MARTINEZ    NEHEMIAH WESTMORELAR");
+        instructions.Add("SOUND ENGINEER        LONGWEI DENG");
+        instructions.Add("GAME DESIGN           PROGRAMMER              ATLEY LOUGHRIDGE"); 
+		instructions.Add("SPECIAL THANKS        RICHARD LEMARCHAND      RUSSELL HONOR       YIWEN DAI AND JUNG HO SOHN  MY FAMILY" ); 
+		instructions.Add("USC                   INTERACTIVE MEDIA       AND GAMES");
+        instructions.Add("IN HONOR OF           THE STRUGGLE FOR        SELF AND LOVE");
     }
 
 	public void Start() 
@@ -82,7 +83,8 @@ public class TextCredits : MonoBehaviour
             }
             else
             {
-                TransportManager.Instance.FadeToWhite();
+                // We are at the end of the credits.  Go to the title screen. 
+                TransportManager.Instance.StationaryEffect ( new Vector3(0.25f, 5.79f, -359.76f), true );
             }
 		}
 	}
@@ -94,8 +96,8 @@ public class TextCredits : MonoBehaviour
 
 	public void OnDisable()
     {
-
-	}
+        Clear ( );
+    }
 
 	public void MakeLines(string text, int index)
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Button : Interactable
 {
@@ -41,10 +42,41 @@ public class Button : Interactable
     public override void Use ( Hand hand )
     {
         if ( m_finished )
+        {
+            Debug.Log ( "finished" );
             return;
+        }
 
         m_finished = true;
-        TransportManager.Instance.StationaryEffect ( nextStartPos.position );
+        if ( gameObject.name.Contains ( "Quit" ) )
+        {
+            TransportManager.Instance.StationaryEffect ( nextStartPos.position, false );
+
+            if ( Application.isEditor )
+            {
+                //UnityEditor.EditorApplication.isPlaying = false;
+            }
+            else
+            {
+                Application.Quit ( );
+            }
+        }
+        else
+        {
+            // If we're in the tutorial, go to characters
+            if(SceneManager.GetActiveScene().buildIndex == 1 )
+            {
+                TransportManager.Instance.StationaryEffect ( nextStartPos.position, true );
+            }
+            // If we're in the "white" ending, play the VO
+            else if ( SceneManager.GetActiveScene ( ).buildIndex == 3 )
+            {
+                if ( VOEventAudio.instance != null )
+                {
+                    VOEventAudio.instance.PlayOnWhiteEnding ( );
+                }
+            }
+        }
     }
 
     public override void Update ( )
@@ -62,5 +94,5 @@ public class Button : Interactable
         base.Start ( );
     }
 
-    #endregion
+#endregion
 }

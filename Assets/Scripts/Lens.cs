@@ -168,72 +168,63 @@ public class Lens : Interactable
             AudioManager.Instance.ChangeBGM ( lightSide );
         }
 
-        // Is the player looking at 
-        Vector3 headFor = LogicManager.Instance.GetPlayerHeadTransform().forward;
-        Vector3 headPos = LogicManager.Instance.GetPlayerHeadTransform().position - 0.2f * headFor; // move pos back a tad
-        Ray headRay = new Ray(headPos, headFor);
-        Quaternion headRotation = Quaternion.LookRotation (headFor, LogicManager.Instance.GetPlayerHeadTransform().up);
-        Vector3 headScale = 0.1f * LogicManager.Instance.GetPlayerHeadTransform().lossyScale;
-        OBB headObb = new OBB(headPos, headRotation, headScale);
-
-        // AxKDebugLines.AddLine( headPos, headPos + headFor, Color.cyan, 0);
-        AxKDebugLines.AddOBB ( headObb, Color.red );
-
-        // If Player looks through the lens to Davina, play Davina's story
-        if ( this.IsInInteractionRange ( headPos, headRay, headObb ) )
+        // Don't have overlapping audio
+        if(!davSourceBeg.isPlaying && !momSourceLight.isPlaying && !momSourceDark.isPlaying )
         {
-            //Debug.Log ( "lens in int " );
-            if ( davina.IsInInteractionRange ( headPos, headRay, headObb ) )
+            // Is the player looking at 
+            Vector3 headFor = LogicManager.Instance.GetPlayerHeadTransform().forward;
+            Vector3 headPos = LogicManager.Instance.GetPlayerHeadTransform().position - 0.2f * headFor; // move pos back a tad
+            Ray headRay = new Ray(headPos, headFor);
+            Quaternion headRotation = Quaternion.LookRotation (headFor, LogicManager.Instance.GetPlayerHeadTransform().up);
+            Vector3 headScale = 0.1f * LogicManager.Instance.GetPlayerHeadTransform().lossyScale;
+            OBB headObb = new OBB(headPos, headRotation, headScale);
+
+            // AxKDebugLines.AddLine( headPos, headPos + headFor, Color.cyan, 0);
+            AxKDebugLines.AddOBB ( headObb, Color.red );
+
+            // If Player looks through the lens to Davina, play Davina's story
+            if ( this.IsInInteractionRange ( headPos, headRay, headObb ) )
             {
-                //Debug.Log ( "dav in int " );
-                if ( davSourceBegCooldown < 0.0f && !davSourceBeg.isPlaying )
+                //Debug.Log ( "lens in int " );
+                if ( davina.IsInInteractionRange ( headPos, headRay, headObb ) )
                 {
-                    //Debug.Log ( "ready " );
-                    if ( Dot > 0.4f || Dot < -0.4f )
+                    //Debug.Log ( "dav in int " );
+                    if ( davSourceBegCooldown < 0.0f && !davSourceBeg.isPlaying )
                     {
-                        //Debug.Log ( "should play " );
-                        davSourceBeg.Play ( );
-                        davSourceBegCooldown = davSoundBeg.length + 4f;
-                        davBegPlayed = true;
+                        //Debug.Log ( "ready " );
+                        if ( Dot > 0.4f || Dot < -0.4f )
+                        {
+                            //Debug.Log ( "should play " );
+                            davSourceBeg.Play ( );
+                            davSourceBegCooldown = davSoundBeg.length + 8f;
+                            davBegPlayed = true;
+                        }
                     }
                 }
             }
-        }
 
-        // If Player looks through the lens to Mom, play Mom's story based on the direction of the lens
-        if ( davBegPlayed )
-        {
-            if( this.IsInInteractionRange ( headPos, headRay, headObb ) )
+            // If Player looks through the lens to Mom, play Mom's story based on the direction of the lens
+            if ( davBegPlayed )
             {
-                if( mom.IsInInteractionRange ( headPos, headRay, headObb ) )
+                if ( this.IsInInteractionRange ( headPos, headRay, headObb ) )
                 {
-                    if ( !davSourceBeg.isPlaying )
+                    if ( mom.IsInInteractionRange ( headPos, headRay, headObb ) )
                     {
                         if ( Dot > 0.4f ) // play dark
                         {
-                            if ( momSourceLight.isPlaying )
-                            {
-                                momSourceLight.Stop ( );
-                            }
-
                             if ( momSourceDarkCoolDown < 0.0f )
                             {
                                 momSourceDark.Play ( );
-                                momSourceDarkCoolDown = momSoundDark.length + 4f;
+                                momSourceDarkCoolDown = momSoundDark.length + 8f;
                                 momDarkPlayed = true;
                             }
                         }
                         else if ( Dot < -0.4f ) // light
                         {
-                            if ( momSourceDark.isPlaying )
-                            {
-                                momSourceDark.Stop ( );
-                            }
-
                             if ( momSourceLightCooldown < 0.0f )
                             {
                                 momSourceLight.Play ( );
-                                momSourceLightCooldown = momSoundLight.length + 4f;
+                                momSourceLightCooldown = momSoundLight.length + 8f;
                                 momLightPlayed = true;
                             }
                         }
@@ -275,12 +266,14 @@ public class Lens : Interactable
         if ( LightSide )
         {
             Score.Instance.SetScore ( 1.0f );
-            StartCoroutine ( DelaySoundClipPlay ( davSourceBeg, momSourceLight ) );
+            // StartCoroutine ( DelaySoundClipPlay ( davSourceBeg, momSourceLight ) );
+            CallNextEvent ( );
         }
         else
         {
             Score.Instance.SetScore ( -1.0f );
-            StartCoroutine ( DelaySoundClipPlay ( davSourceBeg, momSourceDark ) );
+            // StartCoroutine ( DelaySoundClipPlay ( davSourceBeg, momSourceDark ) );
+            CallNextEvent ( );
         }
     }
 
@@ -316,7 +309,7 @@ public class Lens : Interactable
     public void CallNextEvent ( )
     {
         transform.DOLocalMove ( transform.position + Vector3.up * 100f, 10f ).SetEase ( DG.Tweening.Ease.InCirc );
-        TransportManager.Instance.StationaryEffect ( LensManager.instance.observePos.position );
+        TransportManager.Instance.StationaryEffect ( LensManager.instance.observePos.position, false );
         M_Event.FireLogicEvent ( LogicEvents.EnterStory, new LogicArg ( this ) );
     }
 
@@ -341,7 +334,6 @@ public class Lens : Interactable
                 clipLoudness += Mathf.Abs ( sample );
             }
 
-            
             if ( clipLoudness > 100.0f )
             {
                 // Debug.Log ( "clip loudness " + clipLoudness );

@@ -64,7 +64,6 @@ public class TransportManager : MBehavior
 		M_Event.inputEvents[(int)MInputType.FocusNewObject] += OnFocusNew;
 		M_Event.inputEvents[(int)MInputType.OutOfFocusObject] += OnOutofFocus;
         M_Event.logicEvents[(int)LogicEvents.Finale] += OnFinale;
-        M_Event.logicEvents[(int)LogicEvents.End] += OnEnd;
         M_Event.logicEvents[(int)LogicEvents.Credits] += OnCredits;
     }
 
@@ -75,7 +74,6 @@ public class TransportManager : MBehavior
 		M_Event.inputEvents[(int)MInputType.FocusNewObject] -= OnFocusNew;
 		M_Event.inputEvents[(int)MInputType.OutOfFocusObject] -= OnOutofFocus;
         M_Event.logicEvents[(int)LogicEvents.Finale] -= OnFinale;
-        M_Event.logicEvents[(int)LogicEvents.End] -= OnEnd;
 		M_Event.logicEvents[(int)LogicEvents.Credits] -= OnCredits;
 	}
 
@@ -188,7 +186,7 @@ public class TransportManager : MBehavior
 		}
 	}
 
-    public void StationaryEffect( Vector3 target )
+    public void StationaryEffect( Vector3 target, bool switchScene )
     {
         // set up the animation sequence
         transportSequence = DOTween.Sequence();
@@ -209,10 +207,7 @@ public class TransportManager : MBehavior
             transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
         }
 
-        if( SceneManager.GetActiveScene ( ).buildIndex == 1 )
-        {
-            changeScene = true;
-        }
+        changeScene = switchScene;
 
         transportSequence.OnComplete( OnTransportComplete );
     }
@@ -246,84 +241,48 @@ public class TransportManager : MBehavior
 	}
 
     private bool faded = false;
-    private bool credtsDone = false;
     protected override void MUpdate()
     {
         base.MUpdate();
 
-        if (credits)
+        if (finale) // credits
         {
 			float distance = (TrailLeft.GetDistance() + TrailRight.GetDistance()) / 170f;
 			Vector3 target = new Vector3(transform.position.x, transform.position.y + distance, transform.position.z);
 			transform.position = Vector3.Lerp(transform.position, target, 1f);
 
+            /*
             // Fade to white after reaching a certain height
             if (!faded && LogicManager.Instance.GetPlayerHeadTransform().position.y > 20.0f)
             {
                 faded = true;
                 FadeToWhite();
             }
-
-            if (credtsDone)
-            {
-                AudioListener.volume = Mathf.Lerp(AudioListener.volume, 0f, Time.deltaTime);
-            }
+            */
         } 
     }
 
     public void FadeToWhite()
     {
-        credtsDone = true;
         DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime);
         DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 8f, fadeTime);
     }
 
     void OnFinale(LogicArg arg)
     {
-        finale = true;
-        // SIMULATE TRANSPORT JUST FOR THE FINALE!!
-
-        // set up the animation sequence
-        transportSequence = DOTween.Sequence();
-        
-        // add the vfx if there is the image effect in the camera
-        if (toColorEffect != null && bloomAndFlares != null)
-        {
-            transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 1f, fadeTime));
-            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 3f, fadeTime));
-        }
-
         GameObject targetGO = GameObject.Find("endPos");
-        Vector3 target = new Vector3(0f, 7.2f, -2.3f);
+        Vector3 target = new Vector3(-1.025f, 7.313f, -6.987f);
         if (targetGO != null)
         {
             target = targetGO.transform.position;
-        }else
+        }
+        else
         {
             Debug.Log ( "we need an end position." );
         }
 
-        //MetricManagerScript.instance.AddToMatchList(Time.timeSinceLevelLoad + "; TransportStart to: " + target + "/n");
-
-        transportSequence.Append(LogicManager.Instance.GetPlayerTransform().DOMove(target, transportTime * 3)); // move room to the target 
-
-        Vector3 playerCenter = new Vector3(0.0f, 0.0f, 0.0f); // need? LogicManager.Instance.GetPlayerPersonTransform().position.y
-        transportSequence.Append(LogicManager.Instance.GetPlayerPersonTransform().DOLocalMove(playerCenter, transportTime)); // move the player to the center of the room, keeping player height the same
-
-        // add the vfx if there is the image effect in the camera
-        if (toColorEffect != null && bloomAndFlares != null)
-        {
-            transportSequence.Append(DOTween.To(() => toColorEffect.rate, (x) => toColorEffect.rate = x, 0f, fadeTime));
-            transportSequence.Join(DOTween.To(() => bloomAndFlares.bloomIntensity, (x) => bloomAndFlares.bloomIntensity = x, 0f, fadeTime));
-        }
-
-        transportSequence.OnComplete(OnTransportComplete);
+        StationaryEffect ( target, true );
     }
-
-    void OnEnd(LogicArg arg)
-    {
-
-	}
 
     void OnCredits(LogicArg arg)
     {

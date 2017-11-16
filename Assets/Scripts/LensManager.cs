@@ -80,19 +80,13 @@ public class LensManager : MBehavior
     {
         base.MUpdate ( );
 
+        // Once we're all done, run a little timer to delay the finale for a sec
         if ( runTimer )
         {
             timer -= Time.deltaTime;
             if ( timer <= 0f )
             {
                 runTimer = false;
-                /*
-                if ( gameObject.scene.buildIndex == 1 ) // tutorial scene 
-                {
-                    LogicManager.Instance.IterateState ( );
-                }
-                */
-
                 if ( gameObject.scene.buildIndex == 2 ) // characters scene
                 {
                     M_Event.FireLogicEvent ( LogicEvents.Finale, new LogicArg ( this ) );
@@ -104,18 +98,18 @@ public class LensManager : MBehavior
         {
             if ( Lens.instance.LightSide )
             {
-                if( currentStory[1] != null && currentStory[2] != null )
+                if( currentStory[ 2 ] != null && currentStory[ 3 ] != null )
                 {
-                    currentStory [ 1 ].SetActive ( true );
-                    currentStory [ 2 ].SetActive ( false );
+                    currentStory [ 2 ].SetActive ( true );
+                    currentStory [ 3 ].SetActive ( false );
                 }
             }
             else
             {
-                if ( currentStory [ 1 ] != null && currentStory [ 2 ] != null )
+                if ( currentStory [ 2 ] != null && currentStory [ 3 ] != null )
                 {
-                    currentStory [ 1 ].SetActive ( false );
-                    currentStory [ 2 ].SetActive ( true );
+                    currentStory [ 2 ].SetActive ( false );
+                    currentStory [ 3 ].SetActive ( true );
                 }
             }
         }

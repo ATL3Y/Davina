@@ -17,10 +17,11 @@ public class VOEventAudio : MonoBehaviour
 
 	private bool called0 = false;
     private bool called1 = false;
-
+    public static VOEventAudio instance;
 	// Use this for initialization
 	void Start () 
 	{
+        instance = this;
 		if (source == null)
         {
             source = gameObject.AddComponent<AudioSource>();
@@ -39,15 +40,15 @@ public class VOEventAudio : MonoBehaviour
     {
 		M_Event.logicEvents [(int)LogicEvents.Tutorial] += OnTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] += OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
-	}
+        M_Event.logicEvents [(int)LogicEvents.End] += OnEnd;
+    }
 
 	protected void OnDisable()
     {
 		M_Event.logicEvents [(int)LogicEvents.Tutorial] -= OnTutorial;
 		M_Event.logicEvents [(int)LogicEvents.Characters] -= OnCharacters;
-		M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
-	}
+        M_Event.logicEvents [(int)LogicEvents.End] -= OnEnd;
+    }
 
 	void OnTutorial(LogicArg arg)
     {
@@ -61,7 +62,6 @@ public class VOEventAudio : MonoBehaviour
 	void OnCharacters(LogicArg arg)
     {
         i = 0;
-        // SHOULD TRIGGER THE RIGHT CLIP WHEN PLAYER LOOKS AT THEIR BODY
 		if (!called1 && charactersClips.Count > 0)
         { 
 			StartCoroutine(PlayNext(charactersClips));
@@ -69,17 +69,18 @@ public class VOEventAudio : MonoBehaviour
 		} 
 	}
 
-	void OnEnd(LogicArg arg)
+    public void PlayOnWhiteEnding ( )
     {
-        if(SceneManager.GetActiveScene().buildIndex == 3)
+        if ( endWhiteClips.Count > 0 )
         {
-            if (endWhiteClips.Count > 0)
-            {
-                end = true;
-                StartCoroutine(PlayNext(endWhiteClips));
-            }
+            end = true;
+            StartCoroutine ( PlayNext ( endWhiteClips ) );
         }
-        else if(SceneManager.GetActiveScene().buildIndex == 4)
+    }
+
+	void OnEnd(LogicArg arg )
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 4)
         {
             if (endBlackClips.Count > 0)
             {

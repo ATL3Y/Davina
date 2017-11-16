@@ -17,11 +17,11 @@ public class NiceTeleporter : Interactable
 
         if(gameObject.scene.buildIndex == 1)
         {
-            outlineWidth = 20f;
+            outlineWidth = 2f;
         }
         else
         {
-            outlineWidth = 1f;
+            outlineWidth = 2f;
         }
 
 		foreach (Renderer r in outlineRenders)
@@ -60,12 +60,12 @@ public class NiceTeleporter : Interactable
 
         foreach (Renderer r in outlineRenders)
         {
-            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 4.0f : outlineWidth / 2f);
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 8.0f : outlineWidth / 2f);
         }
         foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
         {
             //bool state = m_hoverTime > 0.1f ? true : false;
-            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 4.0f : outlineWidth / 10.0f); // maybe f turn off somehow... 
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 8.0f : outlineWidth / 8.0f); // maybe f turn off somehow... 
         }
 
         m_hoverTime = Mathf.Clamp01(m_hoverTime - Time.deltaTime * 200.0f);

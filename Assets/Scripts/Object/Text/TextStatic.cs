@@ -31,7 +31,7 @@ public class TextStatic : MonoBehaviour
 		tracking /= transform.localScale.x;
 
         string levelPath;
-        if (name.Contains("Title"))
+        if (name.Contains("Title") || name.Contains("Round"))
         {
             levelPath = "lettersGOlarge";
             tracking = 2.5f;
