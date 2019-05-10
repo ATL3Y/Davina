@@ -92,6 +92,7 @@ public class NiceTeleporter : Interactable
 		Vector3 dirToPlayer = player.transform.position - observeLocation.transform.position;
 		dirToPlayer = dirToPlayer.normalized;
 		Vector3 pos = observeLocation.transform.position + dirToPlayer * 1.5f;
+
 		return observeLocation.transform.position;
 	}
 

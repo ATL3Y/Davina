@@ -9,25 +9,37 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LogicManager : MBehavior
 {
-	public LogicManager() { s_Instance = this; }
-	public static LogicManager Instance { get { return s_Instance; } }
-	private static LogicManager s_Instance;
+    public LogicManager ( ) { s_Instance = this; }
+    public static LogicManager Instance { get { return s_Instance; } }
+    private static LogicManager s_Instance;
 
     [SerializeField]
     Transform nextStartPos;
 
+    public bool ovrEnable = true;
+
     public bool VREnable = true;
     public bool VolumetricLights;
 
-	[SerializeField] GameObject PC;
-	[SerializeField] GameObject VR;
+    [SerializeField] GameObject PC;
+    [SerializeField] GameObject VR;
     public GameObject VRLeftHand;
     public GameObject VRRightHand;
     [SerializeField] Transform PCHand;
-	[SerializeField] Transform playerHead;
+    [SerializeField] Transform playerHead;
     [SerializeField] Transform playerPerson;
     [SerializeField] GameObject Rain;
-	[SerializeField] TextStatic text;
+    [SerializeField] TextStatic text;
+
+    // Handle OVR vs Vive
+    [SerializeField]
+    GameObject ovrLeftHand;
+    [SerializeField]
+    GameObject ovrRightHand;
+    [SerializeField]
+    Transform ovrPlayerHead;
+    [SerializeField]
+    Transform ovrPlayerPerson;
 
     public GameObject TutorialRoot { get; set; }
 
@@ -93,6 +105,24 @@ public class LogicManager : MBehavior
         {
 			VR.SetActive (VREnable);
 		}
+
+        // Sense ovr or Vive
+        if ( ovrEnable )
+        {
+            playerPerson.parent.gameObject.SetActive ( false );
+            ovrPlayerPerson.parent.gameObject.SetActive ( true );
+            VRLeftHand = ovrLeftHand;
+            VRRightHand = ovrRightHand;
+            playerHead = ovrPlayerHead;
+            playerPerson = ovrPlayerPerson;
+        }
+        else
+        {
+            VRInputController.Instance.OVREnabled = false;
+            playerPerson.parent.gameObject.SetActive ( true );
+            ovrPlayerPerson.parent.gameObject.SetActive ( false );
+        }
+
 		//Rain.transform.SetParent ( VREnable ? VR.transform : PC.transform);
 		//Rain.transform.localPosition = Vector3.up * 5f;
 		DontDestroyOnLoad (gameObject);
@@ -236,9 +266,9 @@ public class LogicManager : MBehavior
 		switch (clickType) 
 		{
 		case ClickType.LeftController:
-			return ViveInputController.Instance.leftController.transform;
+			return VRInputController.Instance.leftController.transform;
 		case ClickType.RightController:
-			return ViveInputController.Instance.rightController.transform;
+			return VRInputController.Instance.rightController.transform;
 		default:
 			return PCHand;
 		}

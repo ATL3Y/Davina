@@ -107,6 +107,7 @@ public class SteamVR_Settings : EditorWindow
 			updated = true;
 		}
 
+        /*
 		var devices = UnityEditorInternal.VR.VREditor.GetVREnabledDevices(BuildTargetGroup.Standalone);
 		var hasOpenVR = false;
 		foreach (var device in devices)
@@ -130,6 +131,7 @@ public class SteamVR_Settings : EditorWindow
 			}
 			UnityEditorInternal.VR.VREditor.SetVREnabledDevices(BuildTargetGroup.Standalone, newDevices);
 		}
+        */
 
 		if (updated)
 			Debug.Log("Switching to native OpenVR support.");

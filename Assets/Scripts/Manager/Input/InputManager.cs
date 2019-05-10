@@ -86,8 +86,8 @@ public class InputManager : MBehavior {
 		leftHand.ray = centers [0];
 		rightHand.ray = centers [1];
 
-		leftHand.bounds = ViveInputController.Instance.boundsLeftController;
-		rightHand.bounds = ViveInputController.Instance.boundsRightController;
+		leftHand.bounds = VRInputController.Instance.boundsLeftController;
+		rightHand.bounds = VRInputController.Instance.boundsRightController;
 
 		for (int i = 0; i < m_hand.Count; i++)
 		{

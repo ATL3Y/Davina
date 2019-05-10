@@ -60,8 +60,8 @@ public class Hand : MonoBehaviour
             }
         }
 
-		bool triggerPressed = left && ViveInputController.Instance.ReceivedLeftButtonDownSignal()
-			|| !left && ViveInputController.Instance.ReceivedRightButtonDownSignal();
+		bool triggerPressed = left && VRInputController.Instance.ReceivedLeftButtonDownSignal()
+			|| !left && VRInputController.Instance.ReceivedRightButtonDownSignal();
 
         if (highestPriority != null)
         {

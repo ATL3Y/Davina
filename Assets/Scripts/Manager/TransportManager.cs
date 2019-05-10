@@ -11,7 +11,11 @@ public class TransportManager : MBehavior
 	private static TransportManager s_Instance;
 
 	[SerializeField] ToColorEffect toColorEffect;
+    [SerializeField]
+    ToColorEffect ovrToColorEffect;
 	[SerializeField] BloomAndFlares bloomAndFlares;
+    [SerializeField]
+    BloomAndFlares ovrBloomAndFlares;
 	[SerializeField] float fadeTime = .5f;
 	[SerializeField] float transportTime = 1.12f;
 	[SerializeField] LineRenderer transportLine;
@@ -42,6 +46,11 @@ public class TransportManager : MBehavior
 	protected override void MAwake()
 	{
 		base.MAwake();
+        if ( LogicManager.Instance.ovrEnable )
+        {
+            toColorEffect = ovrToColorEffect;
+            bloomAndFlares = ovrBloomAndFlares;
+        }
 	}
 
 	protected override void MStart()

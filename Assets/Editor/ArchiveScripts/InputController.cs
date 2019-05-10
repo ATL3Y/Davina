@@ -39,8 +39,8 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			rightPositionNow = new Vector3(ViveInputController.Instance.rightController.transform.position.x, ViveInputController.Instance.rightController.transform.position.y, ViveInputController.Instance.rightController.transform.position.z);
-			leftPositionNow = new Vector3(ViveInputController.Instance.leftController.transform.position.x, ViveInputController.Instance.leftController.transform.position.y, ViveInputController.Instance.leftController.transform.position.z);
+			rightPositionNow = new Vector3(VRInputController.Instance.rightController.transform.position.x, VRInputController.Instance.rightController.transform.position.y, VRInputController.Instance.rightController.transform.position.z);
+			leftPositionNow = new Vector3(VRInputController.Instance.leftController.transform.position.x, VRInputController.Instance.leftController.transform.position.y, VRInputController.Instance.leftController.transform.position.z);
 
 		}
 	}
@@ -58,7 +58,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			rightPositionOnDown = new Vector3(ViveInputController.Instance.rightController.transform.position.x, ViveInputController.Instance.rightController.transform.position.y, ViveInputController.Instance.rightController.transform.position.z);
+			rightPositionOnDown = new Vector3(VRInputController.Instance.rightController.transform.position.x, VRInputController.Instance.rightController.transform.position.y, VRInputController.Instance.rightController.transform.position.z);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			leftPositionOnDown = new Vector3(ViveInputController.Instance.leftController.transform.position.x, ViveInputController.Instance.leftController.transform.position.y, ViveInputController.Instance.leftController.transform.position.z);
+			leftPositionOnDown = new Vector3(VRInputController.Instance.leftController.transform.position.x, VRInputController.Instance.leftController.transform.position.y, VRInputController.Instance.leftController.transform.position.z);
 		}
 	}
 
@@ -86,7 +86,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if (ViveInputController.Instance.ReceivedRightButtonDownSignal ()) { return true; }
+			if (VRInputController.Instance.ReceivedRightButtonDownSignal ()) { return true; }
 		}
 
 		return false;
@@ -101,7 +101,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if (ViveInputController.Instance.ReceivedLeftButtonDownSignal ()) { return true; }
+			if (VRInputController.Instance.ReceivedLeftButtonDownSignal ()) { return true; }
 		}
 
 		return false;
@@ -116,7 +116,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if (ViveInputController.Instance.ReceivedRightButtonPressSignal ()) { return true; }
+			if (VRInputController.Instance.ReceivedRightButtonPressSignal ()) { return true; }
 		}
 		return false;
 	}
@@ -130,7 +130,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if ( ViveInputController.Instance.ReceivedLeftButtonPressSignal() ) { return true; } 
+			if ( VRInputController.Instance.ReceivedLeftButtonPressSignal() ) { return true; } 
 		}
 		return false;
 	}
@@ -144,7 +144,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if (ViveInputController.Instance.ReceivedRightPadPressedSignal ()) { return true; }
+			if (VRInputController.Instance.ReceivedRightPadPressedSignal ()) { return true; }
 		}
 		return false;
 		
@@ -160,7 +160,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			if (ViveInputController.Instance.ReceivedLeftPadPressedSignal ()) { return true; }
+			if (VRInputController.Instance.ReceivedLeftPadPressedSignal ()) { return true; }
 		}
 		return false;
 	}
@@ -185,7 +185,7 @@ public class InputController : MonoBehaviour
 		} 
 		else if (!pc) 
 		{
-			ray = new Ray (ViveInputController.Instance.leftController.transform.position, ViveInputController.Instance.leftController.transform.forward);
+			ray = new Ray (VRInputController.Instance.leftController.transform.position, VRInputController.Instance.leftController.transform.forward);
 			if (Physics.Raycast (ray, out hit)) 
 			{
 				if (hit.collider == obj.GetComponent<Collider> ()) { return true; }

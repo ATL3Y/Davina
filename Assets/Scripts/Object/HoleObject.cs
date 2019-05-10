@@ -163,9 +163,9 @@ public class HoleObject : MObject {
             //print ("in hole on match obj condition");
             // vibrate the controller holding the matchObject
             if (cobj.transform.gameObject.name == "Controller (right)") {
-				InputManager.Instance.VibrateController (ViveInputController.Instance.rightControllerIndex);
+				InputManager.Instance.VibrateController (VRInputController.Instance.rightControllerIndex);
 			} else {
-				InputManager.Instance.VibrateController (ViveInputController.Instance.leftControllerIndex);
+				InputManager.Instance.VibrateController (VRInputController.Instance.leftControllerIndex);
 			}
 
 			// change the transform parent and position, scale, rotation of the object

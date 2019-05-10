@@ -1,0 +1,8 @@
+4.71148; TransportStart to: (0.3, 6.7, -612.4)/n
+10.44223; TransportStart to: (-2.3, 8.2, -553.0)/n
+16.60833; TransportStart to: (-3.0, 10.5, -486.0)/n
+20.85325; TransportStart to: (-0.1, 10.6, -403.9)/n
+26.92715; TransportStart to: (3.0, 11.1, -328.5)/n
+31.42047; TransportStart to: (-3.0, 10.4, -247.6)/n
+36.0005; TransportStart to: (-3.4, 10.1, -161.6)/n
+41.94312; TransportStart to: (-0.7, 7.6, -52.6)/n

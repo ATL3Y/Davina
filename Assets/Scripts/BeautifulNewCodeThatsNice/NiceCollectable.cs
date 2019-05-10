@@ -243,19 +243,19 @@ public class NiceCollectable : Interactable
 
                 if (owner.left)
                 {
-                    SteamVR_Controller.Input(ViveInputController.Instance.leftControllerIndex).TriggerHapticPulse(distUS);
+                    SteamVR_Controller.Input(VRInputController.Instance.leftControllerIndex).TriggerHapticPulse(distUS);
                 }
                 else
                 {
-                    SteamVR_Controller.Input(ViveInputController.Instance.rightControllerIndex).TriggerHapticPulse(distUS);
+                    SteamVR_Controller.Input(VRInputController.Instance.rightControllerIndex).TriggerHapticPulse(distUS);
                 }
             }
 
 			transform.position = newPosition;
 			transform.rotation = newRotation;
 
-			if ( dropable && ( (owner.left && !ViveInputController.Instance.ReceivedLeftButtonPressSignal ())
-				|| (!owner.left && !ViveInputController.Instance.ReceivedRightButtonPressSignal ())))
+			if ( dropable && ( (owner.left && !VRInputController.Instance.ReceivedLeftButtonPressSignal ())
+				|| (!owner.left && !VRInputController.Instance.ReceivedRightButtonPressSignal ())))
             {
 				owner = null;
 				if (putDownSound)

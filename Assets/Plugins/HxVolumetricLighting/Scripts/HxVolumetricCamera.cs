@@ -224,7 +224,7 @@ public class HxVolumetricCamera : MonoBehaviour
     {
 
 #if HXVR
-        if (Mycamera.stereoTargetEye == StereoTargetEyeMask.Both && Application.isPlaying && VRSettings.enabled && VRDevice.isPresent)
+        if (Mycamera.stereoTargetEye == StereoTargetEyeMask.Both && Application.isPlaying && UnityEngine.XR.XRSettings.enabled && UnityEngine.XR.XRDevice.isPresent)
         {
             return true;
         }
@@ -1148,9 +1148,9 @@ public class HxVolumetricCamera : MonoBehaviour
     int GetCamPixelHeight()
     {
 #if HXVR
-        if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && VRSettings.enabled && VRDevice.isPresent)
+        if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && UnityEngine.XR.XRSettings.enabled && UnityEngine.XR.XRDevice.isPresent)
         {
-            return VRSettings.eyeTextureHeight;
+            return UnityEngine.XR.XRSettings.eyeTextureHeight;
         }
 #endif
 
@@ -1160,9 +1160,9 @@ public class HxVolumetricCamera : MonoBehaviour
     int GetCamPixelWidth()
     {
 #if HXVR
-        if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && VRSettings.enabled && VRDevice.isPresent)
+        if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && UnityEngine.XR.XRSettings.enabled && UnityEngine.XR.XRDevice.isPresent)
         {
-            return VRSettings.eyeTextureWidth + (Mycamera.stereoTargetEye == StereoTargetEyeMask.Both ? VRSettings.eyeTextureWidth +  Mathf.CeilToInt(48 * VRSettings.renderScale) : 0);
+            return UnityEngine.XR.XRSettings.eyeTextureWidth + (Mycamera.stereoTargetEye == StereoTargetEyeMask.Both ? UnityEngine.XR.XRSettings.eyeTextureWidth +  Mathf.CeilToInt(48 * UnityEngine.XR.XRSettings.eyeTextureResolutionScale) : 0);
         }
 #endif
 
@@ -2068,7 +2068,7 @@ public class HxVolumetricCamera : MonoBehaviour
 
 #if HXVR
 
-            if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && VRSettings.enabled && VRDevice.isPresent) 
+            if (Mycamera.stereoTargetEye != StereoTargetEyeMask.None && Application.isPlaying && UnityEngine.XR.XRSettings.enabled && UnityEngine.XR.XRDevice.isPresent) 
             {
 
                 Camera.StereoscopicEye currentEye = Camera.StereoscopicEye.Right;
