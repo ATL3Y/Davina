@@ -455,6 +455,7 @@ static public class AxKDebugLines
 	
 	public static void AddBounds( Bounds bounds, Color color, float life = 0.0f )
 	{
+        Debug.Log ( "called" );
 		AddBoundingBox( bounds.center, bounds.extents, color, life );
 	}
 	

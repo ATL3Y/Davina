@@ -8,22 +8,13 @@ public class NiceTeleporter : Interactable
 
     [SerializeField] protected Renderer[] outlineRenders;
     [SerializeField] protected SkinnedMeshRenderer[] outlineSkinnedMeshRenders;
-    protected float outlineWidth;
+    public float outlineWidth = 5f;
 
     // Use this for initialization
     public override void Start()
     {
 		base.Start ();
-
-        if(gameObject.scene.buildIndex == 1)
-        {
-            outlineWidth = 2f;
-        }
-        else
-        {
-            outlineWidth = 2f;
-        }
-
+        /*
 		foreach (Renderer r in outlineRenders)
         {
 			r.material.SetFloat ("_Outline", outlineWidth);
@@ -33,6 +24,7 @@ public class NiceTeleporter : Interactable
         {
             r.material.SetFloat("_Outline", outlineWidth);
         }
+        */
 
         player = GameObject.FindGameObjectWithTag ("Player");
 
@@ -47,8 +39,8 @@ public class NiceTeleporter : Interactable
     {
 		base.Update();
 
-		// Turn off outline if you're at this umbrella 
-		if (Vector3.Distance(player.transform.position, transform.position) < 2f)
+        // Turn off outline if you're at this umbrella 
+        if (Vector3.Distance(player.transform.position, transform.position) < 2f)
         {
 			SetOutline(false);
 			return;
@@ -60,12 +52,12 @@ public class NiceTeleporter : Interactable
 
         foreach (Renderer r in outlineRenders)
         {
-            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 8.0f : outlineWidth / 2f);
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 2.0f : outlineWidth * 0.1f);
         }
         foreach (SkinnedMeshRenderer r in outlineSkinnedMeshRenders)
         {
             //bool state = m_hoverTime > 0.1f ? true : false;
-            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 8.0f : outlineWidth / 8.0f); // maybe f turn off somehow... 
+            r.material.SetFloat("_Outline", m_hoverTime > 0.1f ? outlineWidth * 0.2f : outlineWidth * 0.01f); // characters
         }
 
         m_hoverTime = Mathf.Clamp01(m_hoverTime - Time.deltaTime * 200.0f);

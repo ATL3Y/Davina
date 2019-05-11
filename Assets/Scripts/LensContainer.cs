@@ -21,8 +21,8 @@ public class LensContainer : MonoBehaviour
     {
         //transform.SetParent ( LogicManager.Instance.VRRightHand.transform );
 
-        transform.localPosition = LogicManager.Instance.VRRightHand.transform.position + offset;
-        transform.localRotation = LogicManager.Instance.VRRightHand.transform.rotation;
+        transform.localPosition = LogicManager.Instance.VRLeftHand.transform.position + offset;
+        transform.localRotation = LogicManager.Instance.VRLeftHand.transform.rotation;
         transform.localScale = new Vector3 ( 1.0f, 1.0f, 1.0f );
 
         GameObject temp = GameObject.Instantiate(prefab);
@@ -45,17 +45,21 @@ public class LensContainer : MonoBehaviour
         lens.davSoundEnd = davEnd;
 
         lens.Color = color;
-        foreach ( MeshRenderer r in lens.outlineRenders )
+        for(int i=0; i<lens.outlineRenders.Length; i++)
         {
-            r.material.SetVector ( "_OutlineColor", color );
+            Color col = (lens.outlineRenders.Length - i) * color + Color.white * i;
+            col /= lens.outlineRenders.Length;
+            lens.outlineRenders[i].material.SetVector( "_OutlineColor", col );
+            lens.outlineRenders[i].material.SetFloat ( "_Outline", i * .05f );
+            lens.outlineRenders [ i ].enabled = false;
         }
     }
 
     // Update is called once per frame
     void Update ( )
     {
-        transform.localPosition = LogicManager.Instance.VRRightHand.transform.position + offset;
-        transform.localRotation = LogicManager.Instance.VRRightHand.transform.rotation;
+        transform.localPosition = LogicManager.Instance.VRLeftHand.transform.position + offset;
+        transform.localRotation = LogicManager.Instance.VRLeftHand.transform.rotation;
         transform.localScale = new Vector3 ( 1.0f, 1.0f, 1.0f );
     }
 }

@@ -37,9 +37,10 @@ public class TextCredits : MonoBehaviour
         instructions.Add("PROGRAMMER            ATWOOD DENG");
         instructions.Add("VOICE ACTORS          KYLER ONEAL             MAGALIS MARTINEZ    NEHEMIAH WESTMORELAR");
         instructions.Add("SOUND ENGINEER        LONGWEI DENG");
-        instructions.Add("GAME DESIGN           PROGRAMMER              ATLEY LOUGHRIDGE"); 
-		instructions.Add("SPECIAL THANKS        RICHARD LEMARCHAND      RUSSELL HONOR       YIWEN DAI AND JUNG HO SOHN  MY FAMILY" ); 
-		instructions.Add("USC                   INTERACTIVE MEDIA       AND GAMES");
+        instructions.Add("GAME DESIGN           PROGRAMMER              ATL3Y"); 
+		instructions.Add("SPECIAL THANKS        RICHARD LEMARCHAND      RUSSELL HONOR" );
+        instructions.Add ("SPECIAL THANKS       YIWEN DAI               JUNG HO SOHN        MY FAMILY" );
+        // instructions.Add("USC                   INTERACTIVE MEDIA       AND GAMES");
         instructions.Add("IN HONOR OF           THE STRUGGLE FOR        SELF AND LOVE");
     }
 
@@ -66,9 +67,19 @@ public class TextCredits : MonoBehaviour
 			_alphabet.Add(l); //add letter to the list // note: could just use the array...
 		}
 	}
-
+    private bool end = false;
+    private float endTimer = 2.5f;
 	public void Update()
     {
+        if ( end )
+        {
+            endTimer -= Time.deltaTime;
+            if(endTimer < 0f )
+            {
+                Application.Quit ( );
+            }
+            
+        }
 		if(timeLeft > 0f)
         {
 			timeLeft -= Time.deltaTime;
@@ -85,6 +96,7 @@ public class TextCredits : MonoBehaviour
             {
                 // We are at the end of the credits.  Go to the title screen. 
                 TransportManager.Instance.StationaryEffect ( new Vector3(0.25f, 5.79f, -359.76f), true );
+                end = true;
             }
 		}
 	}

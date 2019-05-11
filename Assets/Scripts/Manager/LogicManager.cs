@@ -148,7 +148,7 @@ public class LogicManager : MBehavior
         // Start in the Tutorial
         SceneManager.LoadScene("Tutorial", LoadSceneMode.Additive);
 
-        TransportManager.Instance.StationaryEffect( nextStartPos.position, false );
+        TransportManager.Instance.StationaryEffect ( nextStartPos.position, false );
 
         // Load other scenes async
         for (int i = 0; i < numAsyncScenes; i++)
@@ -235,7 +235,9 @@ public class LogicManager : MBehavior
     protected override void MStart()
     {
         InitStateMachine();
-	}
+
+        TransportManager.Instance.StationaryEffect ( nextStartPos.position, false );
+    }
 
     void InitStateMachine()
     {
@@ -314,11 +316,13 @@ public class LogicManager : MBehavior
     {
         base.MUpdate();
 
+        /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Vector3 pos = new Vector3(9.46f, 0.17f, 2.48f);
             TransportManager.Instance.StationaryEffect ( pos, true );
         }
+        */
 
         m_stateMachine.Update();
 

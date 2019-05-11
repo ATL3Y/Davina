@@ -117,8 +117,9 @@ public class AudioManager : MBehavior
         AudioSource source = gameObject.AddComponent<AudioSource>();
         source.clip = clip;
         source.playOnAwake = source.loop = false;
+        if(!source.isPlaying)
+            source.Play ( );
 
-        source.Play ( );
         while ( source.isPlaying )
         {
             yield return null;
@@ -195,7 +196,8 @@ public class AudioManager : MBehavior
 			bgmSource.DOFade (0, 1f).OnComplete (delegate {
 				bgmSource.clip = to;
 				bgmSource.time = Random.Range (0, bgmSource.clip.length);
-				bgmSource.Play();
+                if(!bgmSource.isPlaying)
+                    bgmSource.Play();
 				bgmSource.DOFade(.5f, 1f);
 			});
 		}

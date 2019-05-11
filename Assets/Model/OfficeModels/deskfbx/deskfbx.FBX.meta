@@ -1,0 +1,520 @@
+fileFormatVersion: 2
+guid: 4d196a214179ae744911ff8dadd4b8b3
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: ' 1'
+    100002: Box001
+    100004: Box001 1
+    100006: Box002
+    100008: Box003
+    100010: Box004
+    100012: Box005
+    100014: Box006
+    100016: Box007
+    100018: Box008
+    100020: Box009
+    100022: Box010
+    100024: Box011
+    100026: Box012
+    100028: Box013
+    100030: Box014
+    100032: Box015
+    100034: Box016
+    100036: Box026
+    100038: Box030
+    100040: Box034
+    100042: Box035
+    100044: Box036
+    100046: Box037
+    100048: Box038
+    100050: Box039
+    100052: Box040
+    100054: Box041
+    100056: Box042
+    100058: Box043
+    100060: Box161
+    100062: Box162
+    100064: Box163
+    100066: Box164
+    100068: cord
+    100070: Cylinder001
+    100072: Cylinder002
+    100074: Cylinder003
+    100076: Cylinder004
+    100078: Cylinder005
+    100080: Cylinder006
+    100082: Cylinder007
+    100084: Cylinder008
+    100086: Cylinder009
+    100088: Cylinder010
+    100090: Cylinder011
+    100092: Cylinder012
+    100094: Cylinder013
+    100096: Cylinder014
+    100098: Cylinder015
+    100100: Cylinder016
+    100102: Cylinder017
+    100104: Cylinder018
+    100106: Cylinder019
+    100108: Cylinder020
+    100110: Cylinder021
+    100112: Cylinder022
+    100114: Cylinder023
+    100116: Cylinder027
+    100118: Cylinder027 1
+    100120: Cylinder028
+    100122: //RootNode
+    100124: glass imac
+    100126: Globe
+    100128: globe_Panel
+    100130: globe_Panel001
+    100132: keybord_btn063
+    100134: keybord_btn064
+    100136: logo 003
+    100138: logo 1
+    100140: logo 2
+    100142: Omni001
+    100144: PhysCamera002
+    100146: PhysCamera002.Target
+    100148: PhysCamera003
+    100150: PhysCamera003.Target
+    100152: PhysCamera005
+    100154: PhysCamera005.Target
+    100156: Plane001
+    100158: Plane002
+    100160: Plane003
+    100162: Plane004
+    100164: Sky001
+    100166: stand
+    100168: Tube001
+    400000: ' 1'
+    400002: Box001
+    400004: Box001 1
+    400006: Box002
+    400008: Box003
+    400010: Box004
+    400012: Box005
+    400014: Box006
+    400016: Box007
+    400018: Box008
+    400020: Box009
+    400022: Box010
+    400024: Box011
+    400026: Box012
+    400028: Box013
+    400030: Box014
+    400032: Box015
+    400034: Box016
+    400036: Box026
+    400038: Box030
+    400040: Box034
+    400042: Box035
+    400044: Box036
+    400046: Box037
+    400048: Box038
+    400050: Box039
+    400052: Box040
+    400054: Box041
+    400056: Box042
+    400058: Box043
+    400060: Box161
+    400062: Box162
+    400064: Box163
+    400066: Box164
+    400068: cord
+    400070: Cylinder001
+    400072: Cylinder002
+    400074: Cylinder003
+    400076: Cylinder004
+    400078: Cylinder005
+    400080: Cylinder006
+    400082: Cylinder007
+    400084: Cylinder008
+    400086: Cylinder009
+    400088: Cylinder010
+    400090: Cylinder011
+    400092: Cylinder012
+    400094: Cylinder013
+    400096: Cylinder014
+    400098: Cylinder015
+    400100: Cylinder016
+    400102: Cylinder017
+    400104: Cylinder018
+    400106: Cylinder019
+    400108: Cylinder020
+    400110: Cylinder021
+    400112: Cylinder022
+    400114: Cylinder023
+    400116: Cylinder027
+    400118: Cylinder027 1
+    400120: Cylinder028
+    400122: //RootNode
+    400124: glass imac
+    400126: Globe
+    400128: globe_Panel
+    400130: globe_Panel001
+    400132: keybord_btn063
+    400134: keybord_btn064
+    400136: logo 003
+    400138: logo 1
+    400140: logo 2
+    400142: Omni001
+    400144: PhysCamera002
+    400146: PhysCamera002.Target
+    400148: PhysCamera003
+    400150: PhysCamera003.Target
+    400152: PhysCamera005
+    400154: PhysCamera005.Target
+    400156: Plane001
+    400158: Plane002
+    400160: Plane003
+    400162: Plane004
+    400164: Sky001
+    400166: stand
+    400168: Tube001
+    2100000: glass
+    2100002: midle
+    2100004: side
+    2100006: No Name
+    2100008: metal
+    2100010: s_cup
+    2100012: underdesk
+    2100014: 'Material #62'
+    2100016: 'Material #64'
+    2100018: iMac
+    2100020: 'Material #60'
+    2100022: 'Material #61'
+    2100024: Imac_Glass
+    2100026: logo
+    2100028: Mac_POrt
+    2100030: cord
+    2100032: floor_texture
+    2100034: 'Material #342'
+    2100036: mouse
+    2100038: wall
+    2100040: keyboard_clr
+    2100042: btn_texture
+    2100044: Mac_cord
+    2100046: globe_stand
+    2100048: 01 - Default
+    2100050: globe_attach
+    2100052: paper4
+    2100054: paper2
+    2100056: paper3
+    2100058: Paper
+    2300000: ' 1'
+    2300002: Box001
+    2300004: Box001 1
+    2300006: Box002
+    2300008: Box003
+    2300010: Box004
+    2300012: Box005
+    2300014: Box006
+    2300016: Box007
+    2300018: Box008
+    2300020: Box009
+    2300022: Box010
+    2300024: Box011
+    2300026: Box012
+    2300028: Box013
+    2300030: Box014
+    2300032: Box015
+    2300034: Box016
+    2300036: Box026
+    2300038: Box030
+    2300040: Box034
+    2300042: Box035
+    2300044: Box036
+    2300046: Box037
+    2300048: Box038
+    2300050: Box039
+    2300052: Box040
+    2300054: Box041
+    2300056: Box042
+    2300058: Box043
+    2300060: Box161
+    2300062: Box162
+    2300064: Box163
+    2300066: Box164
+    2300068: Cylinder001
+    2300070: Cylinder002
+    2300072: Cylinder003
+    2300074: Cylinder004
+    2300076: Cylinder005
+    2300078: Cylinder006
+    2300080: Cylinder007
+    2300082: Cylinder008
+    2300084: Cylinder009
+    2300086: Cylinder010
+    2300088: Cylinder011
+    2300090: Cylinder012
+    2300092: Cylinder013
+    2300094: Cylinder014
+    2300096: Cylinder015
+    2300098: Cylinder016
+    2300100: Cylinder017
+    2300102: Cylinder018
+    2300104: Cylinder019
+    2300106: Cylinder020
+    2300108: Cylinder021
+    2300110: Cylinder022
+    2300112: Cylinder023
+    2300114: Cylinder027
+    2300116: Cylinder027 1
+    2300118: Cylinder028
+    2300120: glass imac
+    2300122: Globe
+    2300124: globe_Panel
+    2300126: globe_Panel001
+    2300128: keybord_btn063
+    2300130: keybord_btn064
+    2300132: logo 003
+    2300134: logo 1
+    2300136: logo 2
+    2300138: Plane001
+    2300140: Plane002
+    2300142: Plane003
+    2300144: Plane004
+    2300146: stand
+    2300148: Tube001
+    3300000: ' 1'
+    3300002: Box001
+    3300004: Box001 1
+    3300006: Box002
+    3300008: Box003
+    3300010: Box004
+    3300012: Box005
+    3300014: Box006
+    3300016: Box007
+    3300018: Box008
+    3300020: Box009
+    3300022: Box010
+    3300024: Box011
+    3300026: Box012
+    3300028: Box013
+    3300030: Box014
+    3300032: Box015
+    3300034: Box016
+    3300036: Box026
+    3300038: Box030
+    3300040: Box034
+    3300042: Box035
+    3300044: Box036
+    3300046: Box037
+    3300048: Box038
+    3300050: Box039
+    3300052: Box040
+    3300054: Box041
+    3300056: Box042
+    3300058: Box043
+    3300060: Box161
+    3300062: Box162
+    3300064: Box163
+    3300066: Box164
+    3300068: Cylinder001
+    3300070: Cylinder002
+    3300072: Cylinder003
+    3300074: Cylinder004
+    3300076: Cylinder005
+    3300078: Cylinder006
+    3300080: Cylinder007
+    3300082: Cylinder008
+    3300084: Cylinder009
+    3300086: Cylinder010
+    3300088: Cylinder011
+    3300090: Cylinder012
+    3300092: Cylinder013
+    3300094: Cylinder014
+    3300096: Cylinder015
+    3300098: Cylinder016
+    3300100: Cylinder017
+    3300102: Cylinder018
+    3300104: Cylinder019
+    3300106: Cylinder020
+    3300108: Cylinder021
+    3300110: Cylinder022
+    3300112: Cylinder023
+    3300114: Cylinder027
+    3300116: Cylinder027 1
+    3300118: Cylinder028
+    3300120: glass imac
+    3300122: Globe
+    3300124: globe_Panel
+    3300126: globe_Panel001
+    3300128: keybord_btn063
+    3300130: keybord_btn064
+    3300132: logo 003
+    3300134: logo 1
+    3300136: logo 2
+    3300138: Plane001
+    3300140: Plane002
+    3300142: Plane003
+    3300144: Plane004
+    3300146: stand
+    3300148: Tube001
+    4300000: Box001
+    4300002: Box002
+    4300004: Cylinder001
+    4300006: Box003
+    4300008: Box004
+    4300010: Box005
+    4300012: Box006
+    4300014: Cylinder002
+    4300016: Cylinder003
+    4300018: Box007
+    4300020: Box008
+    4300022: Box009
+    4300024: Cylinder004
+    4300026: Cylinder005
+    4300028: Cylinder006
+    4300030: Cylinder007
+    4300032: Cylinder008
+    4300034: Cylinder009
+    4300036: Cylinder010
+    4300038: Cylinder011
+    4300040: Cylinder012
+    4300042: Box010
+    4300044: Box011
+    4300046: Box012
+    4300048: Box013
+    4300050: Box014
+    4300052: Cylinder013
+    4300054: Cylinder014
+    4300056: Cylinder015
+    4300058: Cylinder016
+    4300060: Cylinder017
+    4300062: Cylinder018
+    4300064: Cylinder019
+    4300066: Cylinder020
+    4300068: Cylinder021
+    4300070: Cylinder022
+    4300072: Cylinder023
+    4300074: Box015
+    4300076: Box016
+    4300078: glass imac
+    4300080: logo 2
+    4300082: Box026
+    4300084: Box030
+    4300086: Cylinder027
+    4300088: logo 1
+    4300090: Box034
+    4300092: Box035
+    4300094: Box036
+    4300096: Box037
+    4300098: Box038
+    4300100: Box039
+    4300102: stand
+    4300104: Box040
+    4300106: Box041
+    4300108: Box042
+    4300110: Box001
+    4300112: logo 003
+    4300114: Box043
+    4300116: Cylinder027
+    4300118: keybord_btn063
+    4300120: keybord_btn064
+    4300122: Cylinder028
+    4300126: Globe
+    4300128: Tube001
+    4300130: globe_Panel
+    4300132: globe_Panel001
+    4300134: Plane001
+    4300136: Plane002
+    4300138: Plane003
+    4300140: Plane004
+    4300142: Box161
+    4300144: Box162
+    4300146: Box163
+    4300148: Box164
+    7400000: Take 001
+    9500000: //RootNode
+    10800000: Omni001
+    10800002: Sky001
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.001
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

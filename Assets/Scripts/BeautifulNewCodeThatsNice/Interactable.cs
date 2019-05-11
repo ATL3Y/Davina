@@ -10,9 +10,9 @@ public class Interactable: MBehavior
     public string displayMessage;
     public bool useable = true;
     public Vector3 boundsMult = Vector3.one;
-    private Bounds m_bounds;
+    protected Bounds m_bounds;
 
-    private Color selectColor = new Color(200.0f, 7.0f, 144.0f, 1.0f);
+    protected Color selectColor = new Color(200.0f, 7.0f, 144.0f, 1.0f);
     Color defaultColor;
 
     protected bool m_finished = false;
@@ -28,7 +28,7 @@ public class Interactable: MBehavior
 		return owner;
 	}
 
-	protected float m_hoverTime = 0.0f;
+	public float m_hoverTime = 0.0f;
     public float HoverTime { get { return m_hoverTime; } }
 
     private bool m_insideBoundsLastFrame;

@@ -23,7 +23,7 @@ public class Lens : Interactable
     private bool momLightPlayed = false;
     private bool momDarkPlayed = false;
     private bool davBegPlayed = false;
-    private bool transportEnabled; 
+    private bool transportEnabled = true; // Just always enable transport. 
 
     [SerializeField] LogicEvents onFillRaiseEvent;
     [SerializeField] LogicEvents onFillLowerEvent;
@@ -46,15 +46,34 @@ public class Lens : Interactable
     private Interactable davina;
 
     private float spawnCooldown = 1.0f;
-    
 
+    [SerializeField] private AudioSource _camBootUp;
+    private bool _camBootUpPlayed = false;
+
+    [SerializeField]
+    private AudioSource _camTakePic;
+    private bool _camTakePicPlayed = false;
+
+    [SerializeField]
+    private AudioSource _caughtAudio;
+
+    private int outlineRendIndex = 0;
+
+    private void TurnOnNextOutlineRend ( )
+    {
+        if(outlineRenders.Length > outlineRendIndex )
+        {
+            outlineRenders [ outlineRendIndex ].enabled = true;
+        }
+        outlineRendIndex++;
+    }
 
     // Use this for initialization
     public override void Start ( )
     {
         base.Start ( );
         instance = this;
-        transportEnabled = false;
+        // transportEnabled = false;
         if( LogicManager.Instance.VRRightHand.GetComponent<Hand> ( ) != null )
         {
             owner = LogicManager.Instance.VRRightHand.GetComponent<Hand> ( );
@@ -83,12 +102,13 @@ public class Lens : Interactable
         }
 
         clipSampleData = new float [ sampleDataLength ];
-
+        /*
         foreach ( MeshRenderer r in outlineRenders )
         {
             r.material.SetFloat ( "_Outline", outlineWidth );
             r.enabled = true;
         }
+        */
 
         if ( momSoundLight != null )
         {
@@ -149,6 +169,12 @@ public class Lens : Interactable
         {
             lightSide = true;
             //Debug.Log ( "it's light" );
+
+            // Sound vol
+
+            // light level
+
+            // ocean instensity 
         }
         else // dark
         {
@@ -192,12 +218,17 @@ public class Lens : Interactable
                     if ( davSourceBegCooldown < 0.0f && !davSourceBeg.isPlaying )
                     {
                         //Debug.Log ( "ready " );
-                        if ( Dot > 0.4f || Dot < -0.4f )
+                        if ( Dot > 0.2f || Dot < -0.2f )
                         {
                             //Debug.Log ( "should play " );
-                            davSourceBeg.Play ( );
-                            davSourceBegCooldown = davSoundBeg.length + 8f;
-                            davBegPlayed = true;
+                            if ( !davSourceBeg.isPlaying )
+                            {
+                                TurnOnNextOutlineRend ( );
+                                _caughtAudio.Play ( );
+                                davSourceBeg.Play ( );
+                                davSourceBegCooldown = davSoundBeg.length + 8f;
+                                davBegPlayed = true;
+                            }
                         }
                     }
                 }
@@ -210,22 +241,34 @@ public class Lens : Interactable
                 {
                     if ( mom.IsInInteractionRange ( headPos, headRay, headObb ) )
                     {
-                        if ( Dot > 0.4f ) // play dark
+                        if ( Dot > 0.3f ) // play dark
                         {
                             if ( momSourceDarkCoolDown < 0.0f )
                             {
-                                momSourceDark.Play ( );
-                                momSourceDarkCoolDown = momSoundDark.length + 8f;
-                                momDarkPlayed = true;
+                                if ( !momSourceDark.isPlaying )
+                                {
+                                    TurnOnNextOutlineRend ( );
+                                    _caughtAudio.Play ( );
+                                    momSourceDark.Play ( );
+                                    momSourceDarkCoolDown = momSoundDark.length + 8f;
+                                    momDarkPlayed = true;
+                                }
+
                             }
                         }
-                        else if ( Dot < -0.4f ) // light
+                        else if ( Dot < -0.3f ) // light
                         {
                             if ( momSourceLightCooldown < 0.0f )
                             {
-                                momSourceLight.Play ( );
-                                momSourceLightCooldown = momSoundLight.length + 8f;
-                                momLightPlayed = true;
+                                if ( !momSourceLight.isPlaying )
+                                {
+                                    TurnOnNextOutlineRend ( );
+                                    _caughtAudio.Play ( );
+                                    momSourceLight.Play ( );
+                                    momSourceLightCooldown = momSoundLight.length + 8f;
+                                    momLightPlayed = true;
+                                }
+
                             }
                         }
                     }
@@ -248,15 +291,37 @@ public class Lens : Interactable
         }
 
         // Once stories listened to, enable the transport
-        Debug.Log ( "transportEnabled " + transportEnabled + " davBegPlayed " + davBegPlayed + " momLightPlayed " + momLightPlayed + " momDarkPlayed " + momDarkPlayed );
-        if ( !transportEnabled && davBegPlayed && momLightPlayed && momDarkPlayed )
+        // Debug.Log ( "transportEnabled " + transportEnabled + " davBegPlayed " + davBegPlayed + " momLightPlayed " + momLightPlayed + " momDarkPlayed " + momDarkPlayed );
+        if ( davBegPlayed && momLightPlayed && momDarkPlayed ) //!transportEnabled && 
         {
+
+            // DO A PULSE UP / PULSE EFFECT.  
+            // IF THE PLAYER CLICKS THE LEFT TRIGGER IN THIS STATE, MAKE A PICTURE TAKING SOUND
+            // THEN CALL ONfINISHED()
+            if ( !_camBootUpPlayed )
+            {
+                TurnOnNextOutlineRend ( );
+                // _camBootUp.Play ( );
+                _camBootUpPlayed = true;
+            }
+
+            if ( VRInputController.Instance.ReceivedLeftButtonDownSignal ( ))// || VRInputController.Instance.ReceivedRightButtonDownSignal ( ) )
+            {
+                if ( !_camTakePicPlayed )
+                {
+                    _camTakePic.Play ( );
+                    _camTakePicPlayed = true;
+                    OnFinished ( );
+                }
+            }
+            
+
             // Send message to the Story Manager to transport to enable
-            LensManager.instance.EnableCamera ( );
-            transportEnabled = true;
+            // LensManager.instance.EnableCamera ( );
+            // transportEnabled = true;
         }
     }
-    // called by teleporter
+
     public void OnFinished ( )
     {
         // M_Event.FireLogicEvent ( onFillRaiseEvent, new LogicArg ( this ) );
@@ -293,11 +358,19 @@ public class Lens : Interactable
             momSourceDark.Stop ( );
         }
 
-        davBeg.Play ( );
-        yield return new WaitForSeconds ( davBeg.clip.length );
+        if ( !davBeg.isPlaying )
+        {
+            davBeg.Play ( );
+            yield return new WaitForSeconds ( davBeg.clip.length );
+        }
 
-        momStory.Play ( );
-        yield return new WaitForSeconds ( momStory.clip.length );
+        if ( !momStory.isPlaying )
+        {
+            momStory.Play ( );
+            yield return new WaitForSeconds ( momStory.clip.length );
+        }
+
+
         CallNextEvent ( );
 
         /*
@@ -312,7 +385,7 @@ public class Lens : Interactable
         TransportManager.Instance.StationaryEffect ( LensManager.instance.observePos.position, false );
         M_Event.FireLogicEvent ( LogicEvents.EnterStory, new LogicArg ( this ) );
     }
-
+    /*
     void SetOutline ( bool isOn )
     {
         foreach ( MeshRenderer r in outlineRenders )
@@ -320,6 +393,7 @@ public class Lens : Interactable
             r.enabled = isOn;
         }
     }
+    */
 
     private void ClipLoudness ( AudioSource source, Interactable character )
     {
@@ -340,7 +414,7 @@ public class Lens : Interactable
                 spawnCooldown = 1.0f;
                 if( character.transform.parent.GetComponent<FXOutlinePulse> ( )  != null )
                 {
-                    character.transform.parent.GetComponent<FXOutlinePulse> ( ).SpawnPulse ( );
+                    // character.transform.parent.GetComponent<FXOutlinePulse> ( ).SpawnPulse ( );
                 }
                 else
                 {

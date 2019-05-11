@@ -8,19 +8,18 @@ using UnityEngine.SceneManagement;
 public class Button : Interactable
 {
     private Color color;
-    [SerializeField]
-    MeshRenderer[] outlineRenders;
+    // [SerializeField] MeshRenderer[] outlineRenders;
     [SerializeField]
     GameObject hoverObject;
     [SerializeField]
     Transform nextStartPos;
 
-    #region public functions
-
-    #endregion
+    private Material mat;
+    private Color baseCol;
 
     #region private functions
 
+    /*
     private void SetOutline ( bool value )
     {
         foreach ( MeshRenderer r in outlineRenders )
@@ -28,6 +27,7 @@ public class Button : Interactable
             r.enabled = value;
         }
     }
+    */
 
     private void SetHoverObject ( bool value )
     {
@@ -81,19 +81,34 @@ public class Button : Interactable
         }
     }
 
+
     public override void Update ( )
     {
         base.Update ( );
+        if ( m_finished )
+            return;
+
+        if(m_hoverTime > 0.0f )
+        {
+            mat.SetColor ( "_EmissionColor", baseCol * 2.0f );
+        }
+        else
+        {
+            mat.SetColor ( "_EmissionColor", baseCol * ( 0.5f * (1.0f + Mathf.Sin(3.0f * Time.timeSinceLevelLoad)) ));
+        }
 
         // HOVER
         bool value = m_hoverTime > 0.0f;
-        SetOutline ( value );
+        // SetOutline ( value );
         SetHoverObject ( value );
     }
 
     public override void Start ( )
     {
         base.Start ( );
+        mat = GetComponent<Renderer> ( ).material;
+        baseCol = mat.color;
+        mat.color *= .3f;
     }
 
 #endregion

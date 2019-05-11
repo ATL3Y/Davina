@@ -118,7 +118,7 @@ public class VRInputController : MonoBehaviour
     {
         if ( OVREnabled )
         {
-            return OVRInput.Get ( OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch ) >= 0.9f;
+            return OVRInput.Get ( OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch ) >= 0.9f;
         }
         else
         {
@@ -160,7 +160,7 @@ public class VRInputController : MonoBehaviour
     {
         if ( OVREnabled )
         {
-            return OVRInput.Get ( OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch ) < 0.1f;
+            return OVRInput.Get ( OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch ) < 0.1f;
         }
         else
         {
