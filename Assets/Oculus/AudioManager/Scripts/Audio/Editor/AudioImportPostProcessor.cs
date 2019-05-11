@@ -12,7 +12,7 @@ AudioImportPostProcessor()
 public class AudioImportPostProcessor : AssetPostprocessor {
 
 	static void OnPostprocessAllAssets( string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths ) {
-		AudioManager audioManager = AudioManager.Instance;
+		OVR.AudioManager audioManager = OVR.AudioManager.Instance;
 		if ( audioManager != null ) {
       // find the asset path to the loaded audio manager prefab
 #if UNITY_2018_2_OR_NEWER

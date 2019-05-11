@@ -23,7 +23,7 @@ public class VRInputController : MonoBehaviour
 
     BoundsDetector bounds;
 
-    public bool OVREnabled { get; set; }
+    private bool OVREnabled = true;
 
     // Handle OVR vs Vive
     [SerializeField]
@@ -39,6 +39,9 @@ public class VRInputController : MonoBehaviour
             OVREnabled = true;
             leftController = ovrLeftHand;
             rightController = ovrRightHand;
+        }else
+        {
+            OVREnabled = false;
         }
     }
 

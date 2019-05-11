@@ -118,7 +118,6 @@ public class LogicManager : MBehavior
         }
         else
         {
-            VRInputController.Instance.OVREnabled = false;
             playerPerson.parent.gameObject.SetActive ( true );
             ovrPlayerPerson.parent.gameObject.SetActive ( false );
         }

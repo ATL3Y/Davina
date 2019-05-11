@@ -12,7 +12,7 @@ namespace OVR
 
 -----------------------
 */
-[CustomEditor(typeof(AudioManager))]
+[CustomEditor(typeof(OVR.AudioManager))]
 public class AudioManagerInspector : Editor {
 
 	private AudioManager 	audioManager = null;

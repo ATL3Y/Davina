@@ -183,15 +183,15 @@ public class Lens : Interactable
         }
 
         // If we are not playing light music, but it's light now, play light
-        if( Dot < -0.9f && !AudioManager.Instance.GetBGMLight ( ))
+        if( Dot < -0.9f && !Davina.MyAudioManager.MyInstance.GetBGMLight ( ))
         {
-            AudioManager.Instance.ChangeBGM ( lightSide );
+            Davina.MyAudioManager.MyInstance.ChangeBGM ( lightSide );
         }
 
         // If we are not playing dark music, but it's dark now, play dark
-        if ( Dot > 0.9f && AudioManager.Instance.GetBGMLight ( ) )
+        if ( Dot > 0.9f && Davina.MyAudioManager.MyInstance.GetBGMLight ( ) )
         {
-            AudioManager.Instance.ChangeBGM ( lightSide );
+            Davina.MyAudioManager.MyInstance.ChangeBGM ( lightSide );
         }
 
         // Don't have overlapping audio
