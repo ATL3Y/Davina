@@ -96,22 +96,28 @@ public class LensManager : MBehavior
 
         if ( Lens.instance != null )
         {
-            if ( Lens.instance.LightSide )
+            if(currentStory.Count > 2 )
             {
-                if( currentStory[ 2 ] != null && currentStory[ 3 ] != null )
+                /*
+                if ( Lens.instance.LightSide )
                 {
-                    currentStory [ 2 ].SetActive ( true );
-                    currentStory [ 3 ].SetActive ( false );
+                    if ( currentStory [ 2 ] != null && currentStory [ 3 ] != null )
+                    {
+                        currentStory [ 2 ].SetActive ( true );
+                        currentStory [ 3 ].SetActive ( false );
+                    }
                 }
-            }
-            else
-            {
-                if ( currentStory [ 2 ] != null && currentStory [ 3 ] != null )
+                else
                 {
-                    currentStory [ 2 ].SetActive ( false );
-                    currentStory [ 3 ].SetActive ( true );
+                    if ( currentStory [ 2 ] != null && currentStory [ 3 ] != null )
+                    {
+                        currentStory [ 2 ].SetActive ( false );
+                        currentStory [ 3 ].SetActive ( true );
+                    }
                 }
+                */
             }
+
         }
     }
 

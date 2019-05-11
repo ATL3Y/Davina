@@ -7,8 +7,8 @@ public class SceneRoot : MonoBehaviour
 {
     [SerializeField]
     GameObject lights;
-    [SerializeField]
-    GameObject lightsVolumetric;
+    // [SerializeField]
+    // GameObject lightsVolumetric;
 
 	// Use this for initialization
 	void Start()
@@ -22,19 +22,21 @@ public class SceneRoot : MonoBehaviour
             LogicManager.Instance.SetSceneRoots(gameObject.scene.buildIndex, gameObject);
         }
         
-        if (lights != null && lightsVolumetric != null)
+        /*
+        if (lights != null)// && lightsVolumetric != null)
         {
             if (LogicManager.Instance.VolumetricLights)
             {
                 lights.SetActive(false);
-                lightsVolumetric.SetActive(true);
+                //lightsVolumetric.SetActive(true);
             }
             else
             {
                 lights.SetActive(true);
-                lightsVolumetric.SetActive(false);
+                //lightsVolumetric.SetActive(false);
             }
         }
+        */
 	}
 	
 	// Update is called once per frame

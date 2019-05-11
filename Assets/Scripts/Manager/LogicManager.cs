@@ -129,7 +129,7 @@ public class LogicManager : MBehavior
 		Cursor.visible = false;
 
         InitScenes();
-
+        /*
         if (VolumetricLights)
         {
             gameObject.GetComponentInChildren<HxVolumetricCamera>().enabled = true;
@@ -138,6 +138,7 @@ public class LogicManager : MBehavior
         {
             gameObject.GetComponentInChildren<HxVolumetricCamera>().enabled = false;
         }
+        */
     }
 
     private void InitScenes()
